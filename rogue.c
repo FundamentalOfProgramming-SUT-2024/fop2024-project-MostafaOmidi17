@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#define MAX_SIZE 100
+#define MAX_SIZE 400
+char naghsheh[MAX_SIZE][MAX_SIZE];
+
 
 typedef struct prof{
     char name[MAX_SIZE];
@@ -66,38 +68,6 @@ int is_char(char a){
 
 
 
-void moving(y_loc , x_loc)
-{
-    int kilid = getch();
-    // mvprintw(y_loc , x_loc , "o");
-    switch (kilid)
-    {
-        case KEY_UP:
-            mvprintw(y_loc , x_loc , " ");
-            y_loc--;
-            // mvprintw(y_loc , x_loc , "o");
-            break;
-        case KEY_DOWN:
-            mvprintw(y_loc , x_loc , " ");
-            y_loc++;
-            // mvprintw(y_loc , x_loc , "o");
-            break;
-        case KEY_LEFT:
-            mvprintw(y_loc , x_loc , " ");
-            x_loc--;
-            // mvprintw(y_loc , x_loc , "o");
-            break;
-        case KEY_RIGHT:
-            mvprintw(y_loc , x_loc , " ");
-            x_loc++;
-            // mvprintw(y_loc , x_loc , "o");
-            break;
-        default:
-            break;
-    }
-}
-
-
 void welcome_to_the_rouge(){
     char welcome[100] = "Welcome to the Rogue!";
     char *p = welcome;
@@ -128,13 +98,28 @@ void generate_map(int row , int col)
 {
     int RoomNum = Random(3 , 9);
     coordinates map;
-    // printw("%d" , rnd);
+    for (int i = 0; i < row; i++)
+    {
+        for(int j = 0 ; j < col ; j++)
+        {
+            naghsheh[i][j] = ' ';
+        }
+    }
+
+
     for(int i = 0 ; i < RoomNum ; i++)
     {
-        int x = Random(0 , col);
-        int y = Random(0 , row);
-        int room_width = Random(6 , 10);
-        int room_hight = Random(6 , 10);
+        int x ;
+        int y;
+        int room_width;
+        int room_hight;
+        room_width = Random(6 , 10);
+        room_hight = Random(6 , 10);
+        //making sure that our rooms doesnt get out of the map.
+        x =  Random(room_width + 1 , col - room_width - 1);
+        y = Random(room_hight + 1 , row - room_hight - 1);
+        
+        
         int count = 0;
         for(int k = 0 ; k < i ; k++)
         {
@@ -148,16 +133,11 @@ void generate_map(int row , int col)
                 count = 1;
                 break;
             }
-            else if( x + room_width > col - 11 || x - room_width < 11 || y + room_hight > row - 11 || y - room_hight < 11)
-            {
-                count = 1;
-                break;
-            }
+            
         }
-        if(count)
+        if(count == 1)
         {
             i--;
-            continue;
         }
         else
         {
@@ -171,9 +151,9 @@ void generate_map(int row , int col)
             {
                 for(int j = y ; j < y + room_hight ; j++)
                 {
-                    if(i_1 == x && j == y || i_1 == x + room_width - 1 && j == y || i_1 == x && j == y + room_hight || i_1 == x + room_width && j == y + room_hight)
+                    if(i_1 == x && j == y || i_1 == x + room_width - 1 && j == y || i_1 == x && j == y + room_hight - 1 || i_1 == x + room_width - 1 && j == y + room_hight - 1)
                     {
-                        mvprintw(j,i_1 , " ");
+                        naghsheh[j][i_1] = ' ';
                     }
                     else if(i_1 == x || i_1 == x + room_width - 1)
                     {
@@ -182,15 +162,15 @@ void generate_map(int row , int col)
                         if(door > (50) * (x+room_width-1) / 100 && door_count < 2 && j <= y + room_hight - 3 || (i_1 == x + room_width - 3 && j == y + room_hight - 3 && door_count == 0))
                         {
                             door_count++;
-                            mvprintw(j,i_1,"+");
+                            naghsheh[j][i_1] = '+';
                         }
                         else if(window > 80 && j <= y + room_hight - 3 )
                         {
-                            mvprintw(j,i_1,"=");
+                            naghsheh[j][i_1] = '=';
                         }
                         else
                         {
-                            mvprintw(j,i_1 , "|");
+                            naghsheh[j][i_1] = '|';
                         }
                     }
                     else if(j == y || j == y + room_hight - 1)
@@ -200,15 +180,15 @@ void generate_map(int row , int col)
                         if(door > (50) * (x+room_width-1) / 100 && door_count < 2 && j <= y + room_hight - 3 || (i_1 == x + room_width - 3 && j == y + room_hight - 3 && door_count == 0))
                         {
                             door_count++;
-                            mvprintw(j,i_1,"+");
+                            naghsheh[j][i_1] = '+';
                         }
                         else if(window > 80 && j <= y + room_hight - 3 )
                         {
-                            mvprintw(j,i_1,"=");
+                            naghsheh[j][i_1] = '=';
                         }
                         else
                         {
-                            mvprintw(j,i_1 , "_");
+                            naghsheh[j][i_1] = '-';
                         }
                     }
                     else
@@ -217,17 +197,28 @@ void generate_map(int row , int col)
                         if(pilar && pillar_count < 4 && j > y + 1 && j < room_hight + y - 1 && i_1 > x + 1 && i_1 < x + room_width - 1)
                         {
                             pillar_count++;
-                            mvprintw(j,i_1 , "0");
+                            naghsheh[j][i_1] = '0';
                         }
                         else
                         {
-                            mvprintw(j,i_1 , ".");
+                            naghsheh[j][i_1] = '.';
+
                         }
                     }
                 }
             }
         }
     }
+
+    for (int i = 0; i < col; i++)
+    {
+        for (int j = 0; j < row; j++)
+        {
+            mvaddch(j , i , naghsheh[j][i]);
+        }
+        
+    }
+    
 
 }
 
