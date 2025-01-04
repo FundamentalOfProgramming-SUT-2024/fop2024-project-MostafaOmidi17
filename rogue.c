@@ -128,7 +128,7 @@ void generate_map(int row , int col)
                 if(naghsheh[i][j] != ' ')
                 {
                     count = 1;
-                    i = y + room_hight;
+                    i = y + room_hight + 1;
                     break;
                 }
             }
