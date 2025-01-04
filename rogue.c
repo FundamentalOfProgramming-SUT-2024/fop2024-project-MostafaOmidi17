@@ -121,19 +121,17 @@ void generate_map(int row , int col)
         
         
         int count = 0;
-        for(int k = 0 ; k < i ; k++)
+        for(int i = y - 1; i < y + room_hight + 1 ; i++ )
         {
-            if((x+room_width) > (map.x[k] - map.width[k]) - 5 && (x-room_width) < (map.x[k] - map.width[k]) - 5 && (y+room_hight) > (map.y[k] - map.hight[k]) - 5 && (y-room_hight) < (map.y[k] - map.hight[k]) - 5)
+            for(int j = x - 1 ; j < x + room_width + 1 ; j++)
             {
-                count = 1;
-                break;
+                if(naghsheh[i][j] != ' ')
+                {
+                    count = 1;
+                    i = y + room_hight;
+                    break;
+                }
             }
-            else if(x > map.x[k] - map.width[k] && x < map.x[k] + map.width[k] && y > map.y[k] - map.hight[k] && y < map.y[k] + map.hight[k])
-            {
-                count = 1;
-                break;
-            }
-            
         }
         if(count == 1)
         {
