@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 #define MAX_SIZE 400
 char naghsheh[MAX_SIZE][MAX_SIZE];
-int roomNUM;
 
 
 typedef struct prof{
@@ -32,9 +32,15 @@ typedef struct rooms
     int x_c;
     int y_c;
     char map[MAX_SIZE][MAX_SIZE];
+    int numdoor;
     location door[MAX_SIZE];
 }rooms;
 
+
+int distance(int a , int b)
+{
+    return abs(a - b);
+}
 
 
 
@@ -50,6 +56,122 @@ int Random(int min , int max)
     int diff = max - min;
     return rand() % diff + min;
 }
+
+
+void connect(int x_i , int y_i , int x_f , int y_f)
+{
+    int distance_x = x_f - x_i;
+    int distance_y = y_f - y_i;
+    if(distance_x > 0 && distance_y > 0)
+    {
+        while(distance_x > 0 || distance_y > 0)
+        {
+            int choose = Random(0,2);
+            if(!choose)
+            {
+                if(distance_x - 1 >= 0)
+                {
+                    x_i++;
+                    distance_x--;
+                    naghsheh[y_i][x_i] = '#';
+                    mvprintw(y_i , x_i , "#");
+                }
+            }
+            else
+            {
+                if(distance_y - 1 >= 0)
+                {
+                    y_i++;
+                    distance_y--;
+                    naghsheh[y_i][x_i] = '#';
+                    mvprintw(y_i , x_i , "#");
+                }
+            }
+        }
+    }
+    else if(distance_x > 0 && distance_y < 0)
+    {
+        while(distance_x > 0 || distance_y < 0)
+        {
+            int choose = Random(0,2);
+            if(!choose)
+            {
+                if(distance_x - 1 >= 0)
+                {
+                    x_i++;
+                    distance_x--;
+                    naghsheh[y_i][x_i] = '#';
+                    mvprintw(y_i , x_i , "#");
+                }
+            }
+            else
+            {
+                if(distance_y + 1 <= 0)
+                {
+                    y_i--;
+                    distance_y++;
+                    naghsheh[y_i][x_i] = '#';
+                    mvprintw(y_i , x_i , "#");
+                }
+            }
+        }
+    }
+    else if(distance_x < 0 && distance_y > 0)
+    {
+        while(distance_x < 0 || distance_y > 0)
+        {
+            int choose = Random(0,2);
+            if(!choose)
+            {
+                if(distance_x + 1 <= 0)
+                {
+                    x_i--;
+                    distance_x++;
+                    naghsheh[y_i][x_i] = '#';
+                    mvprintw(y_i , x_i , "#");
+                }
+            }
+            else
+            {
+                if(distance_y - 1 >= 0)
+                {
+                    y_i++;
+                    distance_y--;
+                    naghsheh[y_i][x_i] = '#';
+                    mvprintw(y_i , x_i , "#");
+                }
+            }
+        }
+    }
+    else
+    {
+        while(distance_x < 0 || distance_y < 0)
+        {
+            int choose = Random(0,2);
+            if(!choose)
+            {
+                if(distance_x + 1 <= 0)
+                {
+                    x_i--;
+                    distance_x++;
+                    naghsheh[y_i][x_i] = '#';
+                    mvprintw(y_i , x_i , "#");
+                }
+            }
+            else
+            {
+                if(distance_y + 1 <= 0)
+                {
+                    y_i--;
+                    distance_y++;
+                    naghsheh[y_i][x_i] = '#';
+                    mvprintw(y_i , x_i , "#");
+                }
+            }
+        }
+    }
+}
+
 
 
 
@@ -90,10 +212,8 @@ void welcome_to_the_rouge(){
 
 
 
-void generate_map(int row , int col , rooms Room[])
+void generate_map(int row , int col , rooms Room[] , int RoomNum)
 {
-    int RoomNum = Random(3 , 9);
-    roomNUM = RoomNum;
     for (int i = 0; i < row; i++)
     {
         for(int j = 0 ; j < col ; j++)
@@ -214,6 +334,7 @@ void generate_map(int row , int col , rooms Room[])
                         }
                     }
                 }
+                Room[i].numdoor = door_count;
             }
         }
     }
@@ -231,8 +352,23 @@ void generate_map(int row , int col , rooms Room[])
 }
 
 
-void generate_corridor()
-{}
+void generate_corridor(rooms Room[] , int RoomNum)
+{
+    for(int i = 0 ; i < RoomNum ; i++)
+    {
+        for(int j = 0 ; j < Room[i].numdoor ; j++)
+        {
+            int Rand_connect = Random(0,RoomNum - 1);
+            int x_i = Room[i].door->x;
+            int y_i = Room[i].door->y;
+            location init = {x_i , y_i};
+            int x_f = Room[Rand_connect].door->x;
+            int y_f = Room[Rand_connect].door->y;
+            location finish = {x_f , y_f};
+            connect(init.x , init.y , finish.x , finish.y);
+        }
+    }
+}
 
 
 int spawn_px(rooms Room)
@@ -282,7 +418,7 @@ int main(){
     init_pair(5 , COLOR_GREEN , COLOR_YELLOW);
     int row , col;
     getmaxyx(stdscr , row , col);
-    // welcome_to_the_rouge();
+    welcome_to_the_rouge();
 
 
     //file handling;
@@ -580,9 +716,12 @@ int main(){
         clear();
         bkgd(' ');
         rooms Room[9];
-        generate_map(row , col , Room);
-        // generate_corridor();
-        int number = Random(0 , roomNUM - 1);
+        int RoomNum;
+        RoomNum = Random(3 , 9);
+        generate_map(row , col , Room , RoomNum);
+        generate_corridor(Room , RoomNum);
+        
+        int number = Random(0 , RoomNum - 1);
         int y_loc;
         int x_loc;
         y_loc = spawn_py(Room[number]);
@@ -596,13 +735,23 @@ int main(){
             switch (kilid)
             {
             case KEY_UP:
-                if(naghsheh[y_loc][x_loc] == '.')
+                if(naghsheh[y_loc - 1][x_loc] == '.' || naghsheh[y_loc - 1][x_loc] == '#' || naghsheh[y_loc - 1][x_loc] == '+')
                 {
-                    if(naghsheh[y_loc - 1][x_loc] == '-'|| naghsheh[y_loc - 1][x_loc] == '0' || naghsheh[y_loc - 1][x_loc] == '=' || naghsheh[y_loc - 1][x_loc] == '+')
+                    if(naghsheh[y_loc - 1][x_loc] == '-'|| naghsheh[y_loc - 1][x_loc] == '0' || naghsheh[y_loc - 1][x_loc] == '=')
                     {
                         break;
                     }
-                    else
+                    else if(naghsheh[y_loc - 1][x_loc] == '.')
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        y_loc--;
+                    }
+                    else if(naghsheh[y_loc - 1][x_loc] == '+')
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        y_loc--;
+                    }
+                    else if(naghsheh[y_loc - 1][x_loc] == '#')
                     {
                         mvprintw(y_loc , x_loc , ".");
                         y_loc--;
@@ -610,13 +759,23 @@ int main(){
                 }
                 break;
             case KEY_DOWN:
-                if(naghsheh[y_loc][x_loc] == '.')
+                if(naghsheh[y_loc + 1][x_loc] == '.' || naghsheh[y_loc + 1][x_loc] == '#' || naghsheh[y_loc + 1][x_loc] == '+')
                 {
-                    if(naghsheh[y_loc + 1][x_loc] == '-'|| naghsheh[y_loc + 1][x_loc] == '0' || naghsheh[y_loc + 1][x_loc] == '=' || naghsheh[y_loc + 1][x_loc] == '+')
+                    if(naghsheh[y_loc + 1][x_loc] == '-'|| naghsheh[y_loc + 1][x_loc] == '0' || naghsheh[y_loc + 1][x_loc] == '=')
                     {
                         break;
                     }
-                    else
+                    else if(naghsheh[y_loc + 1][x_loc] == '.')
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        y_loc++;
+                    }
+                    else if(naghsheh[y_loc + 1][x_loc] == '+')
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        y_loc++;
+                    }
+                    else if(naghsheh[y_loc + 1][x_loc] == '#')
                     {
                         mvprintw(y_loc , x_loc , ".");
                         y_loc++;
@@ -624,13 +783,23 @@ int main(){
                 }
                 break;
             case KEY_LEFT:
-                if(naghsheh[y_loc][x_loc - 1] == '.')
+                if(naghsheh[y_loc][x_loc - 1] == '.' || naghsheh[y_loc][x_loc - 1] == '#' || naghsheh[y_loc][x_loc - 1] == '+')
                 {
-                    if(naghsheh[y_loc][x_loc - 1] == '|'|| naghsheh[y_loc][x_loc - 1] == '0' || naghsheh[y_loc][x_loc - 1] == '=' || naghsheh[y_loc][x_loc - 1] == '+')
+                    if(naghsheh[y_loc][x_loc - 1] == '|'|| naghsheh[y_loc][x_loc - 1] == '0' || naghsheh[y_loc][x_loc - 1] == '=')
                     {
                         break;
                     }
-                    else
+                    else if(naghsheh[y_loc][x_loc - 1] == '.')
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        x_loc--;
+                    }
+                    else if(naghsheh[y_loc][x_loc - 1] == '+')
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        x_loc--;
+                    }
+                    else if(naghsheh[y_loc][x_loc - 1] == '#')
                     {
                         mvprintw(y_loc , x_loc , ".");
                         x_loc--;
@@ -638,13 +807,23 @@ int main(){
                 }
                 break;
             case KEY_RIGHT:
-                if(naghsheh[y_loc][x_loc + 1] == '.')
+                if(naghsheh[y_loc][x_loc + 1] == '.' || naghsheh[y_loc][x_loc + 1] == '#' || naghsheh[y_loc][x_loc + 1] == '+')
                 {
-                    if(naghsheh[y_loc][x_loc + 1] == '|'|| naghsheh[y_loc][x_loc + 1] == '0' || naghsheh[y_loc][x_loc + 1] == '=' || naghsheh[y_loc][x_loc + 1] == '+')
+                    if(naghsheh[y_loc][x_loc + 1] == '|'|| naghsheh[y_loc][x_loc + 1] == '0' || naghsheh[y_loc][x_loc + 1] == '=')
                     {
                         break;
                     }
-                    else
+                    else if(naghsheh[y_loc][x_loc + 1] == '.')
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        x_loc++;
+                    }
+                    else if(naghsheh[y_loc][x_loc + 1] == '+')
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        x_loc++;
+                    }
+                    else if(naghsheh[y_loc][x_loc + 1] == '#')
                     {
                         mvprintw(y_loc , x_loc , ".");
                         x_loc++;
@@ -671,8 +850,6 @@ int main(){
     else if(highlight == 4)
     {}
 
-
-    
     endwin();
     return 0;
 }
