@@ -4,6 +4,7 @@
 #include <time.h>
 #define MAX_SIZE 400
 char naghsheh[MAX_SIZE][MAX_SIZE];
+int roomNUM;
 
 
 typedef struct prof{
@@ -92,6 +93,7 @@ void welcome_to_the_rouge(){
 void generate_map(int row , int col , rooms Room[])
 {
     int RoomNum = Random(3 , 9);
+    roomNUM = RoomNum;
     for (int i = 0; i < row; i++)
     {
         for(int j = 0 ; j < col ; j++)
@@ -580,15 +582,12 @@ int main(){
         rooms Room[9];
         generate_map(row , col , Room);
         // generate_corridor();
-        int number = Random(0 , 9);
+        int number = Random(0 , roomNUM - 1);
         int y_loc;
         int x_loc;
-        do
-        {
-            y_loc = spawn_py(Room[number]);
-            x_loc = spawn_px(Room[number]);
-        } while (naghsheh[y_loc][x_loc] == '.');
-        
+        y_loc = spawn_py(Room[number]);
+        x_loc = spawn_px(Room[number]);
+        naghsheh[y_loc][x_loc] = '.';
         while(1)
         {
             refresh();
