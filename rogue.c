@@ -24,21 +24,7 @@ struct location
 };
 
 
-struct rooms
-{
-    struct location *doors;
-};
 
-
-
-
-typedef struct cord{
-    int x[MAX_SIZE];
-    int y[MAX_SIZE];
-    int width[MAX_SIZE];
-    int hight[MAX_SIZE];
-    
-}coordinates;
 
 
 
@@ -97,7 +83,6 @@ void welcome_to_the_rouge(){
 void generate_map(int row , int col)
 {
     int RoomNum = Random(3 , 9);
-    coordinates map;
     for (int i = 0; i < row; i++)
     {
         for(int j = 0 ; j < col ; j++)
@@ -121,6 +106,7 @@ void generate_map(int row , int col)
         
         
         int count = 0;
+        //checking if there is any full place in random room or not.
         for(int i = y - 1; i < y + room_hight + 1 ; i++ )
         {
             for(int j = x - 1 ; j < x + room_width + 1 ; j++)
@@ -139,10 +125,6 @@ void generate_map(int row , int col)
         }
         else
         {
-            map.x[i] = x;
-            map.y[i] = y;
-            map.hight[i] = room_hight;
-            map.width[i] = room_width;
             int door_count = 0;
             int pillar_count = 0;
             for(int i_1 = x ; i_1 < x + room_width ; i_1++)
@@ -218,6 +200,19 @@ void generate_map(int row , int col)
     }
     
 
+}
+
+
+void print_map(int row , int col , char naghsheh[row][col])
+{
+    for (int i = 0; i < col; i++)
+    {
+        for (int j = 0; j < row; j++)
+        {
+            mvaddch(j , i , naghsheh[j][i]);
+        }
+        
+    }
 }
 
 
@@ -542,6 +537,8 @@ int main(){
         clear();
         bkgd(' ');
         generate_map(row , col);
+        // generate_corridor();
+        spawn_p();
         int y_loc = row / 2;
         int x_loc = col/ 2;
         while(1)
@@ -552,24 +549,60 @@ int main(){
             switch (kilid)
             {
             case KEY_UP:
-                mvprintw(y_loc , x_loc , " ");
-                y_loc--;
-                // mvprintw(y_loc , x_loc , "o");
+                if(naghsheh[y_loc][x_loc] == '.')
+                {
+                    if(naghsheh[y_loc - 1][x_loc] == '-'|| naghsheh[y_loc - 1][x_loc] == '0')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        y_loc--;
+                    }
+                }
                 break;
             case KEY_DOWN:
-                mvprintw(y_loc , x_loc , " ");
-                y_loc++;
-                // mvprintw(y_loc , x_loc , "o");
+                if(naghsheh[y_loc][x_loc] == '.')
+                {
+                    if(naghsheh[y_loc + 1][x_loc] == '-'|| naghsheh[y_loc + 1][x_loc] == '0')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        y_loc++;
+                    }
+                }
                 break;
             case KEY_LEFT:
-                mvprintw(y_loc , x_loc , " ");
-                x_loc--;
-                // mvprintw(y_loc , x_loc , "o");
+                if(naghsheh[y_loc][x_loc - 1] == '.')
+                {
+                    if(naghsheh[y_loc][x_loc - 1] == '|'|| naghsheh[y_loc][x_loc - 1] == '0')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        x_loc--;
+                    }
+                }
                 break;
             case KEY_RIGHT:
-                mvprintw(y_loc , x_loc , " ");
-                x_loc++;
-                // mvprintw(y_loc , x_loc , "o");
+                if(naghsheh[y_loc][x_loc + 1] == '.')
+                {
+                    if(naghsheh[y_loc][x_loc + 1] == '|'|| naghsheh[y_loc][x_loc+1] == '0')
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        mvprintw(y_loc , x_loc , ".");
+                        x_loc++;
+                    }
+                }
                 break;
             default:
                 break;
@@ -587,7 +620,9 @@ int main(){
 
     }
     else if(highlight == 3)
-    {}
+    {
+
+    }
     else if(highlight == 4)
     {}
 
