@@ -17,13 +17,22 @@ typedef struct prof{
 
 
 
-struct location
+typedef struct location
 {
     int x;
     int y;
-};
+}location;
 
 
+typedef struct rooms
+{
+    int size_x;
+    int size_y;
+    int x_c;
+    int y_c;
+    char map[MAX_SIZE][MAX_SIZE];
+    location door[MAX_SIZE];
+}rooms;
 
 
 
@@ -80,7 +89,7 @@ void welcome_to_the_rouge(){
 
 
 
-void generate_map(int row , int col)
+void generate_map(int row , int col , rooms Room[])
 {
     int RoomNum = Random(3 , 9);
     for (int i = 0; i < row; i++)
@@ -125,6 +134,10 @@ void generate_map(int row , int col)
         }
         else
         {
+            Room[i].size_x = room_width;
+            Room[i].size_y = room_hight;
+            Room[i].x_c = x;
+            Room[i].y_c = y;
             int door_count = 0;
             int pillar_count = 0;
             for(int i_1 = x ; i_1 < x + room_width ; i_1++)
@@ -134,6 +147,7 @@ void generate_map(int row , int col)
                     if(i_1 == x && j == y || i_1 == x + room_width - 1 && j == y || i_1 == x && j == y + room_hight - 1 || i_1 == x + room_width - 1 && j == y + room_hight - 1)
                     {
                         naghsheh[j][i_1] = ' ';
+                        Room[i].map[j][i_1] = ' ';
                     }
                     else if(i_1 == x || i_1 == x + room_width - 1)
                     {
@@ -141,16 +155,21 @@ void generate_map(int row , int col)
                         int window = Random(0,100);
                         if(door > (50) * (x+room_width-1) / 100 && door_count < 2 && j <= y + room_hight - 3 || (i_1 == x + room_width - 3 && j == y + room_hight - 3 && door_count == 0))
                         {
+                            (Room[i].door[door_count]).x = i_1;
+                            (Room[i].door[door_count]).y = j;
                             door_count++;
                             naghsheh[j][i_1] = '+';
+                            Room[i].map[j][i_1] = '+';
                         }
                         else if(window > 80 && j <= y + room_hight - 3 )
                         {
                             naghsheh[j][i_1] = '=';
+                            Room[i].map[j][i_1] = '=';
                         }
                         else
                         {
                             naghsheh[j][i_1] = '|';
+                            Room[i].map[j][i_1] = '|';
                         }
                     }
                     else if(j == y || j == y + room_hight - 1)
@@ -159,16 +178,21 @@ void generate_map(int row , int col)
                         int window = Random(0,100);
                         if(door > (50) * (x+room_width-1) / 100 && door_count < 2 && j <= y + room_hight - 3 || (i_1 == x + room_width - 3 && j == y + room_hight - 3 && door_count == 0))
                         {
+                            (Room[i].door[door_count]).x = i_1;
+                            (Room[i].door[door_count]).y = j;
                             door_count++;
                             naghsheh[j][i_1] = '+';
+                            Room[i].map[j][i_1] = '+';
                         }
                         else if(window > 80 && j <= y + room_hight - 3 )
                         {
                             naghsheh[j][i_1] = '=';
+                            Room[i].map[j][i_1] = '=';
                         }
                         else
                         {
                             naghsheh[j][i_1] = '-';
+                            Room[i].map[j][i_1] = '-';
                         }
                     }
                     else
@@ -178,10 +202,12 @@ void generate_map(int row , int col)
                         {
                             pillar_count++;
                             naghsheh[j][i_1] = '0';
+                            Room[i].map[j][i_1] = '0';
                         }
                         else
                         {
                             naghsheh[j][i_1] = '.';
+                            Room[i].map[j][i_1] = '.';
 
                         }
                     }
@@ -200,6 +226,21 @@ void generate_map(int row , int col)
     }
     
 
+}
+
+
+void generate_corridor()
+{}
+
+
+int spawn_px(rooms Room)
+{
+    return Random(Room.x_c + 1 , Room.size_x + Room.x_c - 1);
+}
+
+int spawn_py(rooms Room)
+{
+    return Random(Room.y_c + 1 , Room.size_y + Room.y_c - 1);
 }
 
 
@@ -536,11 +577,18 @@ int main(){
         keypad(stdscr , TRUE);
         clear();
         bkgd(' ');
-        generate_map(row , col);
+        rooms Room[9];
+        generate_map(row , col , Room);
         // generate_corridor();
-        spawn_p();
-        int y_loc = row / 2;
-        int x_loc = col/ 2;
+        int number = Random(0 , 9);
+        int y_loc;
+        int x_loc;
+        do
+        {
+            y_loc = spawn_py(Room[number]);
+            x_loc = spawn_px(Room[number]);
+        } while (naghsheh[y_loc][x_loc] == '.');
+        
         while(1)
         {
             refresh();
@@ -551,7 +599,7 @@ int main(){
             case KEY_UP:
                 if(naghsheh[y_loc][x_loc] == '.')
                 {
-                    if(naghsheh[y_loc - 1][x_loc] == '-'|| naghsheh[y_loc - 1][x_loc] == '0')
+                    if(naghsheh[y_loc - 1][x_loc] == '-'|| naghsheh[y_loc - 1][x_loc] == '0' || naghsheh[y_loc - 1][x_loc] == '=' || naghsheh[y_loc - 1][x_loc] == '+')
                     {
                         break;
                     }
@@ -565,7 +613,7 @@ int main(){
             case KEY_DOWN:
                 if(naghsheh[y_loc][x_loc] == '.')
                 {
-                    if(naghsheh[y_loc + 1][x_loc] == '-'|| naghsheh[y_loc + 1][x_loc] == '0')
+                    if(naghsheh[y_loc + 1][x_loc] == '-'|| naghsheh[y_loc + 1][x_loc] == '0' || naghsheh[y_loc + 1][x_loc] == '=' || naghsheh[y_loc + 1][x_loc] == '+')
                     {
                         break;
                     }
@@ -579,7 +627,7 @@ int main(){
             case KEY_LEFT:
                 if(naghsheh[y_loc][x_loc - 1] == '.')
                 {
-                    if(naghsheh[y_loc][x_loc - 1] == '|'|| naghsheh[y_loc][x_loc - 1] == '0')
+                    if(naghsheh[y_loc][x_loc - 1] == '|'|| naghsheh[y_loc][x_loc - 1] == '0' || naghsheh[y_loc][x_loc - 1] == '=' || naghsheh[y_loc][x_loc - 1] == '+')
                     {
                         break;
                     }
@@ -593,7 +641,7 @@ int main(){
             case KEY_RIGHT:
                 if(naghsheh[y_loc][x_loc + 1] == '.')
                 {
-                    if(naghsheh[y_loc][x_loc + 1] == '|'|| naghsheh[y_loc][x_loc+1] == '0')
+                    if(naghsheh[y_loc][x_loc + 1] == '|'|| naghsheh[y_loc][x_loc + 1] == '0' || naghsheh[y_loc][x_loc + 1] == '=' || naghsheh[y_loc][x_loc + 1] == '+')
                     {
                         break;
                     }
