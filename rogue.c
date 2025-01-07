@@ -620,9 +620,7 @@ int main(){
 
     }
     else if(highlight == 3)
-    {
-
-    }
+    {}
     else if(highlight == 4)
     {}
 
