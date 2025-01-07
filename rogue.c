@@ -73,8 +73,8 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     x_i++;
                     distance_x--;
-                    naghsheh[y_i][x_i] = '#';
-                    mvprintw(y_i , x_i , "#");
+                    naghsheh[y_i][x_i] = '.';
+                    mvprintw(y_i , x_i , ".");
                 }
             }
             else
@@ -83,8 +83,8 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     y_i++;
                     distance_y--;
-                    naghsheh[y_i][x_i] = '#';
-                    mvprintw(y_i , x_i , "#");
+                    naghsheh[y_i][x_i] = '.';
+                    mvprintw(y_i , x_i , ".");
                 }
             }
         }
@@ -100,8 +100,8 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     x_i++;
                     distance_x--;
-                    naghsheh[y_i][x_i] = '#';
-                    mvprintw(y_i , x_i , "#");
+                    naghsheh[y_i][x_i] = '.';
+                    mvprintw(y_i , x_i , ".");
                 }
             }
             else
@@ -110,8 +110,8 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     y_i--;
                     distance_y++;
-                    naghsheh[y_i][x_i] = '#';
-                    mvprintw(y_i , x_i , "#");
+                    naghsheh[y_i][x_i] = '.';
+                    mvprintw(y_i , x_i , ".");
                 }
             }
         }
@@ -127,8 +127,8 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     x_i--;
                     distance_x++;
-                    naghsheh[y_i][x_i] = '#';
-                    mvprintw(y_i , x_i , "#");
+                    naghsheh[y_i][x_i] = '.';
+                    mvprintw(y_i , x_i , ".");
                 }
             }
             else
@@ -137,8 +137,8 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     y_i++;
                     distance_y--;
-                    naghsheh[y_i][x_i] = '#';
-                    mvprintw(y_i , x_i , "#");
+                    naghsheh[y_i][x_i] = '.';
+                    mvprintw(y_i , x_i , ".");
                 }
             }
         }
@@ -154,8 +154,8 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     x_i--;
                     distance_x++;
-                    naghsheh[y_i][x_i] = '#';
-                    mvprintw(y_i , x_i , "#");
+                    naghsheh[y_i][x_i] = '.';
+                    mvprintw(y_i , x_i , ".");
                 }
             }
             else
@@ -164,8 +164,8 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     y_i--;
                     distance_y++;
-                    naghsheh[y_i][x_i] = '#';
-                    mvprintw(y_i , x_i , "#");
+                    naghsheh[y_i][x_i] = '.';
+                    mvprintw(y_i , x_i , ".");
                 }
             }
         }
@@ -280,8 +280,8 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum)
                             (Room[i].door[door_count]).x = i_1;
                             (Room[i].door[door_count]).y = j;
                             door_count++;
-                            naghsheh[j][i_1] = '+';
-                            Room[i].map[j][i_1] = '+';
+                            naghsheh[j][i_1] = '.';
+                            Room[i].map[j][i_1] = '.';
                         }
                         else if(window > 80 && j <= y + room_hight - 3 )
                         {
@@ -303,8 +303,8 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum)
                             (Room[i].door[door_count]).x = i_1;
                             (Room[i].door[door_count]).y = j;
                             door_count++;
-                            naghsheh[j][i_1] = '+';
-                            Room[i].map[j][i_1] = '+';
+                            naghsheh[j][i_1] = '.';
+                            Room[i].map[j][i_1] = '.';
                         }
                         else if(window > 80 && j <= y + room_hight - 3 )
                         {
