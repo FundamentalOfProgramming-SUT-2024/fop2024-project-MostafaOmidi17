@@ -78,7 +78,7 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                         naghsheh[y_i][x_i] = '#';
                         mvprintw(y_i , x_i , "#");
                     }
-                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
                         mvprintw(y_i , x_i , "+");
@@ -100,7 +100,7 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                         naghsheh[y_i][x_i] = '#';
                         mvprintw(y_i , x_i , "#");
                     }
-                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
                         mvprintw(y_i , x_i , "+");
@@ -129,7 +129,7 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                         naghsheh[y_i][x_i] = '#';
                         mvprintw(y_i , x_i , "#");
                     }
-                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
                         mvprintw(y_i , x_i , "+");
@@ -151,7 +151,7 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                         naghsheh[y_i][x_i] = '#';
                         mvprintw(y_i , x_i , "#");
                     }
-                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
                         mvprintw(y_i , x_i , "+");
@@ -180,7 +180,7 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                         naghsheh[y_i][x_i] = '#';
                         mvprintw(y_i , x_i , "#");
                     }
-                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
                         mvprintw(y_i , x_i , "+");
@@ -202,7 +202,7 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                         naghsheh[y_i][x_i] = '#';
                         mvprintw(y_i , x_i , "#");
                     }
-                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
                         mvprintw(y_i , x_i , "+");
@@ -231,7 +231,7 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                         naghsheh[y_i][x_i] = '#';
                         mvprintw(y_i , x_i , "#");
                     }
-                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
                         mvprintw(y_i , x_i , "+");
@@ -253,7 +253,7 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                         naghsheh[y_i][x_i] = '#';
                         mvprintw(y_i , x_i , "#");
                     }
-                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
                         mvprintw(y_i , x_i , "+");
