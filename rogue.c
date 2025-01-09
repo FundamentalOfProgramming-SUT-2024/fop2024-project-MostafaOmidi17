@@ -73,8 +73,20 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     x_i++;
                     distance_x--;
-                    naghsheh[y_i][x_i] = '.';
-                    mvprintw(y_i , x_i , ".");
+                    if(naghsheh[y_i][x_i] == ' ')
+                    {
+                        naghsheh[y_i][x_i] = '#';
+                        mvprintw(y_i , x_i , "#");
+                    }
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    {
+                        naghsheh[y_i][x_i] = '+';
+                        mvprintw(y_i , x_i , "+");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             else
@@ -83,8 +95,20 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     y_i++;
                     distance_y--;
-                    naghsheh[y_i][x_i] = '.';
-                    mvprintw(y_i , x_i , ".");
+                    if(naghsheh[y_i][x_i] == ' ')
+                    {
+                        naghsheh[y_i][x_i] = '#';
+                        mvprintw(y_i , x_i , "#");
+                    }
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    {
+                        naghsheh[y_i][x_i] = '+';
+                        mvprintw(y_i , x_i , "+");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
         }
@@ -100,8 +124,20 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     x_i++;
                     distance_x--;
-                    naghsheh[y_i][x_i] = '.';
-                    mvprintw(y_i , x_i , ".");
+                    if(naghsheh[y_i][x_i] == ' ')
+                    {
+                        naghsheh[y_i][x_i] = '#';
+                        mvprintw(y_i , x_i , "#");
+                    }
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    {
+                        naghsheh[y_i][x_i] = '+';
+                        mvprintw(y_i , x_i , "+");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             else
@@ -110,8 +146,20 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     y_i--;
                     distance_y++;
-                    naghsheh[y_i][x_i] = '.';
-                    mvprintw(y_i , x_i , ".");
+                    if(naghsheh[y_i][x_i] == ' ')
+                    {
+                        naghsheh[y_i][x_i] = '#';
+                        mvprintw(y_i , x_i , "#");
+                    }
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    {
+                        naghsheh[y_i][x_i] = '+';
+                        mvprintw(y_i , x_i , "+");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
         }
@@ -127,8 +175,20 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     x_i--;
                     distance_x++;
-                    naghsheh[y_i][x_i] = '.';
-                    mvprintw(y_i , x_i , ".");
+                    if(naghsheh[y_i][x_i] == ' ')
+                    {
+                        naghsheh[y_i][x_i] = '#';
+                        mvprintw(y_i , x_i , "#");
+                    }
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    {
+                        naghsheh[y_i][x_i] = '+';
+                        mvprintw(y_i , x_i , "+");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             else
@@ -137,8 +197,20 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     y_i++;
                     distance_y--;
-                    naghsheh[y_i][x_i] = '.';
-                    mvprintw(y_i , x_i , ".");
+                    if(naghsheh[y_i][x_i] == ' ')
+                    {
+                        naghsheh[y_i][x_i] = '#';
+                        mvprintw(y_i , x_i , "#");
+                    }
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    {
+                        naghsheh[y_i][x_i] = '+';
+                        mvprintw(y_i , x_i , "+");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
         }
@@ -154,8 +226,20 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     x_i--;
                     distance_x++;
-                    naghsheh[y_i][x_i] = '.';
-                    mvprintw(y_i , x_i , ".");
+                    if(naghsheh[y_i][x_i] == ' ')
+                    {
+                        naghsheh[y_i][x_i] = '#';
+                        mvprintw(y_i , x_i , "#");
+                    }
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    {
+                        naghsheh[y_i][x_i] = '+';
+                        mvprintw(y_i , x_i , "+");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
             else
@@ -164,8 +248,20 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                 {
                     y_i--;
                     distance_y++;
-                    naghsheh[y_i][x_i] = '.';
-                    mvprintw(y_i , x_i , ".");
+                    if(naghsheh[y_i][x_i] == ' ')
+                    {
+                        naghsheh[y_i][x_i] = '#';
+                        mvprintw(y_i , x_i , "#");
+                    }
+                    else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|')
+                    {
+                        naghsheh[y_i][x_i] = '+';
+                        mvprintw(y_i , x_i , "+");
+                    }
+                    else
+                    {
+                        continue;
+                    }
                 }
             }
         }
@@ -280,8 +376,8 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum)
                             (Room[i].door[door_count]).x = i_1;
                             (Room[i].door[door_count]).y = j;
                             door_count++;
-                            naghsheh[j][i_1] = '.';
-                            Room[i].map[j][i_1] = '.';
+                            naghsheh[j][i_1] = '+';
+                            Room[i].map[j][i_1] = '+';
                         }
                         else if(window > 80 && j <= y + room_hight - 3 )
                         {
@@ -303,8 +399,8 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum)
                             (Room[i].door[door_count]).x = i_1;
                             (Room[i].door[door_count]).y = j;
                             door_count++;
-                            naghsheh[j][i_1] = '.';
-                            Room[i].map[j][i_1] = '.';
+                            naghsheh[j][i_1] = '+';
+                            Room[i].map[j][i_1] = '+';
                         }
                         else if(window > 80 && j <= y + room_hight - 3 )
                         {
@@ -418,7 +514,7 @@ int main(){
     init_pair(5 , COLOR_GREEN , COLOR_YELLOW);
     int row , col;
     getmaxyx(stdscr , row , col);
-    welcome_to_the_rouge();
+    // welcome_to_the_rouge();
 
 
     //file handling;
@@ -727,6 +823,8 @@ int main(){
         y_loc = spawn_py(Room[number]);
         x_loc = spawn_px(Room[number]);
         naghsheh[y_loc][x_loc] = '.';
+        attron(COLOR_PAIR(4));
+        bkgd(COLOR_PAIR(4));
         while(1)
         {
             refresh();
@@ -743,18 +841,57 @@ int main(){
                     }
                     else if(naghsheh[y_loc - 1][x_loc] == '.')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        y_loc--;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            y_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            y_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            y_loc--;
+                        }
                     }
                     else if(naghsheh[y_loc - 1][x_loc] == '+')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        y_loc--;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            y_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            y_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            y_loc--;
+                        }
                     }
                     else if(naghsheh[y_loc - 1][x_loc] == '#')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        y_loc--;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            y_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            y_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            y_loc--;
+                        }
                     }
                 }
                 break;
@@ -767,18 +904,57 @@ int main(){
                     }
                     else if(naghsheh[y_loc + 1][x_loc] == '.')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        y_loc++;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            y_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            y_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            y_loc++;
+                        }
                     }
                     else if(naghsheh[y_loc + 1][x_loc] == '+')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        y_loc++;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            y_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            y_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            y_loc++;
+                        }
                     }
                     else if(naghsheh[y_loc + 1][x_loc] == '#')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        y_loc++;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            y_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            y_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            y_loc++;
+                        }
                     }
                 }
                 break;
@@ -791,18 +967,57 @@ int main(){
                     }
                     else if(naghsheh[y_loc][x_loc - 1] == '.')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        x_loc--;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            x_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            x_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            x_loc--;
+                        }
                     }
                     else if(naghsheh[y_loc][x_loc - 1] == '+')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        x_loc--;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            x_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            x_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            x_loc--;
+                        }
                     }
                     else if(naghsheh[y_loc][x_loc - 1] == '#')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        x_loc--;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            x_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            x_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            x_loc--;
+                        }
                     }
                 }
                 break;
@@ -815,18 +1030,57 @@ int main(){
                     }
                     else if(naghsheh[y_loc][x_loc + 1] == '.')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        x_loc++;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            x_loc++;
+                        }
                     }
                     else if(naghsheh[y_loc][x_loc + 1] == '+')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        x_loc++;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            x_loc++;
+                        }
                     }
                     else if(naghsheh[y_loc][x_loc + 1] == '#')
                     {
-                        mvprintw(y_loc , x_loc , ".");
-                        x_loc++;
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            x_loc++;
+                        }
                     }
                 }
                 break;
