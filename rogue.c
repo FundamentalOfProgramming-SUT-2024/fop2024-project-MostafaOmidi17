@@ -3,11 +3,19 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+// #include <cjson/cJSON.h> 
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL.h>
+#define track_1 "1.mp3"
+#define track_2 "2.mp3"
+#define track_3 "3.mp3"
 #define MAX_SIZE 400
-char naghsheh[MAX_SIZE][MAX_SIZE];
+char dungeons[4][MAX_SIZE][MAX_SIZE];
 
 
-typedef struct prof{
+
+typedef struct prof
+{
     char name[MAX_SIZE];
     char password[MAX_SIZE];
     char e_mail[MAX_SIZE];
@@ -37,11 +45,11 @@ typedef struct rooms
 }rooms;
 
 
+
 int distance(int a , int b)
 {
     return abs(a - b);
 }
-
 
 
 void SeedRand()
@@ -58,7 +66,7 @@ int Random(int min , int max)
 }
 
 
-void connect(int x_i , int y_i , int x_f , int y_f)
+void connect(int x_i , int y_i , int x_f , int y_f , char naghsheh[][MAX_SIZE])
 {
     int distance_x = x_f - x_i;
     int distance_y = y_f - y_i;
@@ -76,12 +84,10 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                     if(naghsheh[y_i][x_i] == ' ')
                     {
                         naghsheh[y_i][x_i] = '#';
-                        mvprintw(y_i , x_i , "#");
                     }
                     else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
-                        mvprintw(y_i , x_i , "+");
                     }
                     else
                     {
@@ -98,12 +104,10 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                     if(naghsheh[y_i][x_i] == ' ')
                     {
                         naghsheh[y_i][x_i] = '#';
-                        mvprintw(y_i , x_i , "#");
                     }
                     else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
-                        mvprintw(y_i , x_i , "+");
                     }
                     else
                     {
@@ -127,12 +131,10 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                     if(naghsheh[y_i][x_i] == ' ')
                     {
                         naghsheh[y_i][x_i] = '#';
-                        mvprintw(y_i , x_i , "#");
                     }
                     else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
-                        mvprintw(y_i , x_i , "+");
                     }
                     else
                     {
@@ -149,12 +151,10 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                     if(naghsheh[y_i][x_i] == ' ')
                     {
                         naghsheh[y_i][x_i] = '#';
-                        mvprintw(y_i , x_i , "#");
                     }
                     else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
-                        mvprintw(y_i , x_i , "+");
                     }
                     else
                     {
@@ -178,12 +178,10 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                     if(naghsheh[y_i][x_i] == ' ')
                     {
                         naghsheh[y_i][x_i] = '#';
-                        mvprintw(y_i , x_i , "#");
                     }
                     else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
-                        mvprintw(y_i , x_i , "+");
                     }
                     else
                     {
@@ -200,12 +198,10 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                     if(naghsheh[y_i][x_i] == ' ')
                     {
                         naghsheh[y_i][x_i] = '#';
-                        mvprintw(y_i , x_i , "#");
                     }
                     else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
-                        mvprintw(y_i , x_i , "+");
                     }
                     else
                     {
@@ -229,12 +225,10 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                     if(naghsheh[y_i][x_i] == ' ')
                     {
                         naghsheh[y_i][x_i] = '#';
-                        mvprintw(y_i , x_i , "#");
                     }
                     else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
-                        mvprintw(y_i , x_i , "+");
                     }
                     else
                     {
@@ -251,12 +245,10 @@ void connect(int x_i , int y_i , int x_f , int y_f)
                     if(naghsheh[y_i][x_i] == ' ')
                     {
                         naghsheh[y_i][x_i] = '#';
-                        mvprintw(y_i , x_i , "#");
                     }
                     else if(naghsheh[y_i][x_i] == '-' || naghsheh[y_i][x_i] == '|' || naghsheh[y_i][x_i] == '=')
                     {
                         naghsheh[y_i][x_i] = '+';
-                        mvprintw(y_i , x_i , "+");
                     }
                     else
                     {
@@ -270,10 +262,8 @@ void connect(int x_i , int y_i , int x_f , int y_f)
 
 
 
-
-
-
-int is_char(char a){
+int is_char(char a)
+{
     if((a >= 'a' && a <= 'z') || (a >= 'A' && a <= 'Z')){
         return 1;
     }
@@ -282,7 +272,9 @@ int is_char(char a){
 
 
 
-void welcome_to_the_rouge(){
+
+void welcome_to_the_rouge()
+{
     char welcome[100] = "Welcome to the Rogue!";
     char *p = welcome;
     int len_1 = strlen(welcome);
@@ -308,7 +300,7 @@ void welcome_to_the_rouge(){
 
 
 
-void generate_map(int row , int col , rooms Room[] , int RoomNum)
+void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh[][MAX_SIZE])
 {
     for (int i = 0; i < row; i++)
     {
@@ -435,20 +427,11 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum)
         }
     }
 
-    for (int i = 0; i < col; i++)
-    {
-        for (int j = 0; j < row; j++)
-        {
-            mvaddch(j , i , naghsheh[j][i]);
-        }
-        
-    }
-    
-
 }
 
 
-void generate_corridor(rooms Room[] , int RoomNum)
+
+void generate_corridor(rooms Room[] , int RoomNum , char naghsheh[][MAX_SIZE])
 {
     for(int i = 0 ; i < RoomNum ; i++)
     {
@@ -461,7 +444,7 @@ void generate_corridor(rooms Room[] , int RoomNum)
             int x_f = Room[Rand_connect].door->x;
             int y_f = Room[Rand_connect].door->y;
             location finish = {x_f , y_f};
-            connect(init.x , init.y , finish.x , finish.y);
+            connect(init.x , init.y , finish.x , finish.y , naghsheh);
         }
     }
 }
@@ -478,8 +461,32 @@ int spawn_py(rooms Room)
 }
 
 
-void print_map(int row , int col , char naghsheh[row][col])
+
+
+void copy_map(int row , int col , char naghsheh[][MAX_SIZE] , char dungen[][MAX_SIZE])
 {
+    for(int i = 0 ; i < col ; i++)
+    {
+        for(int j = 0 ; j < row ; j++)
+        {
+            naghsheh[j][i] = dungen[j][i];
+        }
+    }
+}
+
+void spawn_trap(){}
+
+
+void spawn_food(){}
+
+void spawn_stairs(){}
+
+
+
+void print_map(int row , int col , char naghsheh[][MAX_SIZE])
+{
+    clear();
+    move(0,0);
     for (int i = 0; i < col; i++)
     {
         for (int j = 0; j < row; j++)
@@ -491,10 +498,24 @@ void print_map(int row , int col , char naghsheh[row][col])
 }
 
 
+
 void game(){}
 
 
-int main(){
+
+int main()
+{
+
+
+
+    // if(SDL_Init(SDL_INIT_AUDIO) < 0)
+    // {
+    //     printf("SDL couldnt initialize Eror: %s" , SDL_GetError());
+    // }
+    // if(Mix_OpenAudio(44100 , MIX_DEFAULT_FORMAT , 2 , 2048) < 0)
+    // {
+    //     printf("Error: %s" , Mix_GetError());
+    // }
 
     initscr();
 
@@ -505,7 +526,8 @@ int main(){
         start_color();
     }
 
-
+    // Mix_Music* music_1;
+    // music_1 = NULL;
     
     init_pair(1 , COLOR_RED , COLOR_WHITE);
     init_pair(2 , COLOR_RED , COLOR_YELLOW);
@@ -515,7 +537,7 @@ int main(){
     int row , col;
     getmaxyx(stdscr , row , col);
     // welcome_to_the_rouge();
-
+    
 
     //file handling;
 
@@ -811,20 +833,34 @@ int main(){
         keypad(stdscr , TRUE);
         clear();
         bkgd(' ');
-        rooms Room[9];
-        int RoomNum;
-        RoomNum = Random(3 , 9);
-        generate_map(row , col , Room , RoomNum);
-        generate_corridor(Room , RoomNum);
-        
-        int number = Random(0 , RoomNum - 1);
+        rooms Room[4][9];
+        int RoomNum[4];
+        for(int i = 0 ; i < 4 ; i++)
+        {
+            RoomNum[i] = Random(3 , 9);
+        }
+        generate_map(row , col , Room[0] , RoomNum[0] , dungeons[0]);
+        generate_corridor(Room[0] , RoomNum[0] , dungeons[0]);
+        generate_map(row , col , Room[1] , RoomNum[1] , dungeons[1]);
+        generate_corridor(Room[1] , RoomNum[1] , dungeons[1]);
+        generate_map(row , col , Room[2] , RoomNum[2] , dungeons[2]);
+        generate_corridor(Room[2] , RoomNum[2] , dungeons[2]);
+        generate_map(row , col , Room[3] , RoomNum[3] , dungeons[3]);
+        generate_corridor(Room[3] , RoomNum[3] , dungeons[3]);
+
+
+        char naghsheh[MAX_SIZE][MAX_SIZE];
+
+        copy_map(row , col , naghsheh , dungeons[0]);
+        int number = Random(0 , RoomNum[0] - 1);
         int y_loc;
         int x_loc;
-        y_loc = spawn_py(Room[number]);
-        x_loc = spawn_px(Room[number]);
+        y_loc = spawn_py(Room[0][number]);
+        x_loc = spawn_px(Room[0][number]);
         naghsheh[y_loc][x_loc] = '.';
         attron(COLOR_PAIR(4));
         bkgd(COLOR_PAIR(4));
+        print_map(row , col , naghsheh);
         while(1)
         {
             refresh();
@@ -1090,20 +1126,120 @@ int main(){
             
         }
         getch();
-        // wgetch(game_win);
-        //wall "| & _"
-        //floor "."
-        //door "+"
-        //corridor "#"
-        //pillar "O"
-        //window "="
+        // 
 
     }
     else if(highlight == 3)
-    {}
+    {
+        WINDOW* setting_menu = newwin(row , col , 0 , 0);
+        box(setting_menu,0,0);
+        refresh();
+        wrefresh(setting_menu);
+        wbkgd(setting_menu , COLOR_PAIR(4));
+        char setting_info[3][100] = {"music"};
+        int info1_len = strlen(setting_info[0]);
+        char Tracks[4][10] = {"Track 1" , "Track 2" , "Track 3" , "NO Music"};
+        mvwprintw(setting_menu , 0 , col/2 - info1_len/2 , setting_info[0]);
+        int highlight_s = 0;
+        int decision_s;
+        noecho();
+        while(1){
+            for(int i = 0 ; i < 4 ; i++){
+                int len = strlen(Tracks[i]);
+                if(i == highlight_s){
+                    wattron(menu_win , A_REVERSE);
+                }
+                mvwprintw(menu_win , i + row/2 - 4 , col/2 - len/2 , Tracks[i]);
+                wattroff(menu_win , A_REVERSE);
+            }
+            decision_s = wgetch(menu_win);
+            switch(decision_s){
+                case KEY_UP:
+                    highlight_s--;
+                    if(highlight_s == -1){
+                        highlight_s = 3;
+                    }
+                    break;
+                case KEY_DOWN:
+                    highlight_s++;
+                    if(highlight_s == 4){
+                        highlight_s = 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if(decision_s == 10){
+                break;
+            }
+        }
+        
+        // if(highlight_s == 0)
+        // {
+        //     if(music_1 == NULL)
+        //     {
+        //         music_1 = Mix_LoadMUS(track_1);
+        //         Mix_PlayMusic(music_1 , -1);
+        //     }
+        //     else
+        //     {
+        //         Mix_HaltMusic();
+        //         Mix_FreeMusic(music_1);
+        //         music_1 = NULL;
+        //         Mix_CloseAudio();
+        //         music_1 = Mix_LoadMUS(track_1);
+        //         Mix_PlayMusic(music_1 , -1);
+        //     }
+        // }
+        // if(highlight_s == 1)
+        // {
+        //     if(music_1 == NULL)
+        //     {
+        //         music_1 = Mix_LoadMUS(track_2);
+        //         Mix_PlayMusic(music_1 , -1);
+        //     }
+        //     else
+        //     {
+        //         Mix_HaltMusic();
+        //         Mix_FreeMusic(music_1);
+        //         music_1 = NULL;
+        //         Mix_CloseAudio();
+        //         music_1 = Mix_LoadMUS(track_2);
+        //         Mix_PlayMusic(music_1 , -1);
+        //     }
+        // }
+        // if(highlight_s == 2)
+        // {
+        //     if(music_1 == NULL)
+        //     {
+        //         music_1 = Mix_LoadMUS(track_3);
+        //         Mix_PlayMusic(music_1 , -1);
+        //     }
+        //     else
+        //     {
+        //         Mix_HaltMusic();
+        //         Mix_FreeMusic(music_1);
+        //         music_1 = NULL;
+        //         Mix_CloseAudio();
+        //         music_1 = Mix_LoadMUS(track_3);
+        //         Mix_PlayMusic(music_1 , -1);
+        //     }
+        // }
+        // if(highlight_s == 3)
+        // {
+        //     if(music_1 != NULL)
+        //     {
+        //         Mix_HaltMusic();
+        //         Mix_FreeMusic(music_1);
+        //         music_1 = NULL;
+        //         Mix_CloseAudio();
+        //     }
+        // }
+    }
     else if(highlight == 4)
     {}
-
+    // getchar();
+    // SDL_Quit();
     endwin();
     return 0;
 }
