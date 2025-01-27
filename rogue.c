@@ -19,9 +19,11 @@ typedef struct prof
     char name[MAX_SIZE];
     char password[MAX_SIZE];
     char e_mail[MAX_SIZE];
+    char map[4][MAX_SIZE][MAX_SIZE];
     int points;
     int gold_reserve;
     int experience;
+    int health;
 }profile;
 
 
@@ -33,6 +35,22 @@ typedef struct location
 }location;
 
 
+typedef struct food
+{
+    /* data */
+}food;
+
+
+typedef struct trap
+{
+    int x;
+    int y;
+    int show;
+}trap;
+
+
+
+
 typedef struct rooms
 {
     int size_x;
@@ -42,6 +60,8 @@ typedef struct rooms
     char map[MAX_SIZE][MAX_SIZE];
     int numdoor;
     location door[MAX_SIZE];
+    // location foods[MAX_SIZE];
+    trap traps[MAX_SIZE];
 }rooms;
 
 
@@ -371,11 +391,6 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh
                             naghsheh[j][i_1] = '+';
                             Room[i].map[j][i_1] = '+';
                         }
-                        else if(window > 80 && j <= y + room_hight - 3 )
-                        {
-                            naghsheh[j][i_1] = '=';
-                            Room[i].map[j][i_1] = '=';
-                        }
                         else
                         {
                             naghsheh[j][i_1] = '|';
@@ -407,18 +422,28 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh
                     }
                     else
                     {
-                        int pilar = Random(0,2);
-                        if(pilar && pillar_count < 4 && j > y + 1 && j < room_hight + y - 1 && i_1 > x + 1 && i_1 < x + room_width - 1)
+                        int pilar = Random(0,10);
+                        if(pilar == 0 && pillar_count < 4 && j > y + 1 && j < room_hight + y - 1 && i_1 > x + 1 && i_1 < x + room_width - 1)
                         {
                             pillar_count++;
                             naghsheh[j][i_1] = '0';
                             Room[i].map[j][i_1] = '0';
                         }
+                        else if(pilar == 1)
+                        {
+                            naghsheh[j][i_1] = '^';
+                            Room[i].map[j][i_1] = '^';
+                        }
+                        else if(pilar == 2)
+                        {
+                            //food
+                            naghsheh[j][i_1] = 'f';
+                            Room[i].map[j][i_1] = 'f';
+                        }
                         else
                         {
                             naghsheh[j][i_1] = '.';
                             Room[i].map[j][i_1] = '.';
-
                         }
                     }
                 }
@@ -447,6 +472,34 @@ void generate_corridor(rooms Room[] , int RoomNum , char naghsheh[][MAX_SIZE])
             connect(init.x , init.y , finish.x , finish.y , naghsheh);
         }
     }
+    // for(int i = 0 ; i < RoomNum ; i++)
+    // {
+    //     for(int j = 0 ; j < Room[i].numdoor ; j++)
+    //     {
+    //         int x_i = Room[i].door->x;
+    //         int y_i = Room[i].door->y;
+    //         if(naghsheh[y_i - 1][x_i] != '#' && naghsheh[y_i + 1][x_i] != '#' && naghsheh[y_i][x_i - 1] != '#' && naghsheh[y_i][x_i + 1] != '#')
+    //         {
+    //             if(naghsheh[y_i][x_i - 1] == '.' || naghsheh[y_i][x_i - 1] == '0' || naghsheh[y_i][x_i - 1] == '^')
+    //             {
+    //                 naghsheh[y_i][x_i] = '|';
+    //             }
+    //             else if(naghsheh[y_i][x_i + 1] == '.' || naghsheh[y_i][x_i + 1] == '0' || naghsheh[y_i][x_i + 1] == '^')
+    //             {
+    //                 naghsheh[y_i][x_i] = '|';
+    //             }
+    //             else if(naghsheh[y_i - 1][x_i] == '.' || naghsheh[y_i - 1][x_i] == '0' || naghsheh[y_i - 1][x_i] == '^')
+    //             {
+    //                 naghsheh[y_i][x_i] = '|';
+    //             }
+    //             else if(naghsheh[y_i + 1][x_i] == '.' || naghsheh[y_i + 1][x_i] == '0' || naghsheh[y_i + 1][x_i] == '^')
+    //             {
+    //                 naghsheh[y_i][x_i] = '|';
+    //             }
+    //         }
+    //     }
+    // }
+
 }
 
 
@@ -477,7 +530,6 @@ void copy_map(int row , int col , char naghsheh[][MAX_SIZE] , char dungen[][MAX_
 void spawn_trap(){}
 
 
-void spawn_food(){}
 
 void spawn_stairs(){}
 
@@ -491,7 +543,10 @@ void print_map(int row , int col , char naghsheh[][MAX_SIZE])
     {
         for (int j = 0; j < row; j++)
         {
-            mvaddch(j , i , naghsheh[j][i]);
+            if(naghsheh[j][i] != '^')
+                mvaddch(j , i , naghsheh[j][i]);
+            else if
+                mvaddch(j , i , '.');
         }
         
     }
@@ -518,7 +573,7 @@ int main()
     // }
 
     initscr();
-
+    curs_set(0);
 
     SeedRand();
     if(has_colors())
@@ -722,6 +777,58 @@ int main()
             wrefresh(new_usr_win);
         }
         noecho();
+        clear();
+        WINDOW * game_menu = newwin(row , col , 0 , 0);
+        box(game_menu , 0 , 0);
+        keypad(game_menu , TRUE);
+        refresh();
+        wrefresh(game_menu);
+        wbkgd(game_menu , COLOR_PAIR(3));
+        char game_option[2][MAX_SIZE] = { "<new game>" ,
+                                          "<load last game>"};
+        int game_highlight = 0;
+        int game_decision;
+        while(1)
+        {
+            for(int i = 0 ; i < 2 ; i++)
+            {
+                int game_len = strlen(game_option[i]);
+                if(i == game_highlight)
+                {
+                    wattron(game_menu , A_REVERSE);
+                }
+                mvwprintw(game_menu , i + row/2 - 4 , col/2 - game_len/2 , game_option[i]);
+                wattroff(game_menu , A_REVERSE);
+            }
+            game_decision = wgetch(game_menu);
+            switch (game_decision)
+            {
+            case KEY_UP:
+                game_highlight--;
+                if(game_highlight == -1)
+                {
+                    game_highlight = 1;
+                }
+                break;
+            case KEY_DOWN:
+                game_highlight++;
+                if(game_highlight == 2)
+                {
+                    game_highlight = 0;
+                }
+                break;
+            default:
+                break;
+            }
+            if(game_decision == 10)
+            {
+                break;
+            }
+        }
+        if(game_highlight == 0)
+        {}
+        else
+        {}
     }
     else if(highlight == 1)
     {
@@ -825,6 +932,57 @@ int main()
             wrefresh(new_usr_win);
         }
         noecho();
+        clear();
+        WINDOW * game_menu = newwin(row , col , 0 , 0);
+        box(game_menu , 0 , 0);
+        keypad(game_menu , TRUE);
+        refresh();
+        wrefresh(game_menu);
+        wbkgd(game_menu , COLOR_PAIR(3));
+        char game_option[2][MAX_SIZE] = { "<new game>" ,
+                                          "<load last game>"};
+        int game_highlight = 0;
+        int game_decision;
+        while(1)
+        {
+            for(int i = 0 ; i < 2 ; i++)
+            {
+                int game_len = strlen(game_option[i]);
+                if(i == game_highlight)
+                {
+                    wattron(game_menu , A_REVERSE);
+                }
+                mvwprintw(game_menu , i + row/2 - 4 , col/2 - game_len/2 , game_option[i]);
+                wattroff(game_menu , A_REVERSE);
+            }
+            game_decision = wgetch(game_menu);
+            switch (game_decision)
+            {
+            case KEY_UP:
+                game_highlight--;
+                if(game_highlight == -1)
+                {
+                    game_highlight = 1;
+                }
+                break;
+            case KEY_DOWN:
+                game_highlight++;
+                if(game_highlight == 2)
+                {
+                    game_highlight = 0;
+                }
+            default:
+                break;
+            }
+            if(game_decision == 10)
+            {
+                break;
+            }
+        }
+        if(game_highlight == 0)
+        {}
+        else
+        {}
 
     }
     else if(highlight == 2)
@@ -848,6 +1006,16 @@ int main()
         generate_map(row , col , Room[3] , RoomNum[3] , dungeons[3]);
         generate_corridor(Room[3] , RoomNum[3] , dungeons[3]);
 
+        profile guest;
+        strcpy(guest.name , "guest-usr");
+        copy_map(row , col , guest.map[0] , dungeons[0]);
+        copy_map(row , col , guest.map[1] , dungeons[1]);
+        copy_map(row , col , guest.map[2] , dungeons[2]);
+        copy_map(row , col , guest.map[3] , dungeons[3]);
+        guest.health = 100;
+        guest.points = 0;
+        guest.gold_reserve = 0;
+        guest.experience = 1;
 
         char naghsheh[MAX_SIZE][MAX_SIZE];
 
@@ -861,15 +1029,22 @@ int main()
         attron(COLOR_PAIR(4));
         bkgd(COLOR_PAIR(4));
         print_map(row , col , naghsheh);
+        int out = 0;
         while(1)
         {
+            if(out == 1)
+            {
+                break;
+            }
             refresh();
             mvprintw(y_loc , x_loc , "o");
+            mvprintw(0 , 0 , "your health is %d" , guest.health);
+            mvprintw(0 , 20 , "your point is %d" , guest.points);
             int kilid = getch();
             switch (kilid)
             {
             case KEY_UP:
-                if(naghsheh[y_loc - 1][x_loc] == '.' || naghsheh[y_loc - 1][x_loc] == '#' || naghsheh[y_loc - 1][x_loc] == '+')
+                if(naghsheh[y_loc - 1][x_loc] == '.' || naghsheh[y_loc - 1][x_loc] == '#' || naghsheh[y_loc - 1][x_loc] == '+'  || naghsheh[y_loc - 1][x_loc] == '^')
                 {
                     if(naghsheh[y_loc - 1][x_loc] == '-'|| naghsheh[y_loc - 1][x_loc] == '0' || naghsheh[y_loc - 1][x_loc] == '=')
                     {
@@ -892,6 +1067,11 @@ int main()
                             mvprintw(y_loc , x_loc , "#");
                             y_loc--;
                         }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            y_loc--;
+                        }
                     }
                     else if(naghsheh[y_loc - 1][x_loc] == '+')
                     {
@@ -908,6 +1088,11 @@ int main()
                         else if(naghsheh[y_loc][x_loc] == '#')
                         {
                             mvprintw(y_loc , x_loc , "#");
+                            y_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
                             y_loc--;
                         }
                     }
@@ -928,11 +1113,39 @@ int main()
                             mvprintw(y_loc , x_loc , "+");
                             y_loc--;
                         }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            y_loc--;
+                        }
+                    }
+                    else if(naghsheh[y_loc - 1][x_loc] == '^')
+                    {
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            y_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            y_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            y_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            y_loc--;
+                        }
                     }
                 }
                 break;
             case KEY_DOWN:
-                if(naghsheh[y_loc + 1][x_loc] == '.' || naghsheh[y_loc + 1][x_loc] == '#' || naghsheh[y_loc + 1][x_loc] == '+')
+                if(naghsheh[y_loc + 1][x_loc] == '.' || naghsheh[y_loc + 1][x_loc] == '#' || naghsheh[y_loc + 1][x_loc] == '+' || naghsheh[y_loc + 1][x_loc] == '^')
                 {
                     if(naghsheh[y_loc + 1][x_loc] == '-'|| naghsheh[y_loc + 1][x_loc] == '0' || naghsheh[y_loc + 1][x_loc] == '=')
                     {
@@ -955,6 +1168,11 @@ int main()
                             mvprintw(y_loc , x_loc , "#");
                             y_loc++;
                         }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            y_loc++;
+                        }
                     }
                     else if(naghsheh[y_loc + 1][x_loc] == '+')
                     {
@@ -971,6 +1189,11 @@ int main()
                         else if(naghsheh[y_loc][x_loc] == '#')
                         {
                             mvprintw(y_loc , x_loc , "#");
+                            y_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
                             y_loc++;
                         }
                     }
@@ -991,11 +1214,39 @@ int main()
                             mvprintw(y_loc , x_loc , "+");
                             y_loc++;
                         }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            y_loc++;
+                        }
+                    }
+                    else if(naghsheh[y_loc + 1][x_loc] == '^')
+                    {
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            y_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            y_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            y_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            y_loc++;
+                        }
                     }
                 }
                 break;
             case KEY_LEFT:
-                if(naghsheh[y_loc][x_loc - 1] == '.' || naghsheh[y_loc][x_loc - 1] == '#' || naghsheh[y_loc][x_loc - 1] == '+')
+                if(naghsheh[y_loc][x_loc - 1] == '.' || naghsheh[y_loc][x_loc - 1] == '#' || naghsheh[y_loc][x_loc - 1] == '+' || naghsheh[y_loc][x_loc - 1] == '^')
                 {
                     if(naghsheh[y_loc][x_loc - 1] == '|'|| naghsheh[y_loc][x_loc - 1] == '0' || naghsheh[y_loc][x_loc - 1] == '=')
                     {
@@ -1018,6 +1269,11 @@ int main()
                             mvprintw(y_loc , x_loc , "#");
                             x_loc--;
                         }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            x_loc--;
+                        }
                     }
                     else if(naghsheh[y_loc][x_loc - 1] == '+')
                     {
@@ -1034,6 +1290,11 @@ int main()
                         else if(naghsheh[y_loc][x_loc] == '#')
                         {
                             mvprintw(y_loc , x_loc , "#");
+                            x_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
                             x_loc--;
                         }
                     }
@@ -1054,11 +1315,39 @@ int main()
                             mvprintw(y_loc , x_loc , "+");
                             x_loc--;
                         }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            x_loc--;
+                        }
+                    }
+                    else if(naghsheh[y_loc][x_loc - 1] == '^')
+                    {
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            x_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            x_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            x_loc--;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            x_loc--;
+                        }
                     }
                 }
                 break;
             case KEY_RIGHT:
-                if(naghsheh[y_loc][x_loc + 1] == '.' || naghsheh[y_loc][x_loc + 1] == '#' || naghsheh[y_loc][x_loc + 1] == '+')
+                if(naghsheh[y_loc][x_loc + 1] == '.' || naghsheh[y_loc][x_loc + 1] == '#' || naghsheh[y_loc][x_loc + 1] == '+' || naghsheh[y_loc][x_loc + 1] == '^')
                 {
                     if(naghsheh[y_loc][x_loc + 1] == '|'|| naghsheh[y_loc][x_loc + 1] == '0' || naghsheh[y_loc][x_loc + 1] == '=')
                     {
@@ -1081,6 +1370,11 @@ int main()
                             mvprintw(y_loc , x_loc , "#");
                             x_loc++;
                         }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            x_loc++;
+                        }
                     }
                     else if(naghsheh[y_loc][x_loc + 1] == '+')
                     {
@@ -1097,6 +1391,11 @@ int main()
                         else if(naghsheh[y_loc][x_loc] == '#')
                         {
                             mvprintw(y_loc , x_loc , "#");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
                             x_loc++;
                         }
                     }
@@ -1117,15 +1416,123 @@ int main()
                             mvprintw(y_loc , x_loc , "+");
                             x_loc++;
                         }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            x_loc++;
+                        }
+                    }
+                    else if(naghsheh[y_loc][x_loc + 1] == '.')
+                    {
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            x_loc++;
+                        }
+                    }
+                    else if(naghsheh[y_loc][x_loc + 1] == '^')
+                    {
+                        if(naghsheh[y_loc][x_loc] == '.')
+                        {
+                            mvprintw(y_loc , x_loc , ".");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '+')
+                        {
+                            mvprintw(y_loc , x_loc , "+");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '#')
+                        {
+                            mvprintw(y_loc , x_loc , "#");
+                            x_loc++;
+                        }
+                        else if(naghsheh[y_loc][x_loc] == '^')
+                        {
+                            mvprintw(y_loc , x_loc , "^");
+                            x_loc++;
+                        }
                     }
                 }
+                break;
+            case 'S':
+                WINDOW* setting = newwin(row , col , 0 , 0);
+                box(setting , 0 , 0);
+                refresh();
+                keypad(setting , TRUE);
+                wrefresh(setting);
+                wbkgd(setting , COLOR_PAIR(4));
+                char setting_option[2][MAX_SIZE] = {"SAVE" , "EXIT"};
+                int setting_highlight = 0;
+                int setting_decision;
+                while (1)
+                {
+                    for(int i = 0 ; i < 2 ; i++)
+                    {
+                        int setting_len = strlen(setting_option[i]);
+                        if(i == setting_highlight)
+                        {
+                            wattron(setting , A_REVERSE);
+                        }
+                        mvwprintw(setting , i + row/2 - 4 , col/2 - setting_len/2 , setting_option[i]);
+                        wattroff(setting , A_REVERSE);
+                    }
+                    setting_decision = wgetch(setting);
+                    switch (setting_decision)
+                    {
+                    case KEY_UP:
+                        setting_highlight--;
+                        if(setting_highlight == -1)
+                        {
+                            setting_highlight = 1;
+                        }
+                        break;
+                    case KEY_DOWN:
+                        setting_highlight++;
+                        if(setting_highlight == 2)
+                        {
+                            setting_highlight = 0;
+                        }
+                        break;
+                    default:
+                        break;
+                    }
+                    if(setting_decision == 10)
+                    {
+                        break;
+                    }
+                }
+                if(setting_highlight == 0)
+                {
+                    clear();
+                    print_map(row , col , naghsheh);
+                }
+                else
+                {
+                    out = 1;
+                }
+                
                 break;
             default:
                 break;
             }
             
         }
-        getch();
         // 
 
     }
