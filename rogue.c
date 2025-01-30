@@ -610,7 +610,7 @@ void init_show(int show[MAX_SIZE][MAX_SIZE] , int row , int col)
 }
 
 
-void showroom(rooms room[] , int show[MAX_SIZE][MAX_SIZE] , int roomNum)
+void showroom(rooms room[] , char map[MAX_SIZE][MAX_SIZE] , int show[MAX_SIZE][MAX_SIZE] , int roomNum)
 {
     int y = room[roomNum].y_c;
     int x = room[roomNum].x_c;
@@ -620,12 +620,15 @@ void showroom(rooms room[] , int show[MAX_SIZE][MAX_SIZE] , int roomNum)
     {
         for(int j = x ; j < x + size_x ; j++)
         {
-            show[i][j] = 1;
+            if(istrap(map[i][j]))
+                show[i][j] = 0;
+            else
+                show[i][j] = 1;
         }
     }
 }
 
-void showcorridor(int show[MAX_SIZE][MAX_SIZE] , int x , int y)
+void showcorridor(char map[MAX_SIZE][MAX_SIZE] , int show[MAX_SIZE][MAX_SIZE] , int x , int y)
 {
     for(int i = y - 5; i < y + 5 ; i++)
     {
@@ -636,9 +639,10 @@ void showcorridor(int show[MAX_SIZE][MAX_SIZE] , int x , int y)
     }
 }
 
-void showtraps(naghseh dungeons , int x , int y)
+void showtraps(char map[MAX_SIZE][MAX_SIZE] , int show[MAX_SIZE][MAX_SIZE], int x , int y)
 {
-    dungeons.show[y][x] = 1;
+    show[y][x] = 1;
+    map[y][x] = 't';
 }
 
 
@@ -652,8 +656,10 @@ void print_map(int row , int col , char map[MAX_SIZE][MAX_SIZE] , int show[MAX_S
     {
         for (int j = 0; j < row; j++)
         {
-            if(show[j][i] == 1)
+            if(show[j][i] == 1 && !istrap(map[j][i]))
                 mvaddch(j , i , map[j][i]);
+            else if(istrap(map[j][i]) && show[j][i] == 1)
+                mvaddch(j , i , '.');
             else
                 mvaddch(j , i , ' ');
         }
@@ -1139,7 +1145,7 @@ int main()
         bkgd(COLOR_PAIR(4));
         // getch();
         init_show(dungeons[0].show , row , col);
-        showroom(dungeons[0].room , dungeons[0].show , number);
+        showroom(dungeons[0].room , dungeons[0].naghseh , dungeons[0].show , number);
         print_map(row , col , dungeons[0].naghseh , dungeons[0].show);
         int out = 0;
         while(1)
@@ -1150,7 +1156,7 @@ int main()
                 break;
             }
             refresh();
-            showcorridor(dungeons[0].show , x_loc , y_loc);
+            showcorridor(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
             print_map(row , col , dungeons[0].naghseh , dungeons[0].show);
             mvprintw(y_loc , x_loc , "@");
             mvprintw(0 , 0 , "your health is %d |" , guest.health);
@@ -1167,100 +1173,48 @@ int main()
                     }
                     else if(isfloor(dungeons[0].naghseh[y_loc - 1][x_loc]))
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            y_loc--;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            y_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            // mvprintw(y_loc , x_loc , "#");
-                            y_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            y_loc--;
-                        }
+                        y_loc--;
                     }
                     else if(dungeons[0].naghseh[y_loc - 1][x_loc] == '+')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            y_loc--;
+                           showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            y_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            y_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            y_loc--;
-                        }
+                        y_loc--;
                     }
                     else if(dungeons[0].naghseh[y_loc - 1][x_loc] == '#')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            y_loc--;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            y_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            y_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            y_loc--;
-                        }
+                        y_loc--;
                     }
                     else if(dungeons[0].naghseh[y_loc - 1][x_loc] == '^')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            y_loc--;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
+                        y_loc--;
+                    }
+                    else if(isfood(dungeons[0].naghseh[y_loc - 1][x_loc]))
+                    {
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , "+");
-                            y_loc--;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            y_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            y_loc--;
-                        }
+                        y_loc--;
                     }
                 }
                 break;
             case KEY_DOWN:
-                if(dungeons[0].naghseh[y_loc + 1][x_loc] == '.' || dungeons[0].naghseh[y_loc + 1][x_loc] == '#' || dungeons[0].naghseh[y_loc + 1][x_loc] == '+' || dungeons[0].naghseh[y_loc + 1][x_loc] == '^')
+                if(isfloor(dungeons[0].naghseh[y_loc + 1][x_loc]) || iscorridor(dungeons[0].naghseh[y_loc + 1][x_loc]) || isdoor(dungeons[0].naghseh[y_loc + 1][x_loc]) || istrap(dungeons[0].naghseh[y_loc + 1][x_loc]) || isfood(dungeons[0].naghseh[y_loc + 1][x_loc]))
                 {
                     if(dungeons[0].naghseh[y_loc + 1][x_loc] == '-'|| dungeons[0].naghseh[y_loc + 1][x_loc] == '0' || dungeons[0].naghseh[y_loc + 1][x_loc] == '=')
                     {
@@ -1268,100 +1222,48 @@ int main()
                     }
                     else if(dungeons[0].naghseh[y_loc + 1][x_loc] == '.')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            y_loc++;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            y_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            y_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            y_loc++;
-                        }
+                        y_loc++;
                     }
                     else if(dungeons[0].naghseh[y_loc + 1][x_loc] == '+')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            y_loc++;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            y_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            y_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            y_loc++;
-                        }
+                        y_loc++;
                     }
                     else if(dungeons[0].naghseh[y_loc + 1][x_loc] == '#')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            y_loc++;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            y_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            y_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            y_loc++;
-                        }
+                        y_loc++;
                     }
                     else if(dungeons[0].naghseh[y_loc + 1][x_loc] == '^')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            y_loc++;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
+                        y_loc++;
+                    }
+                    else if(isfood(dungeons[0].naghseh[y_loc + 1][x_loc]))
+                    {
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , "+");
-                            y_loc++;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            y_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            y_loc++;
-                        }
+                        y_loc++;
                     }
                 }
                 break;
             case KEY_LEFT:
-                if(dungeons[0].naghseh[y_loc][x_loc - 1] == '.' || dungeons[0].naghseh[y_loc][x_loc - 1] == '#' || dungeons[0].naghseh[y_loc][x_loc - 1] == '+' || dungeons[0].naghseh[y_loc][x_loc - 1] == '^')
+                if(isfloor(dungeons[0].naghseh[y_loc][x_loc - 1]) || iscorridor(dungeons[0].naghseh[y_loc][x_loc - 1]) || isdoor(dungeons[0].naghseh[y_loc][x_loc - 1]) || istrap(dungeons[0].naghseh[y_loc][x_loc - 1]) || isfood(dungeons[0].naghseh[y_loc][x_loc - 1]))
                 {
                     if(dungeons[0].naghseh[y_loc][x_loc - 1] == '|'|| dungeons[0].naghseh[y_loc][x_loc - 1] == '0' || dungeons[0].naghseh[y_loc][x_loc - 1] == '=')
                     {
@@ -1369,100 +1271,48 @@ int main()
                     }
                     else if(dungeons[0].naghseh[y_loc][x_loc - 1] == '.')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            x_loc--;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            x_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            x_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            x_loc--;
-                        }
+                        x_loc--;
                     }
                     else if(dungeons[0].naghseh[y_loc][x_loc - 1] == '+')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            x_loc--;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            x_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            x_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            x_loc--;
-                        }
+                        x_loc--;
                     }
                     else if(dungeons[0].naghseh[y_loc][x_loc - 1] == '#')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            x_loc--;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            x_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            x_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            x_loc--;
-                        }
+                        x_loc--;
                     }
                     else if(dungeons[0].naghseh[y_loc][x_loc - 1] == '^')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            x_loc--;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
+                        x_loc--;
+                    }
+                    else if(isfood(dungeons[0].naghseh[y_loc][x_loc - 1]))
+                    {
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , "+");
-                            x_loc--;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            x_loc--;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            x_loc--;
-                        }
+                        x_loc--;
                     }
                 }
                 break;
             case KEY_RIGHT:
-                if(dungeons[0].naghseh[y_loc][x_loc + 1] == '.' || dungeons[0].naghseh[y_loc][x_loc + 1] == '#' || dungeons[0].naghseh[y_loc][x_loc + 1] == '+' || dungeons[0].naghseh[y_loc][x_loc + 1] == '^')
+                if(isfloor(dungeons[0].naghseh[y_loc][x_loc + 1]) || iscorridor(dungeons[0].naghseh[y_loc][x_loc + 1]) || isdoor(dungeons[0].naghseh[y_loc][x_loc + 1]) || istrap(dungeons[0].naghseh[y_loc][x_loc + 1]) || isfood(dungeons[0].naghseh[y_loc][x_loc + 1]))
                 {
                     if(dungeons[0].naghseh[y_loc][x_loc + 1] == '|'|| dungeons[0].naghseh[y_loc][x_loc + 1] == '0' || dungeons[0].naghseh[y_loc][x_loc + 1] == '=')
                     {
@@ -1470,118 +1320,51 @@ int main()
                     }
                     else if(dungeons[0].naghseh[y_loc][x_loc + 1] == '.')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            x_loc++;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            x_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            x_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            x_loc++;
-                        }
+                        x_loc++;
                     }
                     else if(dungeons[0].naghseh[y_loc][x_loc + 1] == '+')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            x_loc++;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            x_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            x_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            x_loc++;
-                        }
+                        x_loc++;
                     }
                     else if(dungeons[0].naghseh[y_loc][x_loc + 1] == '#')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            x_loc++;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            x_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            x_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            x_loc++;
-                        }
+                        x_loc++;
                     }
                     else if(dungeons[0].naghseh[y_loc][x_loc + 1] == '.')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            x_loc++;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
-                        {
-                            mvprintw(y_loc , x_loc , "+");
-                            x_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            x_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            x_loc++;
-                        }
+                        x_loc++;
                     }
                     else if(dungeons[0].naghseh[y_loc][x_loc + 1] == '^')
                     {
-                        if(dungeons[0].naghseh[y_loc][x_loc] == '.')
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , ".");
-                            x_loc++;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '+')
+                        x_loc++;
+                    }
+                    else if(isfood(dungeons[0].naghseh[y_loc][x_loc + 1]))
+                    {
+                        if(dungeons[0].naghseh[y_loc][x_loc] == '^')
                         {
-                            mvprintw(y_loc , x_loc , "+");
-                            x_loc++;
+                            showtraps(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
                         }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
-                        {
-                            mvprintw(y_loc , x_loc , "#");
-                            x_loc++;
-                        }
-                        else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
-                        {
-                            mvprintw(y_loc , x_loc , "^");
-                            x_loc++;
-                        }
+                        x_loc++;
                     }
                 }
                 break;
