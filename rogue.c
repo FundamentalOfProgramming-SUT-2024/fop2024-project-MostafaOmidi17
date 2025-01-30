@@ -69,6 +69,16 @@ int istrap(char a)
 }
 
 
+int isdoor(char a)
+{
+    if(a == '+')
+    {
+        return 1;
+    }
+    return 0;
+}
+
+
 int iswall(char a)
 {
     if(a == '|' || a == '-')
@@ -82,6 +92,24 @@ int iswall(char a)
 int isfood(char a)
 {
     if(a == 'f')
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int ispillar(char a)
+{
+    if(a == '0')
+    {
+        return 1;
+    }
+    return 0;
+}
+
+int iswindow(char a)
+{
+    if(a == '=')
     {
         return 1;
     }
@@ -597,13 +625,13 @@ void showroom(rooms room[] , int show[MAX_SIZE][MAX_SIZE] , int roomNum)
     }
 }
 
-void showcorridor(naghseh dungeons , int x , int y)
+void showcorridor(int show[MAX_SIZE][MAX_SIZE] , int x , int y)
 {
-    for(int i = y ; i < y + 5 ; i++)
+    for(int i = y - 5; i < y + 5 ; i++)
     {
-        for(int j = x ; j < x + 5 ; j++)
+        for(int j = x - 5 ; j < x + 5 ; j++)
         {
-            dungeons.show[i][j] = 1;
+            show[i][j] = 1;
         }
     }
 }
@@ -1116,25 +1144,28 @@ int main()
         int out = 0;
         while(1)
         {
+            clear();
             if(out == 1)
             {
                 break;
             }
             refresh();
+            showcorridor(dungeons[0].show , x_loc , y_loc);
+            print_map(row , col , dungeons[0].naghseh , dungeons[0].show);
             mvprintw(y_loc , x_loc , "@");
-            mvprintw(0 , 0 , "your health is %d" , guest.health);
-            mvprintw(0 , 20 , "your point is %d" , guest.points);
+            mvprintw(0 , 0 , "your health is %d |" , guest.health);
+            mvprintw(0 , 20 , "your point is %d |" , guest.points);
             int kilid = getch();
             switch (kilid)
             {
             case KEY_UP:
-                if(dungeons[0].naghseh[y_loc - 1][x_loc] == '.' || dungeons[0].naghseh[y_loc - 1][x_loc] == '#' || dungeons[0].naghseh[y_loc - 1][x_loc] == '+'  || dungeons[0].naghseh[y_loc - 1][x_loc] == '^')
+                if(isfloor(dungeons[0].naghseh[y_loc - 1][x_loc]) || iscorridor(dungeons[0].naghseh[y_loc - 1][x_loc]) || isdoor(dungeons[0].naghseh[y_loc - 1][x_loc]) || istrap(dungeons[0].naghseh[y_loc - 1][x_loc]) || isfood(dungeons[0].naghseh[y_loc - 1][x_loc]))
                 {
-                    if(dungeons[0].naghseh[y_loc - 1][x_loc] == '-'|| dungeons[0].naghseh[y_loc - 1][x_loc] == '0' || dungeons[0].naghseh[y_loc - 1][x_loc] == '=')
+                    if(iswall(dungeons[0].naghseh[y_loc - 1][x_loc]) || ispillar(dungeons[0].naghseh[y_loc - 1][x_loc]) || iswindow(dungeons[0].naghseh[y_loc - 1][x_loc]))
                     {
                         break;
                     }
-                    else if(dungeons[0].naghseh[y_loc - 1][x_loc] == '.')
+                    else if(isfloor(dungeons[0].naghseh[y_loc - 1][x_loc]))
                     {
                         if(dungeons[0].naghseh[y_loc][x_loc] == '.')
                         {
@@ -1148,7 +1179,7 @@ int main()
                         }
                         else if(dungeons[0].naghseh[y_loc][x_loc] == '#')
                         {
-                            mvprintw(y_loc , x_loc , "#");
+                            // mvprintw(y_loc , x_loc , "#");
                             y_loc--;
                         }
                         else if(dungeons[0].naghseh[y_loc][x_loc] == '^')
