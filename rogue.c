@@ -21,6 +21,8 @@ typedef struct prof
     char password[MAX_SIZE];
     char e_mail[MAX_SIZE];
     char map[4][MAX_SIZE][MAX_SIZE];
+    char inventory[10][MAX_SIZE];
+    int weapon_num;
     int points;
     int gold_reserve;
     int experience;
@@ -59,6 +61,58 @@ typedef struct naghseh
 }naghseh;
 naghseh dungeons[4];
 int stairs = 0;
+
+
+
+int ismace(char a)
+{
+    if(a == 'M')
+    {
+        return 1;
+    }
+    return 0;
+}
+
+
+int iswand(char a)
+{
+    if(a == 'I')
+    {
+        return 1;
+    }
+    return 0;
+}
+
+
+int isdagger(char a)
+{
+    if(a == 'p')
+    {
+        return 1;
+    }
+    return 0;
+}
+
+
+int isarrow(char a)
+{
+    if(a == 'Y')
+    {
+        return 1;
+    }
+    return 0;
+}
+
+
+
+int issword(char a)
+{
+    if(a == 'P')
+    {
+        return 1;
+    }
+    return 0;
+}
 
 
 
@@ -1165,6 +1219,8 @@ int main()
         guest.health = 100;
         guest.points = 0;
         guest.gold_reserve = 0;
+        guest.weapon_num = 1;
+        strcpy(guest.inventory[0] , "NO WEAPON");
         guest.experience = 1;
 
         char naghsheh[MAX_SIZE][MAX_SIZE];
@@ -1367,6 +1423,53 @@ int main()
                         }
                         break;
                     default:
+                        break;
+                    }
+                }
+                break;
+            case 'i':
+                WINDOW* inventory = newwin(row , col , 0 , 0);
+                box(inventory , 0 , 0);
+                refresh();
+                keypad(inventory , TRUE);
+                wrefresh(inventory);
+                wbkgd(inventory , COLOR_PAIR(4));
+                int inventory_highlight = 0;
+                int inventory_decision;
+                while(1)
+                {
+                    for(int i = 0 ; i < guest.weapon_num ; i++)
+                    {
+                        int item_len = strlen(guest.inventory[i]);
+                        if(i == inventory_highlight)
+                        {
+                            wattron(inventory , A_REVERSE);
+                        }
+                        mvwprintw(inventory , i + 1 , col/2 - item_len/2 , guest.inventory[i]);
+                        wattroff(inventory , A_REVERSE);
+                    }
+                    inventory_decision = wgetch(inventory);
+                    switch (inventory_decision)
+                    {
+                    case KEY_UP:
+                        inventory_highlight--;
+                        if(inventory_highlight == -1)
+                        {
+                            inventory_highlight = guest.weapon_num - 1;
+                        }
+                        break;
+                    case KEY_DOWN:
+                        inventory_highlight++;
+                        if(inventory_highlight == guest.weapon_num)
+                        {
+                            inventory_highlight = 0;
+                        }
+                        break;
+                    default:
+                        break;
+                    }
+                    if(inventory_decision == 10)
+                    {
                         break;
                     }
                 }
