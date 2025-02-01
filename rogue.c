@@ -48,6 +48,8 @@ typedef struct rooms
     // location foods[MAX_SIZE];
 }rooms;
 
+
+
 typedef struct naghseh
 {
     char naghseh[MAX_SIZE][MAX_SIZE];
@@ -56,7 +58,7 @@ typedef struct naghseh
     rooms room[9];
 }naghseh;
 naghseh dungeons[4];
-
+int stairs = 0;
 
 
 int istrap(char a)
@@ -390,7 +392,7 @@ void welcome_to_the_rouge()
 
 
 
-void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh[][MAX_SIZE])
+void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh[][MAX_SIZE] , int floor , location pelle[])
 {
     for (int i = 0; i < row; i++)
     {
@@ -399,7 +401,16 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh
             naghsheh[i][j] = ' ';
         }
     }
-
+    int stairs_num;
+    if(floor == 1 || floor == 4)
+    {
+        stairs_num = 1;
+    }
+    else
+    {
+        stairs_num = 2;
+    }
+    int stairs_cnt = 0;
 
     for(int i = 0 ; i < RoomNum ; i++)
     {
@@ -512,8 +523,20 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh
                         }
                         else
                         {
-                            naghsheh[j][i_1] = '.';
-                            Room[i].map[j][i_1] = '.';
+                            if(stairs_cnt < stairs_num)
+                            {
+                                naghsheh[j][i_1] = '>';
+                                Room[i].map[j][i_1] = '>';
+                                pelle[stairs].x = i_1;
+                                pelle[stairs].y = j;
+                                stairs++;
+                                stairs_cnt++;
+                            }
+                            else
+                            {
+                                naghsheh[j][i_1] = '.';
+                                Room[i].map[j][i_1] = '.';
+                            }
                         }
                     }
                 }
@@ -1106,18 +1129,19 @@ int main()
         clear();
         bkgd(' ');
         rooms Room[4][9];
+        location pelle[6];
         int RoomNum[4];
         for(int i = 0 ; i < 4 ; i++)
         {
             dungeons[i].RoomNum = Random(3 , 9);
         }
-        generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh);
+        generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh , 1 , pelle);
         generate_corridor(dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh);
-        generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh);
+        generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh , 2 , pelle);
         generate_corridor(dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh);
-        generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh);
+        generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh , 3 , pelle);
         generate_corridor(dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh);
-        generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh);
+        generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh , 4 , pelle);
         generate_corridor(dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh);
 
         profile guest;
