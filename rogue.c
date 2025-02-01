@@ -1070,1120 +1070,1238 @@ int main()
         endwin();
         return 0;
     }
-
-
-    wbkgd(menu_win , COLOR_PAIR(3));
-    refresh();
-    wrefresh(menu_win);
-    keypad(menu_win , TRUE);
-    char menu[5][100] = {"<new usr>" ,
-                        "<login usr>" ,
-                        "<guest mode>" ,
-                        "<setting>" ,
-                        "<scoreboard>"};
-    int highlight = 0;
-    int decision;
-    noecho();
-    while(1){
-        for(int i = 0 ; i < 5 ; i++){
-            int len = strlen(menu[i]);
-            if(i == highlight){
-                wattron(menu_win , A_REVERSE);
-            }
-            mvwprintw(menu_win , i + row/2 - 4 , col/2 - len/2 , menu[i]);
-            wattroff(menu_win , A_REVERSE);
-        }
-        decision = wgetch(menu_win);
-        switch(decision){
-            case KEY_UP:
-                highlight--;
-                if(highlight == -1){
-                    highlight = 4;
-                }
-                break;
-            case KEY_DOWN:
-                highlight++;
-                if(highlight == 5){
-                    highlight = 0;
-                }
-                break;
-            default:
-                break;
-        }
-        if(decision == 10){
+    int exit = 0;
+    while(1)
+    {
+        if(exit == 1)
+        {
             break;
         }
-    }
-
-
-
-
-    if(highlight == 0)
-    {
-        WINDOW* new_usr_win = newwin(row , col , 0 , 0);
-        box(new_usr_win , 0 , 0);
+        clear();
+        wbkgd(menu_win , COLOR_PAIR(4));
         refresh();
-        wrefresh(new_usr_win);
-        wbkgd(new_usr_win , COLOR_PAIR(3));
-        char usr_in[3][100] = {"usr-name:" , "password:" , "e-mail:"};
-        int usr_len_0 = strlen(usr_in[0]);
-        int usr_len_1 = strlen(usr_in[1]);
-        int usr_len_2 = strlen(usr_in[2]);
-        int choose;
-        int complete = 0;
-        char message[3][100] = {"Please fill your usr-name (maximum usr/pass/e-mail size is 100):" ,
-                                "Please fill your password (maximum usr/pass/e-mail size is 100):" ,
-                                "Please fill your e-mail (maximum usr/pass/e-mail size is 100):"};
-        int message_len[3] = {strlen(message[0]) , strlen(message[1]) , strlen(message[2])};
-        for(int i = 0 ; i < 3 ; i++){
-            int len = strlen(usr_in[i]);
-            mvwprintw(new_usr_win , 4*(i+1) + 1 , 2 , usr_in[i]);
-        }
-        profile user;
-        char input[3][MAX_SIZE];
-        FILE * fptr_usr;
-        FILE * fptr_all_names_append;
-        fptr_all_names_append = fopen("all-names.txt" , "a");
-        keypad(new_usr_win , TRUE);
-        while(complete < 3){
-            mvwprintw(new_usr_win , 2 , col/2 - message_len[complete] /2 , message[complete]);
-            switch(complete){
-                case 0:
-                    echo();
-                    wmove(new_usr_win , 5 , usr_len_0 + 2);
-                    // wgetnstr(new_usr_win , user.name , MAX_SIZE - 1);
-                    wscanw(new_usr_win , " %s", user.name);
-                    FILE * fptr_all_names;
-                    fptr_all_names = fopen("all-names.txt" , "r");
-                    char user_check[MAX_SIZE];
-                    int checker = 0;
-                    noecho();
-                    int key = wgetch(new_usr_win);
-                    while (1)
-                    {
-                        int a = fscanf(fptr_all_names , " %s" , user_check);
-                        if(a == -1){
-                            break;
-                        }
-                        if(strcmp(user_check , user.name) == 0){
-                            checker = 1;
-                            break;
-                        }
+        wrefresh(menu_win);
+        keypad(menu_win , TRUE);
+        char menu[6][100] = {"<new usr>" ,
+                            "<login usr>" ,
+                            "<guest mode>" ,
+                            "<setting>" ,
+                            "<scoreboard>" ,
+                            "<load last game>"};
+        int highlight = 0;
+        int decision;
+        noecho();
+        while(1){
+            for(int i = 0 ; i < 6 ; i++){
+                int len = strlen(menu[i]);
+                if(i == highlight){
+                    wattron(menu_win , A_REVERSE);
+                }
+                mvwprintw(menu_win , i + row/2 - 4 , col/2 - len/2 , menu[i]);
+                wattroff(menu_win , A_REVERSE);
+            }
+            decision = wgetch(menu_win);
+            switch(decision){
+                case KEY_UP:
+                    highlight--;
+                    if(highlight == -1){
+                        highlight = 5;
                     }
-                    if(checker == 1){
-                        mvwprintw(new_usr_win , 3 , col/2 - 25 /2 , "choose another user-name!");
-                        mvwprintw(new_usr_win , 5 , usr_len_0 + 2 , "                                                                          ");
+                    break;
+                case KEY_DOWN:
+                    highlight++;
+                    if(highlight == 6){
+                        highlight = 0;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            if(decision == 10){
+                break;
+            }
+        }
+
+
+
+
+        if(highlight == 0)
+        {
+            WINDOW* new_usr_win = newwin(row , col , 0 , 0);
+            box(new_usr_win , 0 , 0);
+            refresh();
+            wrefresh(new_usr_win);
+            wbkgd(new_usr_win , COLOR_PAIR(3));
+            char usr_in[3][100] = {"usr-name:" , "password:" , "e-mail:"};
+            int usr_len_0 = strlen(usr_in[0]);
+            int usr_len_1 = strlen(usr_in[1]);
+            int usr_len_2 = strlen(usr_in[2]);
+            int choose;
+            int complete = 0;
+            char message[3][100] = {"Please fill your usr-name (maximum usr/pass/e-mail size is 100):" ,
+                                    "Please fill your password (maximum usr/pass/e-mail size is 100):" ,
+                                    "Please fill your e-mail (maximum usr/pass/e-mail size is 100):"};
+            int message_len[3] = {strlen(message[0]) , strlen(message[1]) , strlen(message[2])};
+            for(int i = 0 ; i < 3 ; i++){
+                int len = strlen(usr_in[i]);
+                mvwprintw(new_usr_win , 4*(i+1) + 1 , 2 , usr_in[i]);
+            }
+            profile user;
+            char input[3][MAX_SIZE];
+            FILE * fptr_usr;
+            FILE * fptr_all_names_append;
+            fptr_all_names_append = fopen("all-names.txt" , "a");
+            keypad(new_usr_win , TRUE);
+            while(complete < 3){
+                mvwprintw(new_usr_win , 2 , col/2 - message_len[complete] /2 , message[complete]);
+                switch(complete){
+                    case 0:
+                        echo();
                         wmove(new_usr_win , 5 , usr_len_0 + 2);
-                        break;
-                    }else{
-                        fprintf(fptr_all_names_append , "%s\n" , user.name);
-                        fclose(fptr_all_names_append);
-                        char temp[100];
-                        strcpy(temp ,user.name);
-                        strcat(temp , ".txt");
-                        fptr_usr = fopen(temp , "w");
+                        // wgetnstr(new_usr_win , user.name , MAX_SIZE - 1);
+                        wscanw(new_usr_win , " %s", user.name);
+                        FILE * fptr_all_names;
+                        fptr_all_names = fopen("all-names.txt" , "r");
+                        char user_check[MAX_SIZE];
+                        int checker = 0;
+                        noecho();
+                        int key = wgetch(new_usr_win);
+                        while (1)
+                        {
+                            int a = fscanf(fptr_all_names , " %s" , user_check);
+                            if(a == -1){
+                                break;
+                            }
+                            if(strcmp(user_check , user.name) == 0){
+                                checker = 1;
+                                break;
+                            }
+                        }
+                        if(checker == 1){
+                            mvwprintw(new_usr_win , 3 , col/2 - 25 /2 , "choose another user-name!");
+                            mvwprintw(new_usr_win , 5 , usr_len_0 + 2 , "                                                                          ");
+                            wmove(new_usr_win , 5 , usr_len_0 + 2);
+                            break;
+                        }else{
+                            fprintf(fptr_all_names_append , "%s\n" , user.name);
+                            fclose(fptr_all_names_append);
+                            char temp[100];
+                            strcpy(temp ,user.name);
+                            strcat(temp , ".txt");
+                            fptr_usr = fopen(temp , "w");
+                            mvwprintw(new_usr_win , 2 , col/2 - message_len[complete] /2 , "                                                               ");
+                            complete++;
+                            break;
+                        }
+                    case 1:
+                        noecho();
+                        wmove(new_usr_win , 9 , usr_len_1 + 2);
+                        wgetnstr(new_usr_win , user.password , MAX_SIZE - 1);
+                        int check = strlen(user.password);
+                        if(check < 7){
+                            mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "Password len is smaller than 7");
+                            break;
+                        }
+                        fprintf(fptr_usr , "%s\n" , user.password);
+                        mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "                              ");
                         mvwprintw(new_usr_win , 2 , col/2 - message_len[complete] /2 , "                                                               ");
                         complete++;
                         break;
-                    }
-                case 1:
-                    noecho();
-                    wmove(new_usr_win , 9 , usr_len_1 + 2);
-                    wgetnstr(new_usr_win , user.password , MAX_SIZE - 1);
-                    int check = strlen(user.password);
-                    if(check < 7){
-                        mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "Password len is smaller than 7");
-                        break;
-                    }
-                    fprintf(fptr_usr , "%s\n" , user.password);
-                    mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "                              ");
-                    mvwprintw(new_usr_win , 2 , col/2 - message_len[complete] /2 , "                                                               ");
-                    complete++;
-                    break;
-                case 2:
-                    echo();
-                    wmove(new_usr_win , 13 , usr_len_2 + 2);
-                    wgetnstr(new_usr_win , user.e_mail , MAX_SIZE - 1);
-                    int len_e_mail = strlen(user.e_mail);
-                    int check_adsign = 0;
-                    int check_dot = 0;
-                    int asghar = 0;
-                    int point_ad_sign;
-                    int point_dot;
-                    for(int i = 0 ; i < len_e_mail ; i++){
-                        if(user.e_mail[i] == '@' && check_adsign < 2){
-                            asghar = 1;
-                            check_adsign++;
-                            point_ad_sign = i;
-                        }else if(user.e_mail[i] == '.' && asghar == 1 && check_dot < 2 && i > point_ad_sign + 1 && is_char(user.e_mail[i+1])){
-                            check_dot++;
+                    case 2:
+                        echo();
+                        wmove(new_usr_win , 13 , usr_len_2 + 2);
+                        wgetnstr(new_usr_win , user.e_mail , MAX_SIZE - 1);
+                        int len_e_mail = strlen(user.e_mail);
+                        int check_adsign = 0;
+                        int check_dot = 0;
+                        int asghar = 0;
+                        int point_ad_sign;
+                        int point_dot;
+                        for(int i = 0 ; i < len_e_mail ; i++){
+                            if(user.e_mail[i] == '@' && check_adsign < 2){
+                                asghar = 1;
+                                check_adsign++;
+                                point_ad_sign = i;
+                            }else if(user.e_mail[i] == '.' && asghar == 1 && check_dot < 2 && i > point_ad_sign + 1 && is_char(user.e_mail[i+1])){
+                                check_dot++;
+                            }
                         }
-                    }
-                    if(check_dot == 0 || check_adsign == 0){
-                        mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "e-mail is not valid!");
-                        break;
-                    }
-                    fprintf(fptr_usr , "%s\n" , user.e_mail);
-                    mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "                    ");
-                    complete++;
-                    noecho();
-                    break;
-            }
-            noecho();
-            wrefresh(new_usr_win);
-        }
-        noecho();
-        clear();
-        WINDOW * game_menu = newwin(row , col , 0 , 0);
-        box(game_menu , 0 , 0);
-        keypad(game_menu , TRUE);
-        refresh();
-        wrefresh(game_menu);
-        wbkgd(game_menu , COLOR_PAIR(3));
-        char game_option[2][MAX_SIZE] = { "<new game>" ,
-                                          "<load last game>"};
-        int game_highlight = 0;
-        int game_decision;
-        while(1)
-        {
-            for(int i = 0 ; i < 2 ; i++)
-            {
-                int game_len = strlen(game_option[i]);
-                if(i == game_highlight)
-                {
-                    wattron(game_menu , A_REVERSE);
-                }
-                mvwprintw(game_menu , i + row/2 - 4 , col/2 - game_len/2 , game_option[i]);
-                wattroff(game_menu , A_REVERSE);
-            }
-            game_decision = wgetch(game_menu);
-            switch (game_decision)
-            {
-            case KEY_UP:
-                game_highlight--;
-                if(game_highlight == -1)
-                {
-                    game_highlight = 1;
-                }
-                break;
-            case KEY_DOWN:
-                game_highlight++;
-                if(game_highlight == 2)
-                {
-                    game_highlight = 0;
-                }
-                break;
-            default:
-                break;
-            }
-            if(game_decision == 10)
-            {
-                break;
-            }
-        }
-        if(game_highlight == 0)
-        {}
-        else
-        {}
-    }
-    else if(highlight == 1)
-    {
-        WINDOW* new_usr_win = newwin(row , col , 0 , 0);
-        box(new_usr_win , 0 , 0);
-        refresh();
-        wrefresh(new_usr_win);
-        wbkgd(new_usr_win , COLOR_PAIR(3));
-        char usr_in[3][100] = {"usr-name:" , "password:" , "e-mail:"};
-        int usr_len_0 = strlen(usr_in[0]);
-        int usr_len_1 = strlen(usr_in[1]);
-        int usr_len_2 = strlen(usr_in[2]);
-        int choose;
-        int complete = 0;
-        char message[3][100] = {"Please fill your usr-name (maximum usr/pass/e-mail size is 100):" ,
-                                "Please fill your password if you forgot it fill your e-mail (maximum usr/pass/e-mail size is 100):" ,
-                                "Please fill your e-mail (maximum usr/pass/e-mail size is 100):"};
-        int message_len[3] = {strlen(message[0]) , strlen(message[1]) , strlen(message[2])};
-        for(int i = 0 ; i < 3 ; i++){
-            int len = strlen(usr_in[i]);
-            mvwprintw(new_usr_win , 4*(i+1) + 1 , 2 , usr_in[i]);
-        }
-        profile user;
-        char input[3][MAX_SIZE];
-        FILE * fptr_usr;
-        keypad(new_usr_win , TRUE);
-        char File[100];
-        char check_data[2][100];
-        while(complete < 3){
-            mvwprintw(new_usr_win , 2 , col/2 - message_len[complete] /2 , message[complete]);
-            switch(complete){
-                case 0:
-                    echo();
-                    wmove(new_usr_win , 5 , usr_len_0 + 2);
-                    wscanw(new_usr_win , " %s", user.name);
-                    FILE * fptr_all_names;
-                    fptr_all_names = fopen("all-names.txt" , "r");
-                    char user_check[MAX_SIZE];
-                    int checker = 0;
-                    noecho();
-                    int key = wgetch(new_usr_win);
-                    while (1)
-                    {
-                        fscanf(fptr_all_names , " %s" , user_check);
-                        if(strcmp(user_check , user.name) == 0){
-                            checker = 1;
+                        if(check_dot == 0 || check_adsign == 0){
+                            mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "e-mail is not valid!");
                             break;
                         }
-                    }
-                    if(checker == 1){
-                        strcpy(File ,user.name);
-                        strcat(File , ".txt");
+                        fprintf(fptr_usr , "%s\n" , user.e_mail);
+                        mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "                    ");
                         complete++;
+                        noecho();
                         break;
-                    }else{
-                        mvwprintw(new_usr_win , 3 , col/2 - 24 /2 , "user name doesnt exists!");
-                        mvwprintw(new_usr_win , 5 , usr_len_0 + 2 , "                                                                          ");
-                        wmove(new_usr_win , 5 , usr_len_0 + 2);
-                        break;
-                    }
-                case 1:
-                    noecho();
-                    wmove(new_usr_win , 9 , usr_len_1 + 2);
-                    wgetnstr(new_usr_win , user.password , MAX_SIZE - 1);
-                    int check = strlen(user.password);
-                    fptr_usr = fopen(File , "r");
-                    int a = 0;
-                    int k = 0;
-                    while(a != -1){
-                        a = fscanf(fptr_usr , " %s" , check_data[k]);
-                        k++;
-                    }
-                    if(strcmp(check_data[0] , user.password) == 0){
-                        complete = 3;
-                        break;
-                    }
-                    mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "                              ");
-                    mvwprintw(new_usr_win , 2 , col/2 - message_len[complete] /2 , "                                                               ");
-                    complete++;
-                    break;
-                case 2:
-                    echo();
-                    wmove(new_usr_win , 13 , usr_len_2 + 2);
-                    wgetnstr(new_usr_win , user.e_mail , MAX_SIZE - 1);
-                    int len_e_mail = strlen(user.e_mail);
-                    int check_adsign = 0;
-                    int check_dot = 0;
-                    int asghar = 0;
-                    int point_ad_sign;
-                    int point_dot;
-                    if(strcmp(check_data[1] , user.e_mail) != 0){
-                        mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "e-mail is not wrong!");
-                        break;
-                    }
-                    mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "                    ");
-                    complete++;
-                    noecho();
-                    break;
+                }
+                noecho();
+                wrefresh(new_usr_win);
             }
             noecho();
-            wrefresh(new_usr_win);
-        }
-        noecho();
-        clear();
-        WINDOW * game_menu = newwin(row , col , 0 , 0);
-        box(game_menu , 0 , 0);
-        keypad(game_menu , TRUE);
-        refresh();
-        wrefresh(game_menu);
-        wbkgd(game_menu , COLOR_PAIR(3));
-        char game_option[2][MAX_SIZE] = { "<new game>" ,
-                                          "<load last game>"};
-        int game_highlight = 0;
-        int game_decision;
-        while(1)
-        {
-            for(int i = 0 ; i < 2 ; i++)
-            {
-                int game_len = strlen(game_option[i]);
-                if(i == game_highlight)
-                {
-                    wattron(game_menu , A_REVERSE);
-                }
-                mvwprintw(game_menu , i + row/2 - 4 , col/2 - game_len/2 , game_option[i]);
-                wattroff(game_menu , A_REVERSE);
-            }
-            game_decision = wgetch(game_menu);
-            switch (game_decision)
-            {
-            case KEY_UP:
-                game_highlight--;
-                if(game_highlight == -1)
-                {
-                    game_highlight = 1;
-                }
-                break;
-            case KEY_DOWN:
-                game_highlight++;
-                if(game_highlight == 2)
-                {
-                    game_highlight = 0;
-                }
-            default:
-                break;
-            }
-            if(game_decision == 10)
-            {
-                break;
-            }
-        }
-        if(game_highlight == 0)
-        {}
-        else
-        {}
-
-    }
-    else if(highlight == 2)
-    {
-        noecho();
-        keypad(stdscr , TRUE);
-        clear();
-        bkgd(' ');
-        int out = 0;
-        int finish = 0;
-        while (1)
-        {
-            if(out == 2)
-            {
-                clear();
-                WINDOW * option_menu = newwin(row , col , 0 , 0);
-                box(option_menu , 0 , 0);
-                keypad(option_menu , TRUE);
-                refresh();
-                wrefresh(option_menu);
-                wbkgd(option_menu , COLOR_PAIR(4));
-                char options[2][MAX_SIZE] = { "<new game>" ,
-                                                  "<exit>"};
-                int highlight_option = 0;
-                int decision_option;
-                wattron(option_menu , COLOR_PAIR(6));
-                mvwprintw(option_menu , 0 , col/2 - 8/2 , "YOU LOST");
-                wattroff(option_menu , COLOR_PAIR(6));
-                while(1)
-                {
-                    for(int i = 0 ; i < 2 ; i++)
-                    {
-                        int game_len = strlen(options[i]);
-                        if(i == highlight_option)
-                        {
-                            wattron(option_menu , A_REVERSE);
-                        }
-                        mvwprintw(option_menu , i + row/2 - 4 , col/2 - game_len/2 , options[i]);
-                        wattroff(option_menu , A_REVERSE);
-                    }
-                    decision_option = wgetch(option_menu);
-                    switch (decision_option)
-                    {
-                    case KEY_UP:
-                        highlight_option--;
-                        if(highlight_option == -1)
-                        {
-                            highlight_option = 1;
-                        }
-                        break;
-                    case KEY_DOWN:
-                        highlight_option++;
-                        if(highlight_option == 2)
-                        {
-                            highlight_option = 0;
-                        }
-                    default:
-                        break;
-                    }
-                    if(decision_option == 10)
-                    {
-                        break;
-                    }
-                }
-                if(highlight_option == 1)
-                {
-                    break;
-                }
-                else
-                {
-                    out = 0;
-                }
-            }
-            
-            rooms Room[4][9];
-            location pelle[6];
-            int RoomNum[4];
-            for(int i = 0 ; i < 4 ; i++)
-            {
-                dungeons[i].RoomNum = Random(3 , 9);
-            }
-            generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh , 1 , pelle);
-            generate_corridor(dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh);
-            generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh , 2 , pelle);
-            generate_corridor(dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh);
-            generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh , 3 , pelle);
-            generate_corridor(dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh);
-            generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh , 4 , pelle);
-            generate_corridor(dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh);
-            generate_treasure_room(row , col  , dungeons[4].naghseh );
-
-            profile guest;
-            strcpy(guest.name , "guest-usr");
-            copy_map(row , col , guest.map[0] , dungeons[0].naghseh);
-            copy_map(row , col , guest.map[1] , dungeons[1].naghseh);
-            copy_map(row , col , guest.map[2] , dungeons[2].naghseh);
-            copy_map(row , col , guest.map[3] , dungeons[3].naghseh);
-            guest.health = 100;
-            guest.points = 0;
-            guest.gold_reserve = 0;
-            guest.weapon_num = 1;
-            strcpy(guest.inventory[0] , "NO WEAPON");
-            guest.experience = 1;
-
-            char naghsheh[MAX_SIZE][MAX_SIZE];
-
-            copy_map(row , col , naghsheh , dungeons[0].naghseh);
-            int number = Random(0 , RoomNum[0] - 1);
-            int y_loc;
-            int x_loc;
-            y_loc = spawn_py(dungeons[0].room[number]);
-            x_loc = spawn_px(dungeons[0].room[number]);
-            int floor = 0;
-            dungeons[floor].naghseh[y_loc][x_loc] = '.';
-            attron(COLOR_PAIR(4));
-            bkgd(COLOR_PAIR(4));
-            init_show(dungeons[floor].show , row , col);
-            showroom(dungeons[floor].room , dungeons[floor].naghseh , dungeons[floor].show , number);
+            clear();
+            WINDOW * game_menu = newwin(row , col , 0 , 0);
+            box(game_menu , 0 , 0);
+            keypad(game_menu , TRUE);
+            refresh();
+            wrefresh(game_menu);
+            wbkgd(game_menu , COLOR_PAIR(3));
+            char game_option[2][MAX_SIZE] = { "<new game>" ,
+                                            "<load last game>"};
+            int game_highlight = 0;
+            int game_decision;
             while(1)
             {
-                
-                clear();
-                if(out == 1)
+                for(int i = 0 ; i < 2 ; i++)
                 {
-                    break;
+                    int game_len = strlen(game_option[i]);
+                    if(i == game_highlight)
+                    {
+                        wattron(game_menu , A_REVERSE);
+                    }
+                    mvwprintw(game_menu , i + row/2 - 4 , col/2 - game_len/2 , game_option[i]);
+                    wattroff(game_menu , A_REVERSE);
                 }
-                if(out == 2)
-                {
-                    break;
-                }
-                refresh();
-                showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc , 5);
-                print_map(row , col , dungeons[floor].naghseh , dungeons[floor].show);
-                mvprintw(y_loc , x_loc , "@");
-                mvprintw(0 , 0 , "your health is %d %d|" , guest.health , floor);
-                mvprintw(0 , 20 , "your point is %d |" , guest.points);
-                int kilid = getch();
-                switch (kilid)
+                game_decision = wgetch(game_menu);
+                switch (game_decision)
                 {
                 case KEY_UP:
-                    if(isfloor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc - 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc - 1][x_loc]))
+                    game_highlight--;
+                    if(game_highlight == -1)
                     {
-                        if(iswall(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ispillar(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswindow(dungeons[floor].naghseh[y_loc - 1][x_loc]))
-                        {
-                            break;
-                        }
-                        else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.health >= 10)
-                            {
-                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
-                                guest.health -= 10;
-                            }
-                            else
-                                out = 2;
-                        }
-                        else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
-                        {
-                            if(guest.health <= 90)
-                            {
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                                guest.health+=10;
-                            }
-                        }
-                        else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
-                        {
-                            guest.points++;
-                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                        }
-                        else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        y_loc--;
+                        game_highlight = 1;
                     }
                     break;
                 case KEY_DOWN:
-                    if(isfloor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc + 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc + 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc + 1][x_loc]))
+                    game_highlight++;
+                    if(game_highlight == 2)
                     {
-                        if(dungeons[floor].naghseh[y_loc + 1][x_loc] == '-'|| dungeons[floor].naghseh[y_loc + 1][x_loc] == '0' || dungeons[floor].naghseh[y_loc + 1][x_loc] == '=')
-                        {
-                            break;
-                        }
-                        else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.health >= 10)
-                            {
-                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
-                                guest.health -= 10;
-                            }
-                            else
-                                out = 2;
-                        }
-                        else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
-                        {
-                            if(guest.health <= 90)
-                            {
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                                guest.health+=10;
-                            }
-                        }
-                        else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
-                        {
-                            guest.points++;
-                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                        }
-                        else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        y_loc++;
+                        game_highlight = 0;
                     }
                     break;
-                case KEY_LEFT:
-                    if(isfloor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc - 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc - 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc - 1]))
-                    {
-                        if(dungeons[floor].naghseh[y_loc][x_loc - 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc - 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc - 1] == '=')
+                default:
+                    break;
+                }
+                if(game_decision == 10)
+                {
+                    break;
+                }
+            }
+            if(game_highlight == 0)
+            {}
+            else
+            {}
+        }
+        else if(highlight == 1)
+        {
+            WINDOW* new_usr_win = newwin(row , col , 0 , 0);
+            box(new_usr_win , 0 , 0);
+            refresh();
+            wrefresh(new_usr_win);
+            wbkgd(new_usr_win , COLOR_PAIR(3));
+            char usr_in[3][100] = {"usr-name:" , "password:" , "e-mail:"};
+            int usr_len_0 = strlen(usr_in[0]);
+            int usr_len_1 = strlen(usr_in[1]);
+            int usr_len_2 = strlen(usr_in[2]);
+            int choose;
+            int complete = 0;
+            char message[3][100] = {"Please fill your usr-name (maximum usr/pass/e-mail size is 100):" ,
+                                    "Please fill your password if you forgot it fill your e-mail (maximum usr/pass/e-mail size is 100):" ,
+                                    "Please fill your e-mail (maximum usr/pass/e-mail size is 100):"};
+            int message_len[3] = {strlen(message[0]) , strlen(message[1]) , strlen(message[2])};
+            for(int i = 0 ; i < 3 ; i++){
+                int len = strlen(usr_in[i]);
+                mvwprintw(new_usr_win , 4*(i+1) + 1 , 2 , usr_in[i]);
+            }
+            profile user;
+            char input[3][MAX_SIZE];
+            FILE * fptr_usr;
+            keypad(new_usr_win , TRUE);
+            char File[100];
+            char check_data[2][100];
+            while(complete < 3){
+                mvwprintw(new_usr_win , 2 , col/2 - message_len[complete] /2 , message[complete]);
+                switch(complete){
+                    case 0:
+                        echo();
+                        wmove(new_usr_win , 5 , usr_len_0 + 2);
+                        wscanw(new_usr_win , " %s", user.name);
+                        FILE * fptr_all_names;
+                        fptr_all_names = fopen("all-names.txt" , "r");
+                        char user_check[MAX_SIZE];
+                        int checker = 0;
+                        noecho();
+                        int key = wgetch(new_usr_win);
+                        while (1)
                         {
+                            fscanf(fptr_all_names , " %s" , user_check);
+                            if(strcmp(user_check , user.name) == 0){
+                                checker = 1;
+                                break;
+                            }
+                        }
+                        if(checker == 1){
+                            strcpy(File ,user.name);
+                            strcat(File , ".txt");
+                            complete++;
+                            break;
+                        }else{
+                            mvwprintw(new_usr_win , 3 , col/2 - 24 /2 , "user name doesnt exists!");
+                            mvwprintw(new_usr_win , 5 , usr_len_0 + 2 , "                                                                          ");
+                            wmove(new_usr_win , 5 , usr_len_0 + 2);
                             break;
                         }
-                        else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.health >= 10)
-                            {
-                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
-                                guest.health -= 10;
-                            }
-                            else
-                                out = 2;
+                    case 1:
+                        noecho();
+                        wmove(new_usr_win , 9 , usr_len_1 + 2);
+                        wgetnstr(new_usr_win , user.password , MAX_SIZE - 1);
+                        int check = strlen(user.password);
+                        fptr_usr = fopen(File , "r");
+                        int a = 0;
+                        int k = 0;
+                        while(a != -1){
+                            a = fscanf(fptr_usr , " %s" , check_data[k]);
+                            k++;
                         }
-                        else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
-                        {
-                            if(guest.health <= 90)
-                            {
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                                guest.health+=10;
-                            }
+                        if(strcmp(check_data[0] , user.password) == 0){
+                            complete = 3;
+                            break;
                         }
-                        else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
-                        {
-                            guest.points++;
-                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                        mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "                              ");
+                        mvwprintw(new_usr_win , 2 , col/2 - message_len[complete] /2 , "                                                               ");
+                        complete++;
+                        break;
+                    case 2:
+                        echo();
+                        wmove(new_usr_win , 13 , usr_len_2 + 2);
+                        wgetnstr(new_usr_win , user.e_mail , MAX_SIZE - 1);
+                        int len_e_mail = strlen(user.e_mail);
+                        int check_adsign = 0;
+                        int check_dot = 0;
+                        int asghar = 0;
+                        int point_ad_sign;
+                        int point_dot;
+                        if(strcmp(check_data[1] , user.e_mail) != 0){
+                            mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "e-mail is not wrong!");
+                            break;
                         }
-                        else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        x_loc--;
+                        mvwprintw(new_usr_win , 3 , col/2 - 30 /2 , "                    ");
+                        complete++;
+                        noecho();
+                        break;
+                }
+                noecho();
+                wrefresh(new_usr_win);
+            }
+            noecho();
+            clear();
+            WINDOW * game_menu = newwin(row , col , 0 , 0);
+            box(game_menu , 0 , 0);
+            keypad(game_menu , TRUE);
+            refresh();
+            wrefresh(game_menu);
+            wbkgd(game_menu , COLOR_PAIR(3));
+            char game_option[2][MAX_SIZE] = { "<new game>" ,
+                                            "<load last game>"};
+            int game_highlight = 0;
+            int game_decision;
+            while(1)
+            {
+                for(int i = 0 ; i < 2 ; i++)
+                {
+                    int game_len = strlen(game_option[i]);
+                    if(i == game_highlight)
+                    {
+                        wattron(game_menu , A_REVERSE);
+                    }
+                    mvwprintw(game_menu , i + row/2 - 4 , col/2 - game_len/2 , game_option[i]);
+                    wattroff(game_menu , A_REVERSE);
+                }
+                game_decision = wgetch(game_menu);
+                switch (game_decision)
+                {
+                case KEY_UP:
+                    game_highlight--;
+                    if(game_highlight == -1)
+                    {
+                        game_highlight = 1;
                     }
                     break;
-                case KEY_RIGHT:
-                    if(isfloor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc + 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc + 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc + 1]))
+                case KEY_DOWN:
+                    game_highlight++;
+                    if(game_highlight == 2)
                     {
-                        if(dungeons[floor].naghseh[y_loc][x_loc + 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc + 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc + 1] == '=')
-                        {
-                            break;
-                        }
-                        else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.health >= 10)
-                            {
-                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
-                                guest.health -= 10;
-                            }
-                            else
-                                out = 2;
-                        }
-                        else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
-                        {
-                            if(guest.health <= 90)
-                            {
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                                guest.health+=10;
-                            }
-                        }
-                        else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
-                        {
-                            guest.points++;
-                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                        }
-                        else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
-                        {
-                            if(guest.weapon_num < 5)
-                            {
-                                strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
-                                guest.weapon_num++;
-                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
-                            }
-                        }
-                        x_loc++;
+                        game_highlight = 0;
                     }
+                default:
                     break;
-                
-                case '>':
-                    if(istair(dungeons[floor].naghseh[y_loc][x_loc]))
-                    {
-                        switch (floor)
-                        {
-                        case 0:
-                            if(pelle[0].x == x_loc && pelle[0].y == y_loc)
-                            {
-                                floor++;
-                                y_loc = pelle[1].y;
-                                x_loc = pelle[1].x;
-                            }
-                            break;
-                        case 1:
-                            if(pelle[1].x == x_loc && pelle[1].y == y_loc)
-                            {
-                                floor--;
-                                y_loc = pelle[0].y;
-                                x_loc = pelle[0].x;
-                            }
-                            else if(pelle[2].x == x_loc && pelle[2].y == y_loc)
-                            {
-                                floor++;
-                                y_loc = pelle[3].y;
-                                x_loc = pelle[3].x;
-                            }
-                            break;
-                        case 2:
-                            if(pelle[3].x == x_loc && pelle[3].y == y_loc)
-                            {
-                                floor--;
-                                y_loc = pelle[2].y;
-                                x_loc = pelle[2].x;
-                            }
-                            else if(pelle[4].x == x_loc && pelle[4].y == y_loc)
-                            {
-                                floor++;
-                                y_loc = pelle[5].y;
-                                x_loc = pelle[5].x;
-                            }
-                            break;
-                        case 3:
-                            if(pelle[5].x == x_loc && pelle[5].y == y_loc)
-                            {
-                                floor--;
-                                y_loc = pelle[4].y;
-                                x_loc = pelle[4].x;
-                            }
-                            break;
-                        default:
-                            break;
-                        }
-                    }
-                    else if(istreasure(dungeons[floor].naghseh[y_loc][x_loc]))
-                    {
-                        x_loc = 10;
-                        y_loc = 10;
-                        floor++;
-                    }
+                }
+                if(game_decision == 10)
+                {
                     break;
-                case 'i':
-                    WINDOW* inventory = newwin(row , col , 0 , 0);
-                    box(inventory , 0 , 0);
+                }
+            }
+            if(game_highlight == 0)
+            {}
+            else
+            {}
+
+        }
+        else if(highlight == 2)
+        {
+            noecho();
+            keypad(stdscr , TRUE);
+            clear();
+            bkgd(' ');
+            int out = 0;
+            int finish = 0;
+            while (1)
+            {
+                if(out == 2)
+                {
+                    clear();
+                    WINDOW * option_menu = newwin(row , col , 0 , 0);
+                    box(option_menu , 0 , 0);
+                    keypad(option_menu , TRUE);
                     refresh();
-                    keypad(inventory , TRUE);
-                    wrefresh(inventory);
-                    wbkgd(inventory , COLOR_PAIR(4));
-                    int inventory_highlight = 0;
-                    int inventory_decision;
+                    wrefresh(option_menu);
+                    wbkgd(option_menu , COLOR_PAIR(4));
+                    char options[2][MAX_SIZE] = { "<new game>" ,
+                                                    "<exit>"};
+                    int highlight_option = 0;
+                    int decision_option;
+                    wattron(option_menu , COLOR_PAIR(6));
+                    mvwprintw(option_menu , 0 , col/2 - 8/2 , "YOU LOST");
+                    wattroff(option_menu , COLOR_PAIR(6));
                     while(1)
-                    {
-                        for(int i = 0 ; i < guest.weapon_num ; i++)
-                        {
-                            int item_len = strlen(guest.inventory[i]);
-                            if(i == inventory_highlight)
-                            {
-                                wattron(inventory , A_REVERSE);
-                            }
-                            mvwprintw(inventory , i + 1 , col/2 - item_len/2 , guest.inventory[i]);
-                            wattroff(inventory , A_REVERSE);
-                        }
-                        inventory_decision = wgetch(inventory);
-                        switch (inventory_decision)
-                        {
-                        case KEY_UP:
-                            inventory_highlight--;
-                            if(inventory_highlight == -1)
-                            {
-                                inventory_highlight = guest.weapon_num - 1;
-                            }
-                            break;
-                        case KEY_DOWN:
-                            inventory_highlight++;
-                            if(inventory_highlight == guest.weapon_num)
-                            {
-                                inventory_highlight = 0;
-                            }
-                            break;
-                        default:
-                            break;
-                        }
-                        if(inventory_decision == 10)
-                        {
-                            break;
-                        }
-                    }
-                    break;
-                case 's':
-                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc + 1);
-                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc - 1);
-                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc);
-                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc);
-                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc - 1);
-                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc + 1);
-                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc + 1);
-                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc - 1);
-                    break;
-                case 'S':
-                    WINDOW* setting = newwin(row , col , 0 , 0);
-                    box(setting , 0 , 0);
-                    refresh();
-                    keypad(setting , TRUE);
-                    wrefresh(setting);
-                    wbkgd(setting , COLOR_PAIR(4));
-                    char setting_option[2][MAX_SIZE] = {"SAVE" , "EXIT"};
-                    int setting_highlight = 0;
-                    int setting_decision;
-                    while (1)
                     {
                         for(int i = 0 ; i < 2 ; i++)
                         {
-                            int setting_len = strlen(setting_option[i]);
-                            if(i == setting_highlight)
+                            int game_len = strlen(options[i]);
+                            if(i == highlight_option)
                             {
-                                wattron(setting , A_REVERSE);
+                                wattron(option_menu , A_REVERSE);
                             }
-                            mvwprintw(setting , i + row/2 - 4 , col/2 - setting_len/2 , setting_option[i]);
-                            wattroff(setting , A_REVERSE);
+                            mvwprintw(option_menu , i + row/2 - 4 , col/2 - game_len/2 , options[i]);
+                            wattroff(option_menu , A_REVERSE);
                         }
-                        setting_decision = wgetch(setting);
-                        switch (setting_decision)
+                        decision_option = wgetch(option_menu);
+                        switch (decision_option)
                         {
                         case KEY_UP:
-                            setting_highlight--;
-                            if(setting_highlight == -1)
+                            highlight_option--;
+                            if(highlight_option == -1)
                             {
-                                setting_highlight = 1;
+                                highlight_option = 1;
                             }
                             break;
                         case KEY_DOWN:
-                            setting_highlight++;
-                            if(setting_highlight == 2)
+                            highlight_option++;
+                            if(highlight_option == 2)
                             {
-                                setting_highlight = 0;
+                                highlight_option = 0;
                             }
-                            break;
                         default:
                             break;
                         }
-                        if(setting_decision == 10)
+                        if(decision_option == 10)
                         {
                             break;
                         }
                     }
-                    if(setting_highlight == 0)
+                    if(highlight_option == 1)
                     {
-                        
-                        clear();
-                        out = 2;
+                        exit = 1;
+                        break;
                     }
                     else
                     {
-                        out = 2;
+                        out = 0;
                     }
-                    
-                    break;
-                default:
-                    break;
                 }
                 
-            }
-        }
-
-    }
-    else if(highlight == 3)
-    {
-        WINDOW* setting_menu = newwin(row , col , 0 , 0);
-        box(setting_menu,0,0);
-        refresh();
-        wrefresh(setting_menu);
-        wbkgd(setting_menu , COLOR_PAIR(4));
-        char setting_info[3][100] = {"music"};
-        int info1_len = strlen(setting_info[0]);
-        char Tracks[4][10] = {"Track 1" , "Track 2" , "Track 3" , "NO Music"};
-        mvwprintw(setting_menu , 0 , col/2 - info1_len/2 , setting_info[0]);
-        int highlight_s = 0;
-        int decision_s;
-        noecho();
-        while(1){
-            for(int i = 0 ; i < 4 ; i++){
-                int len = strlen(Tracks[i]);
-                if(i == highlight_s){
-                    wattron(menu_win , A_REVERSE);
+                rooms Room[4][9];
+                location pelle[6];
+                int RoomNum[4];
+                for(int i = 0 ; i < 4 ; i++)
+                {
+                    dungeons[i].RoomNum = Random(3 , 9);
                 }
-                mvwprintw(menu_win , i + row/2 - 4 , col/2 - len/2 , Tracks[i]);
-                wattroff(menu_win , A_REVERSE);
-            }
-            decision_s = wgetch(menu_win);
-            switch(decision_s){
-                case KEY_UP:
-                    highlight_s--;
-                    if(highlight_s == -1){
-                        highlight_s = 3;
+                generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh , 1 , pelle);
+                generate_corridor(dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh);
+                generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh , 2 , pelle);
+                generate_corridor(dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh);
+                generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh , 3 , pelle);
+                generate_corridor(dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh);
+                generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh , 4 , pelle);
+                generate_corridor(dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh);
+                generate_treasure_room(row , col  , dungeons[4].naghseh );
+                remove("map-1-defualt.txt");
+                remove("map-2-defualt.txt");
+                remove("map-3-defualt.txt");
+                remove("map-4-defualt.txt");
+                remove("treasure-defualt.txt");
+                remove("show-1-defualt.txt");
+                remove("show-2-defualt.txt");
+                remove("show-3-defualt.txt");
+                remove("show-4-defualt.txt");
+                remove("show-defualt.txt");
+                remove("defualt.txt");
+                profile guest;
+                strcpy(guest.name , "guest-usr");
+                copy_map(row , col , guest.map[0] , dungeons[0].naghseh);
+                copy_map(row , col , guest.map[1] , dungeons[1].naghseh);
+                copy_map(row , col , guest.map[2] , dungeons[2].naghseh);
+                copy_map(row , col , guest.map[3] , dungeons[3].naghseh);
+                guest.health = 100;
+                guest.points = 0;
+                guest.gold_reserve = 0;
+                guest.weapon_num = 1;
+                strcpy(guest.inventory[0] , "NO WEAPON");
+                guest.experience = 1;
+
+                char naghsheh[MAX_SIZE][MAX_SIZE];
+
+                copy_map(row , col , naghsheh , dungeons[0].naghseh);
+                int number = Random(0 , RoomNum[0] - 1);
+                int y_loc;
+                int x_loc;
+                y_loc = spawn_py(dungeons[0].room[number]);
+                x_loc = spawn_px(dungeons[0].room[number]);
+                int floor = 0;
+                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                attron(COLOR_PAIR(4));
+                bkgd(COLOR_PAIR(4));
+                init_show(dungeons[floor].show , row , col);
+                showroom(dungeons[floor].room , dungeons[floor].naghseh , dungeons[floor].show , number);
+                while(1)
+                {
+                    
+                    clear();
+                    if(out == 1)
+                    {
+                        break;
                     }
-                    break;
-                case KEY_DOWN:
-                    highlight_s++;
-                    if(highlight_s == 4){
-                        highlight_s = 0;
+                    if(out == 2)
+                    {
+                        break;
                     }
-                    break;
-                default:
-                    break;
+                    refresh();
+                    showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc , 5);
+                    print_map(row , col , dungeons[floor].naghseh , dungeons[floor].show);
+                    mvprintw(y_loc , x_loc , "@");
+                    mvprintw(0 , 0 , "your health is %d %d|" , guest.health , floor);
+                    mvprintw(0 , 20 , "your point is %d |" , guest.points);
+                    int kilid = getch();
+                    switch (kilid)
+                    {
+                    case KEY_UP:
+                        if(isfloor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc - 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc - 1][x_loc]))
+                        {
+                            if(iswall(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ispillar(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswindow(dungeons[floor].naghseh[y_loc - 1][x_loc]))
+                            {
+                                break;
+                            }
+                            else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.health >= 10)
+                                {
+                                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                    guest.health -= 10;
+                                }
+                                else
+                                    out = 2;
+                            }
+                            else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                            {
+                                if(guest.health <= 90)
+                                {
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    guest.health+=10;
+                                }
+                            }
+                            else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                            {
+                                guest.points++;
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            y_loc--;
+                        }
+                        break;
+                    case KEY_DOWN:
+                        if(isfloor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc + 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc + 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc + 1][x_loc]))
+                        {
+                            if(dungeons[floor].naghseh[y_loc + 1][x_loc] == '-'|| dungeons[floor].naghseh[y_loc + 1][x_loc] == '0' || dungeons[floor].naghseh[y_loc + 1][x_loc] == '=')
+                            {
+                                break;
+                            }
+                            else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.health >= 10)
+                                {
+                                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                    guest.health -= 10;
+                                }
+                                else
+                                    out = 2;
+                            }
+                            else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                            {
+                                if(guest.health <= 90)
+                                {
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    guest.health+=10;
+                                }
+                            }
+                            else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                            {
+                                guest.points++;
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            y_loc++;
+                        }
+                        break;
+                    case KEY_LEFT:
+                        if(isfloor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc - 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc - 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc - 1]))
+                        {
+                            if(dungeons[floor].naghseh[y_loc][x_loc - 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc - 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc - 1] == '=')
+                            {
+                                break;
+                            }
+                            else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.health >= 10)
+                                {
+                                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                    guest.health -= 10;
+                                }
+                                else
+                                    out = 2;
+                            }
+                            else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                            {
+                                if(guest.health <= 90)
+                                {
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    guest.health+=10;
+                                }
+                            }
+                            else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                            {
+                                guest.points++;
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            x_loc--;
+                        }
+                        break;
+                    case KEY_RIGHT:
+                        if(isfloor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc + 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc + 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc + 1]))
+                        {
+                            if(dungeons[floor].naghseh[y_loc][x_loc + 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc + 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc + 1] == '=')
+                            {
+                                break;
+                            }
+                            else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.health >= 10)
+                                {
+                                    showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                    guest.health -= 10;
+                                }
+                                else
+                                    out = 2;
+                            }
+                            else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                            {
+                                if(guest.health <= 90)
+                                {
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    guest.health+=10;
+                                }
+                            }
+                            else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                            {
+                                guest.points++;
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(guest.weapon_num < 5)
+                                {
+                                    strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                    guest.weapon_num++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                            }
+                            x_loc++;
+                        }
+                        break;
+                    
+                    case '>':
+                        if(istair(dungeons[floor].naghseh[y_loc][x_loc]))
+                        {
+                            switch (floor)
+                            {
+                            case 0:
+                                if(pelle[0].x == x_loc && pelle[0].y == y_loc)
+                                {
+                                    floor++;
+                                    y_loc = pelle[1].y;
+                                    x_loc = pelle[1].x;
+                                }
+                                break;
+                            case 1:
+                                if(pelle[1].x == x_loc && pelle[1].y == y_loc)
+                                {
+                                    floor--;
+                                    y_loc = pelle[0].y;
+                                    x_loc = pelle[0].x;
+                                }
+                                else if(pelle[2].x == x_loc && pelle[2].y == y_loc)
+                                {
+                                    floor++;
+                                    y_loc = pelle[3].y;
+                                    x_loc = pelle[3].x;
+                                }
+                                break;
+                            case 2:
+                                if(pelle[3].x == x_loc && pelle[3].y == y_loc)
+                                {
+                                    floor--;
+                                    y_loc = pelle[2].y;
+                                    x_loc = pelle[2].x;
+                                }
+                                else if(pelle[4].x == x_loc && pelle[4].y == y_loc)
+                                {
+                                    floor++;
+                                    y_loc = pelle[5].y;
+                                    x_loc = pelle[5].x;
+                                }
+                                break;
+                            case 3:
+                                if(pelle[5].x == x_loc && pelle[5].y == y_loc)
+                                {
+                                    floor--;
+                                    y_loc = pelle[4].y;
+                                    x_loc = pelle[4].x;
+                                }
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                        else if(istreasure(dungeons[floor].naghseh[y_loc][x_loc]))
+                        {
+                            x_loc = 10;
+                            y_loc = 10;
+                            floor++;
+                        }
+                        break;
+                    case 'i':
+                        WINDOW* inventory = newwin(row , col , 0 , 0);
+                        box(inventory , 0 , 0);
+                        refresh();
+                        keypad(inventory , TRUE);
+                        wrefresh(inventory);
+                        wbkgd(inventory , COLOR_PAIR(4));
+                        int inventory_highlight = 0;
+                        int inventory_decision;
+                        while(1)
+                        {
+                            for(int i = 0 ; i < guest.weapon_num ; i++)
+                            {
+                                int item_len = strlen(guest.inventory[i]);
+                                if(i == inventory_highlight)
+                                {
+                                    wattron(inventory , A_REVERSE);
+                                }
+                                mvwprintw(inventory , i + 1 , col/2 - item_len/2 , guest.inventory[i]);
+                                wattroff(inventory , A_REVERSE);
+                            }
+                            inventory_decision = wgetch(inventory);
+                            switch (inventory_decision)
+                            {
+                            case KEY_UP:
+                                inventory_highlight--;
+                                if(inventory_highlight == -1)
+                                {
+                                    inventory_highlight = guest.weapon_num - 1;
+                                }
+                                break;
+                            case KEY_DOWN:
+                                inventory_highlight++;
+                                if(inventory_highlight == guest.weapon_num)
+                                {
+                                    inventory_highlight = 0;
+                                }
+                                break;
+                            default:
+                                break;
+                            }
+                            if(inventory_decision == 10)
+                            {
+                                break;
+                            }
+                        }
+                        break;
+                    case 's':
+                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc + 1);
+                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc - 1);
+                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc);
+                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc);
+                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc - 1);
+                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc + 1);
+                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc + 1);
+                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc - 1);
+                        break;
+                    case 'S':
+                        WINDOW* setting = newwin(row , col , 0 , 0);
+                        box(setting , 0 , 0);
+                        refresh();
+                        keypad(setting , TRUE);
+                        wrefresh(setting);
+                        wbkgd(setting , COLOR_PAIR(4));
+                        char setting_option[2][MAX_SIZE] = {"SAVE" , "EXIT"};
+                        int setting_highlight = 0;
+                        int setting_decision;
+                        while (1)
+                        {
+                            for(int i = 0 ; i < 2 ; i++)
+                            {
+                                int setting_len = strlen(setting_option[i]);
+                                if(i == setting_highlight)
+                                {
+                                    wattron(setting , A_REVERSE);
+                                }
+                                mvwprintw(setting , i + row/2 - 4 , col/2 - setting_len/2 , setting_option[i]);
+                                wattroff(setting , A_REVERSE);
+                            }
+                            setting_decision = wgetch(setting);
+                            switch (setting_decision)
+                            {
+                            case KEY_UP:
+                                setting_highlight--;
+                                if(setting_highlight == -1)
+                                {
+                                    setting_highlight = 1;
+                                }
+                                break;
+                            case KEY_DOWN:
+                                setting_highlight++;
+                                if(setting_highlight == 2)
+                                {
+                                    setting_highlight = 0;
+                                }
+                                break;
+                            default:
+                                break;
+                            }
+                            if(setting_decision == 10)
+                            {
+                                break;
+                            }
+                        }
+                        if(setting_highlight == 0)
+                        {
+                            FILE * map_1 = fopen("map-1-defualt.txt" , "a");
+                            FILE * map_2 = fopen("map-2-defualt.txt" , "a");
+                            FILE * map_3 = fopen("map-3-defualt.txt" , "a");
+                            FILE * map_4 = fopen("map-4-defualt.txt" , "a");
+                            FILE * treasure_map = fopen("treasure-defualt.txt" , "a");
+                            FILE * show_1 = fopen("show-1-defualt.txt" , "a");
+                            FILE * show_2 = fopen("show-2-defualt.txt" , "a");
+                            FILE * show_3 = fopen("show-3-defualt.txt" , "a");
+                            FILE * show_4 = fopen("show-4-defualt.txt" , "a");
+                            FILE * show_treasure = fopen("show-defualt.txt" , "a");
+                            FILE * guestfile = fopen("defualt.txt" , "a");
+                            for(int i = 0 ; i < row ; i++)
+                            {
+                                fprintf(map_1 ,"%s\n"  , dungeons[0].naghseh[i]);
+                            }
+                            for(int i = 0 ; i < row ; i++)
+                            {
+                                fprintf(map_2 ,"%s\n"  , dungeons[1].naghseh[i]);
+                            }
+                            for(int i = 0 ; i < row ; i++)
+                            {
+                                fprintf(map_3 ,"%s\n"  , dungeons[2].naghseh[i]);
+                            }
+                            for(int i = 0 ; i < row ; i++)
+                            {
+                                fprintf(map_4 ,"%s\n"  , dungeons[3].naghseh[i]);
+                            }
+                            for(int i = 0 ; i < row ; i++)
+                            {
+                                fprintf(treasure_map ,"%s\n"  , dungeons[4].naghseh[i]);
+                            }
+
+                            for(int i = 0 ; i < row ; i++)
+                            {
+                                for(int j = 0 ; j < col ; j++)
+                                {
+                                    fprintf(show_1 , "%d " , dungeons[0].show[i][j]);
+                                }
+                                fprintf(show_1 , "\n");
+                            }
+
+                            for(int i = 0 ; i < row ; i++)
+                            {
+                                for(int j = 0 ; j < col ; j++)
+                                {
+                                    fprintf(show_2 , "%d " , dungeons[0].show[i][j]);
+                                }
+                                fprintf(show_2 , "\n");
+                            }
+
+                            for(int i = 0 ; i < row ; i++)
+                            {
+                                for(int j = 0 ; j < col ; j++)
+                                {
+                                    fprintf(show_3 , "%d " , dungeons[0].show[i][j]);
+                                }
+                                fprintf(show_3 , "\n");
+                            }
+
+                            for(int i = 0 ; i < row ; i++)
+                            {
+                                for(int j = 0 ; j < col ; j++)
+                                {
+                                    fprintf(show_4 , "%d " , dungeons[0].show[i][j]);
+                                }
+                                fprintf(show_4 , "\n");
+                            }
+
+                            for(int i = 0 ; i < row ; i++)
+                            {
+                                for(int j = 0 ; j < col ; j++)
+                                {
+                                    fprintf(show_treasure , "%d " , dungeons[0].show[i][j]);
+                                }
+                                fprintf(show_treasure , "\n");
+                            }
+                            fprintf(guestfile , "%d\n" , guest.health);
+                            fprintf(guestfile , "%d\n" , guest.points);
+                            fprintf(guestfile , "%d\n" , guest.experience);
+                            for(int i = 0 ; i < 10 ; i++)
+                            {
+                                fprintf(guestfile , "%s\n" , guest.inventory[i]);
+                            }
+                            clear();
+                            out = 2;
+                        }
+                        else
+                        {
+                            out = 2;
+                        }
+                        
+                        break;
+                    default:
+                        break;
+                    }
+                    
+                }
             }
-            if(decision_s == 10){
-                break;
-            }
+
         }
-        
-        // if(highlight_s == 0)
-        // {
-        //     if(music_1 == NULL)
-        //     {
-        //         music_1 = Mix_LoadMUS(track_1);
-        //         Mix_PlayMusic(music_1 , -1);
-        //     }
-        //     else
-        //     {
-        //         Mix_HaltMusic();
-        //         Mix_FreeMusic(music_1);
-        //         music_1 = NULL;
-        //         Mix_CloseAudio();
-        //         music_1 = Mix_LoadMUS(track_1);
-        //         Mix_PlayMusic(music_1 , -1);
-        //     }
-        // }
-        // if(highlight_s == 1)
-        // {
-        //     if(music_1 == NULL)
-        //     {
-        //         music_1 = Mix_LoadMUS(track_2);
-        //         Mix_PlayMusic(music_1 , -1);
-        //     }
-        //     else
-        //     {
-        //         Mix_HaltMusic();
-        //         Mix_FreeMusic(music_1);
-        //         music_1 = NULL;
-        //         Mix_CloseAudio();
-        //         music_1 = Mix_LoadMUS(track_2);
-        //         Mix_PlayMusic(music_1 , -1);
-        //     }
-        // }
-        // if(highlight_s == 2)
-        // {
-        //     if(music_1 == NULL)
-        //     {
-        //         music_1 = Mix_LoadMUS(track_3);
-        //         Mix_PlayMusic(music_1 , -1);
-        //     }
-        //     else
-        //     {
-        //         Mix_HaltMusic();
-        //         Mix_FreeMusic(music_1);
-        //         music_1 = NULL;
-        //         Mix_CloseAudio();
-        //         music_1 = Mix_LoadMUS(track_3);
-        //         Mix_PlayMusic(music_1 , -1);
-        //     }
-        // }
-        // if(highlight_s == 3)
-        // {
-        //     if(music_1 != NULL)
-        //     {
-        //         Mix_HaltMusic();
-        //         Mix_FreeMusic(music_1);
-        //         music_1 = NULL;
-        //         Mix_CloseAudio();
-        //     }
-        // }
-    }
-    else if(highlight == 4)
-    {}
+        else if(highlight == 3)
+        {
+            WINDOW* setting_menu = newwin(row , col , 0 , 0);
+            box(setting_menu,0,0);
+            refresh();
+            wrefresh(setting_menu);
+            wbkgd(setting_menu , COLOR_PAIR(4));
+            char setting_info[3][100] = {"music"};
+            int info1_len = strlen(setting_info[0]);
+            char Tracks[4][10] = {"Track 1" , "Track 2" , "Track 3" , "NO Music"};
+            mvwprintw(setting_menu , 0 , col/2 - info1_len/2 , setting_info[0]);
+            int highlight_s = 0;
+            int decision_s;
+            noecho();
+            while(1){
+                for(int i = 0 ; i < 4 ; i++){
+                    int len = strlen(Tracks[i]);
+                    if(i == highlight_s){
+                        wattron(menu_win , A_REVERSE);
+                    }
+                    mvwprintw(menu_win , i + row/2 - 4 , col/2 - len/2 , Tracks[i]);
+                    wattroff(menu_win , A_REVERSE);
+                }
+                decision_s = wgetch(menu_win);
+                switch(decision_s){
+                    case KEY_UP:
+                        highlight_s--;
+                        if(highlight_s == -1){
+                            highlight_s = 3;
+                        }
+                        break;
+                    case KEY_DOWN:
+                        highlight_s++;
+                        if(highlight_s == 4){
+                            highlight_s = 0;
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                if(decision_s == 10){
+                    break;
+                }
+            }
+            
+            // if(highlight_s == 0)
+            // {
+            //     if(music_1 == NULL)
+            //     {
+            //         music_1 = Mix_LoadMUS(track_1);
+            //         Mix_PlayMusic(music_1 , -1);
+            //     }
+            //     else
+            //     {
+            //         Mix_HaltMusic();
+            //         Mix_FreeMusic(music_1);
+            //         music_1 = NULL;
+            //         Mix_CloseAudio();
+            //         music_1 = Mix_LoadMUS(track_1);
+            //         Mix_PlayMusic(music_1 , -1);
+            //     }
+            // }
+            // if(highlight_s == 1)
+            // {
+            //     if(music_1 == NULL)
+            //     {
+            //         music_1 = Mix_LoadMUS(track_2);
+            //         Mix_PlayMusic(music_1 , -1);
+            //     }
+            //     else
+            //     {
+            //         Mix_HaltMusic();
+            //         Mix_FreeMusic(music_1);
+            //         music_1 = NULL;
+            //         Mix_CloseAudio();
+            //         music_1 = Mix_LoadMUS(track_2);
+            //         Mix_PlayMusic(music_1 , -1);
+            //     }
+            // }
+            // if(highlight_s == 2)
+            // {
+            //     if(music_1 == NULL)
+            //     {
+            //         music_1 = Mix_LoadMUS(track_3);
+            //         Mix_PlayMusic(music_1 , -1);
+            //     }
+            //     else
+            //     {
+            //         Mix_HaltMusic();
+            //         Mix_FreeMusic(music_1);
+            //         music_1 = NULL;
+            //         Mix_CloseAudio();
+            //         music_1 = Mix_LoadMUS(track_3);
+            //         Mix_PlayMusic(music_1 , -1);
+            //     }
+            // }
+            // if(highlight_s == 3)
+            // {
+            //     if(music_1 != NULL)
+            //     {
+            //         Mix_HaltMusic();
+            //         Mix_FreeMusic(music_1);
+            //         music_1 = NULL;
+            //         Mix_CloseAudio();
+            //     }
+            // }
+        }
+        else if(highlight == 4)
+        {}
+        else if(highlight == 5)
+        {
+            clear();
+            FILE * map_1 = fopen("map-1-defualt.txt" , "a");
+            FILE * map_2 = fopen("map-2-defualt.txt" , "a");
+            FILE * map_3 = fopen("map-3-defualt.txt" , "a");
+            FILE * map_4 = fopen("map-4-defualt.txt" , "a");
+            FILE * treasure_map = fopen("treasure-defualt.txt" , "a");
+            FILE * show_1 = fopen("show-1-defualt.txt" , "a");
+            FILE * show_2 = fopen("show-2-defualt.txt" , "a");
+            FILE * show_3 = fopen("show-3-defualt.txt" , "a");
+            FILE * show_4 = fopen("show-4-defualt.txt" , "a");
+            FILE * show_treasure = fopen("show-defualt.txt" , "a");
+            FILE * guestfile = fopen("defualt.txt" , "a");
+            if(guestfile == NULL)
+            {}
+        }
+    } 
     // getchar();
     // SDL_Quit();
     endwin();
