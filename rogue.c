@@ -61,6 +61,18 @@ naghseh dungeons[4];
 int stairs = 0;
 
 
+
+int istair(char a)
+{
+    if(a == '>')
+    {
+        return 1;
+    }
+    return 0;
+}
+
+
+
 int istrap(char a)
 {
     if(a == '^' || a == 't')
@@ -1163,13 +1175,14 @@ int main()
         int x_loc;
         y_loc = spawn_py(dungeons[0].room[number]);
         x_loc = spawn_px(dungeons[0].room[number]);
-        dungeons[0].naghseh[y_loc][x_loc] = '.';
+        int floor = 0;
+        dungeons[floor].naghseh[y_loc][x_loc] = '.';
         // naghsheh[y_loc][x_loc] = '.';
         attron(COLOR_PAIR(4));
         bkgd(COLOR_PAIR(4));
         // getch();
-        init_show(dungeons[0].show , row , col);
-        showroom(dungeons[0].room , dungeons[0].naghseh , dungeons[0].show , number);
+        init_show(dungeons[floor].show , row , col);
+        showroom(dungeons[floor].room , dungeons[floor].naghseh , dungeons[floor].show , number);
         int out = 0;
         while(1)
         {
@@ -1183,22 +1196,22 @@ int main()
                 break;
             }
             refresh();
-            showcorridor(dungeons[0].naghseh , dungeons[0].show , x_loc , y_loc);
-            print_map(row , col , dungeons[0].naghseh , dungeons[0].show);
+            showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+            print_map(row , col , dungeons[floor].naghseh , dungeons[floor].show);
             mvprintw(y_loc , x_loc , "@");
-            mvprintw(0 , 0 , "your health is %d |" , guest.health);
+            mvprintw(0 , 0 , "your health is %d %d|" , guest.health , floor);
             mvprintw(0 , 20 , "your point is %d |" , guest.points);
             int kilid = getch();
             switch (kilid)
             {
             case KEY_UP:
-                if(isfloor(dungeons[0].naghseh[y_loc - 1][x_loc]) || iscorridor(dungeons[0].naghseh[y_loc - 1][x_loc]) || isdoor(dungeons[0].naghseh[y_loc - 1][x_loc]) || istrap(dungeons[0].naghseh[y_loc - 1][x_loc]) || isfood(dungeons[0].naghseh[y_loc - 1][x_loc]))
+                if(isfloor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc - 1][x_loc]))
                 {
-                    if(iswall(dungeons[0].naghseh[y_loc - 1][x_loc]) || ispillar(dungeons[0].naghseh[y_loc - 1][x_loc]) || iswindow(dungeons[0].naghseh[y_loc - 1][x_loc]))
+                    if(iswall(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ispillar(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswindow(dungeons[floor].naghseh[y_loc - 1][x_loc]))
                     {
                         break;
                     }
-                    else if(istrap(dungeons[0].naghseh[y_loc][x_loc]))
+                    else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
                     {
                         if(guest.health >= 10)
                         {
@@ -1208,11 +1221,11 @@ int main()
                         else
                             out = 2;
                     }
-                    else if(dungeons[0].naghseh[y_loc][x_loc] == 'f')
+                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
                     {
                         if(guest.health <= 90)
                         {
-                            dungeons[0].naghseh[y_loc][x_loc] = '.';
+                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
                             guest.health+=10;
                         }
                     }
@@ -1220,13 +1233,13 @@ int main()
                 }
                 break;
             case KEY_DOWN:
-                if(isfloor(dungeons[0].naghseh[y_loc + 1][x_loc]) || iscorridor(dungeons[0].naghseh[y_loc + 1][x_loc]) || isdoor(dungeons[0].naghseh[y_loc + 1][x_loc]) || istrap(dungeons[0].naghseh[y_loc + 1][x_loc]) || isfood(dungeons[0].naghseh[y_loc + 1][x_loc]))
+                if(isfloor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc + 1][x_loc]))
                 {
-                    if(dungeons[0].naghseh[y_loc + 1][x_loc] == '-'|| dungeons[0].naghseh[y_loc + 1][x_loc] == '0' || dungeons[0].naghseh[y_loc + 1][x_loc] == '=')
+                    if(dungeons[floor].naghseh[y_loc + 1][x_loc] == '-'|| dungeons[floor].naghseh[y_loc + 1][x_loc] == '0' || dungeons[floor].naghseh[y_loc + 1][x_loc] == '=')
                     {
                         break;
                     }
-                    else if(istrap(dungeons[0].naghseh[y_loc][x_loc]))
+                    else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
                     {
                         if(guest.health >= 10)
                         {
@@ -1236,11 +1249,11 @@ int main()
                         else
                             out = 2;
                     }
-                    else if(dungeons[0].naghseh[y_loc][x_loc] == 'f')
+                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
                     {
                         if(guest.health <= 90)
                         {
-                            dungeons[0].naghseh[y_loc][x_loc] = '.';
+                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
                             guest.health+=10;
                         }
                     }
@@ -1248,13 +1261,13 @@ int main()
                 }
                 break;
             case KEY_LEFT:
-                if(isfloor(dungeons[0].naghseh[y_loc][x_loc - 1]) || iscorridor(dungeons[0].naghseh[y_loc][x_loc - 1]) || isdoor(dungeons[0].naghseh[y_loc][x_loc - 1]) || istrap(dungeons[0].naghseh[y_loc][x_loc - 1]) || isfood(dungeons[0].naghseh[y_loc][x_loc - 1]))
+                if(isfloor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc - 1]))
                 {
-                    if(dungeons[0].naghseh[y_loc][x_loc - 1] == '|'|| dungeons[0].naghseh[y_loc][x_loc - 1] == '0' || dungeons[0].naghseh[y_loc][x_loc - 1] == '=')
+                    if(dungeons[floor].naghseh[y_loc][x_loc - 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc - 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc - 1] == '=')
                     {
                         break;
                     }
-                    else if(istrap(dungeons[0].naghseh[y_loc][x_loc]))
+                    else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
                     {
                         if(guest.health >= 10)
                         {
@@ -1264,11 +1277,11 @@ int main()
                         else
                             out = 2;
                     }
-                    else if(dungeons[0].naghseh[y_loc][x_loc] == 'f')
+                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
                     {
                         if(guest.health <= 90)
                         {
-                            dungeons[0].naghseh[y_loc][x_loc] = '.';
+                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
                             guest.health+=10;
                         }
                     }
@@ -1276,13 +1289,13 @@ int main()
                 }
                 break;
             case KEY_RIGHT:
-                if(isfloor(dungeons[0].naghseh[y_loc][x_loc + 1]) || iscorridor(dungeons[0].naghseh[y_loc][x_loc + 1]) || isdoor(dungeons[0].naghseh[y_loc][x_loc + 1]) || istrap(dungeons[0].naghseh[y_loc][x_loc + 1]) || isfood(dungeons[0].naghseh[y_loc][x_loc + 1]))
+                if(isfloor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc + 1]))
                 {
-                    if(dungeons[0].naghseh[y_loc][x_loc + 1] == '|'|| dungeons[0].naghseh[y_loc][x_loc + 1] == '0' || dungeons[0].naghseh[y_loc][x_loc + 1] == '=')
+                    if(dungeons[floor].naghseh[y_loc][x_loc + 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc + 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc + 1] == '=')
                     {
                         break;
                     }
-                    else if(istrap(dungeons[0].naghseh[y_loc][x_loc]))
+                    else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
                     {
                         if(guest.health >= 10)
                         {
@@ -1292,15 +1305,70 @@ int main()
                         else
                             out = 2;
                     }
-                    else if(dungeons[0].naghseh[y_loc][x_loc] == 'f')
+                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
                     {
                         if(guest.health <= 90)
                         {
-                            dungeons[0].naghseh[y_loc][x_loc] = '.';
+                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
                             guest.health+=10;
                         }
                     }
                     x_loc++;
+                }
+                break;
+            
+            case '>':
+                if(istair(dungeons[floor].naghseh[y_loc][x_loc]))
+                {
+                    switch (floor)
+                    {
+                    case 0:
+                        if(pelle[0].x == x_loc && pelle[0].y == y_loc)
+                        {
+                            floor++;
+                            y_loc = pelle[1].y;
+                            x_loc = pelle[1].x;
+                        }
+                        break;
+                    case 1:
+                        if(pelle[1].x == x_loc && pelle[1].y == y_loc)
+                        {
+                            floor--;
+                            y_loc = pelle[0].y;
+                            x_loc = pelle[0].x;
+                        }
+                        else if(pelle[2].x == x_loc && pelle[2].y == y_loc)
+                        {
+                            floor++;
+                            y_loc = pelle[3].y;
+                            x_loc = pelle[3].x;
+                        }
+                        break;
+                    case 2:
+                        if(pelle[3].x == x_loc && pelle[3].y == y_loc)
+                        {
+                            floor--;
+                            y_loc = pelle[2].y;
+                            x_loc = pelle[2].x;
+                        }
+                        else if(pelle[4].x == x_loc && pelle[4].y == y_loc)
+                        {
+                            floor++;
+                            y_loc = pelle[5].y;
+                            x_loc = pelle[5].x;
+                        }
+                        break;
+                    case 3:
+                        if(pelle[5].x == x_loc && pelle[5].y == y_loc)
+                        {
+                            floor--;
+                            y_loc = pelle[4].y;
+                            x_loc = pelle[4].x;
+                        }
+                        break;
+                    default:
+                        break;
+                    }
                 }
                 break;
             case 'S':
