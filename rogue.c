@@ -166,6 +166,15 @@ int isfood(char a)
     return 0;
 }
 
+int isfood(char a)
+{
+    if(a == 'G')
+    {
+        return 1;
+    }
+    return 0;
+}
+
 int ispillar(char a)
 {
     if(a == '0')
@@ -477,10 +486,38 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh
         stairs_num = 2;
     }
     int stairs_cnt = 0;
+    int weapon_type = Random(0,5);
+    char weapon;
+    int weapon_cnt = 0;
+    switch (weapon_type)
+    {
+    case 0:
+        weapon = 'M';
+        break;
+    case 1:
+        weapon = 'I';
+        break;
+    case 2:
+        weapon = 'p';
+        break;
+    case 3:
+        weapon = 'Y';
+        break;
+    case 4:
+        weapon = 'P';
+        break;
+    default:
+        break;
+    }
+
+
+    int points = Random(0 , 7);
+    int gold_cnt = 0;
+
 
     for(int i = 0 ; i < RoomNum ; i++)
     {
-        int x ;
+        int x;
         int y;
         int room_width;
         int room_hight;
@@ -570,6 +607,7 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh
                     else
                     {
                         int pilar = Random(0,10);
+                        int randgold = Random(0,10);
                         if(pilar == 0 && pillar_count < 4 && j > y + 1 && j < room_hight + y - 1 && i_1 > x + 1 && i_1 < x + room_width - 1)
                         {
                             pillar_count++;
@@ -584,8 +622,16 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh
                         else if(pilar == 2)
                         {
                             //food
-                            naghsheh[j][i_1] = 'f';
-                            Room[i].map[j][i_1] = 'f';
+                            if(randgold > 5)
+                            {
+                                naghsheh[j][i_1] = 'f';
+                                Room[i].map[j][i_1] = 'f';
+                            }
+                            else
+                            {
+                                naghsheh[j][i_1] = 'G';
+                                Room[i].map[j][i_1] = 'G';
+                            }
                         }
                         else
                         {
@@ -597,6 +643,12 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh
                                 pelle[stairs].y = j;
                                 stairs++;
                                 stairs_cnt++;
+                            }
+                            else if(weapon_cnt < 1)
+                            {
+                                naghsheh[j][i_1] = weapon;
+                                Room[i].map[j][i_1] = weapon;
+                                weapon_cnt++;
                             }
                             else
                             {
