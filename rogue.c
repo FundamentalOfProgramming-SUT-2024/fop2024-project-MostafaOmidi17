@@ -4,13 +4,14 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
-// #include <cjson/cJSON.h> 
+// #include <cjson/cJSON.h>
+#include <SDL2/SDL.h> 
 #include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL.h>
 #define track_1 "1.mp3"
 #define track_2 "2.mp3"
 #define track_3 "3.mp3"
 #define MAX_SIZE 400
+int all_treasures = 0;
 
 
 
@@ -242,6 +243,47 @@ int Random(int min , int max)
     return rand() % diff + min;
 }
 
+
+
+// void Seda_1()
+// {
+//     if(SDL_Init(SDL_INIT_AUDIO) < 0)
+//     {
+//         fprintf(stdscr , "SDL could not initialize! SDL_Error: %s\n" , SDL_GetError());
+//         exit(1);
+//     }
+
+//     if(Mix_OpenAudio(44100 , MIX_DEFAULT_FORMAT , 2 , 2048) < 0)
+//     {
+//         fprintf(stdscr , "SDL could not initialize! SDL_Mixer Error: %s\n" , Mix_GetError());
+//         exit(1);
+//     }
+// }
+
+
+// void play_track(const char *file)
+// {
+//     Mix_Music *music = Mix_LoadMUS(file);
+//     if(music == NULL)
+//     {
+//         fprintf(stdscr , "Failed to load music! SDL_Mixer Error: %s\n" , Mix_GetError());
+//         exit(1);
+//     }
+
+//     if(Mix_PlayMusic(music , -1) < 0)
+//     {
+//         fprintf(stdscr , "Failed to play music! SDL_Mixer Error: %s\n" , Mix_GetError());
+//         exit(1);
+//     }
+// }
+
+
+// void stop()
+// {
+//     Mix_HaltMusic();
+//     Mix_CloseAudio();
+//     SDL_Quit();
+// }
 
 void connect(int x_i , int y_i , int x_f , int y_f , char naghsheh[][MAX_SIZE])
 {
@@ -709,6 +751,7 @@ void generate_treasure_room(int row , int col , char naghsheh[][MAX_SIZE])
                 else
                 {
                     naghsheh[j][i] = 'G';
+                    all_treasures++;
                 }
             }
             else
@@ -717,143 +760,6 @@ void generate_treasure_room(int row , int col , char naghsheh[][MAX_SIZE])
             }
         }
     }
-    
-
-
-
-
-
-
-
-    // for(int i = 0 ; i < RoomNum ; i++)
-    // {
-    //     int x;
-    //     int y;
-    //     int room_width;
-    //     int room_hight;
-    //     room_width = 50;
-    //     room_hight = 20;
-    //     //making sure that our rooms doesnt get out of the map.
-    //     x = 0;
-    //     y = 0;
-        
-        
-    //     int count = 0;
-    //     //checking if there is any full place in random room or not.
-    //     for(int i = y - 1; i < y + room_hight + 1 ; i++ )
-    //     {
-    //         for(int j = x - 1 ; j < x + room_width + 1 ; j++)
-    //         {
-    //             if(naghsheh[i][j] != ' ')
-    //             {
-    //                 count = 1;
-    //                 i = y + room_hight + 1;
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     if(count == 1)
-    //     {
-    //         i--;
-    //     }
-    //     else
-    //     {
-    //         Room[i].size_x = room_width;
-    //         Room[i].size_y = room_hight;
-    //         Room[i].x_c = x;
-    //         Room[i].y_c = y;
-    //         int door_count = 0;
-    //         int pillar_count = 0;
-    //         for(int i_1 = x ; i_1 < x + room_width ; i_1++)
-    //         {
-    //             for(int j = y ; j < y + room_hight ; j++)
-    //             {
-    //                 if(i_1 == x && j == y || i_1 == x + room_width - 1 && j == y || i_1 == x && j == y + room_hight - 1 || i_1 == x + room_width - 1 && j == y + room_hight - 1)
-    //                 {
-    //                     naghsheh[j][i_1] = ' ';
-    //                     Room[i].map[j][i_1] = ' ';
-    //                 }
-    //                 else if(i_1 == x || i_1 == x + room_width - 1)
-    //                 {
-    //                     int door = Random(0,x+room_width-1);
-    //                     int window = Random(0,100);
-    //                     if(door > (50) * (x+room_width-1) / 100 && door_count < 2 && j <= y + room_hight - 3 || (i_1 == x + room_width - 3 && j == y + room_hight - 3 && door_count == 0))
-    //                     {
-    //                         (Room[i].door[door_count]).x = i_1;
-    //                         (Room[i].door[door_count]).y = j;
-    //                         door_count++;
-    //                         naghsheh[j][i_1] = '+';
-    //                         Room[i].map[j][i_1] = '+';
-    //                     }
-    //                     else
-    //                     {
-    //                         naghsheh[j][i_1] = '|';
-    //                         Room[i].map[j][i_1] = '|';
-    //                     }
-    //                 }
-    //                 else if(j == y || j == y + room_hight - 1)
-    //                 {
-    //                     int door = Random(0,x+room_width-1);
-    //                     int window = Random(0,100);
-    //                     if(door > (50) * (x+room_width-1) / 100 && door_count < 2 && j <= y + room_hight - 3 || (i_1 == x + room_width - 3 && j == y + room_hight - 3 && door_count == 0))
-    //                     {
-    //                         (Room[i].door[door_count]).x = i_1;
-    //                         (Room[i].door[door_count]).y = j;
-    //                         door_count++;
-    //                         naghsheh[j][i_1] = '+';
-    //                         Room[i].map[j][i_1] = '+';
-    //                     }
-    //                     else if(window > 80 && j <= y + room_hight - 3 )
-    //                     {
-    //                         naghsheh[j][i_1] = '=';
-    //                         Room[i].map[j][i_1] = '=';
-    //                     }
-    //                     else
-    //                     {
-    //                         naghsheh[j][i_1] = '-';
-    //                         Room[i].map[j][i_1] = '-';
-    //                     }
-    //                 }
-    //                 else
-    //                 {
-    //                     int pilar = Random(0,10);
-    //                     int randgold = Random(0,10);
-    //                     if(pilar == 0 && pillar_count < 4 && j > y + 1 && j < room_hight + y - 1 && i_1 > x + 1 && i_1 < x + room_width - 1)
-    //                     {
-    //                         pillar_count++;
-    //                         naghsheh[j][i_1] = '0';
-    //                         Room[i].map[j][i_1] = '0';
-    //                     }
-    //                     else if(pilar < 4)
-    //                     {
-    //                         naghsheh[j][i_1] = '^';
-    //                         Room[i].map[j][i_1] = '^';
-    //                     }
-    //                     else if(pilar == 4)
-    //                     {
-    //                         naghsheh[j][i_1] = 'f';
-    //                         Room[i].map[j][i_1] = 'f';
-    //                     }
-    //                     else
-    //                     {
-    //                         if(randgold < 5)
-    //                         {
-    //                             naghsheh[j][i_1] = 'G';
-    //                             Room[i].map[j][i_1] = 'G';
-    //                         }
-    //                         else
-    //                         {
-    //                             naghsheh[j][i_1] = '.';
-    //                             Room[i].map[j][i_1] = '.';
-    //                         }
-    //                     }
-    //                 }
-    //             }
-    //             Room[i].numdoor = door_count;
-    //         }
-    //     }
-    // }
-
 }
 
 
@@ -873,34 +779,6 @@ void generate_corridor(rooms Room[] , int RoomNum , char naghsheh[][MAX_SIZE])
             connect(init.x , init.y , finish.x , finish.y , naghsheh);
         }
     }
-    // for(int i = 0 ; i < RoomNum ; i++)
-    // {
-    //     for(int j = 0 ; j < Room[i].numdoor ; j++)
-    //     {
-    //         int x_i = Room[i].door->x;
-    //         int y_i = Room[i].door->y;
-    //         if(naghsheh[y_i - 1][x_i] != '#' && naghsheh[y_i + 1][x_i] != '#' && naghsheh[y_i][x_i - 1] != '#' && naghsheh[y_i][x_i + 1] != '#')
-    //         {
-    //             if(naghsheh[y_i][x_i - 1] == '.' || naghsheh[y_i][x_i - 1] == '0' || naghsheh[y_i][x_i - 1] == '^')
-    //             {
-    //                 naghsheh[y_i][x_i] = '|';
-    //             }
-    //             else if(naghsheh[y_i][x_i + 1] == '.' || naghsheh[y_i][x_i + 1] == '0' || naghsheh[y_i][x_i + 1] == '^')
-    //             {
-    //                 naghsheh[y_i][x_i] = '|';
-    //             }
-    //             else if(naghsheh[y_i - 1][x_i] == '.' || naghsheh[y_i - 1][x_i] == '0' || naghsheh[y_i - 1][x_i] == '^')
-    //             {
-    //                 naghsheh[y_i][x_i] = '|';
-    //             }
-    //             else if(naghsheh[y_i + 1][x_i] == '.' || naghsheh[y_i + 1][x_i] == '0' || naghsheh[y_i + 1][x_i] == '^')
-    //             {
-    //                 naghsheh[y_i][x_i] = '|';
-    //             }
-    //         }
-    //     }
-    // }
-
 }
 
 
@@ -980,6 +858,18 @@ void showtraps(char map[MAX_SIZE][MAX_SIZE] , int show[MAX_SIZE][MAX_SIZE], int 
 }
 
 
+void init_map(int row , int col , char map[MAX_SIZE][MAX_SIZE])
+{
+    clear();
+    move(0,0);
+    for (int i = 0; i < col; i++)
+    {
+        for (int j = 0; j < row; j++)
+        {
+            map[j][i] = ' ';
+        }
+    }
+}
 
 
 void print_map(int row , int col , char map[MAX_SIZE][MAX_SIZE] , int show[MAX_SIZE][MAX_SIZE])
@@ -1007,6 +897,26 @@ void print_map(int row , int col , char map[MAX_SIZE][MAX_SIZE] , int show[MAX_S
     }
 }
 
+void print_map_1(int row , int col , char map[MAX_SIZE][MAX_SIZE] , int show[MAX_SIZE][MAX_SIZE])
+{
+    clear();
+    move(0,0);
+    for (int i = 0; i < row; i++)
+    {
+        mvprintw(i , 0 , map[i]);
+    }
+}
+
+void print(int row , int col , char map[MAX_SIZE][MAX_SIZE] , int show[MAX_SIZE][MAX_SIZE])
+{
+    clear();
+    move(0,0);
+    for (int i = 0; i < row + 10; i++)
+    {
+        for(int j = 0 ; j < col + 11 ; j++)
+            mvaddch(i , j , map[i][j]);
+    }
+}
 
 
 void game(){}
@@ -1150,6 +1060,7 @@ int main()
             char input[3][MAX_SIZE];
             FILE * fptr_usr;
             FILE * fptr_all_names_append;
+            char temp[100];
             fptr_all_names_append = fopen("all-names.txt" , "a");
             keypad(new_usr_win , TRUE);
             while(complete < 3){
@@ -1253,7 +1164,7 @@ int main()
             int game_decision;
             while(1)
             {
-                for(int i = 0 ; i < 2 ; i++)
+                for(int i = 0 ; i < 1 ; i++)
                 {
                     int game_len = strlen(game_option[i]);
                     if(i == game_highlight)
@@ -1270,12 +1181,12 @@ int main()
                     game_highlight--;
                     if(game_highlight == -1)
                     {
-                        game_highlight = 1;
+                        game_highlight = 0;
                     }
                     break;
                 case KEY_DOWN:
                     game_highlight++;
-                    if(game_highlight == 2)
+                    if(game_highlight == 1)
                     {
                         game_highlight = 0;
                     }
@@ -1288,10 +1199,765 @@ int main()
                     break;
                 }
             }
+            char file_1[MAX_SIZE] = "map-1-";
+            char file_2[MAX_SIZE] = "map-2-";
+            char file_3[MAX_SIZE] = "map-3-";
+            char file_4[MAX_SIZE] = "map-4-";
+            char file_5[MAX_SIZE] = "treasure-";
+            char file_6[MAX_SIZE] = "show-1-";
+            char file_7[MAX_SIZE] = "show-2-";
+            char file_8[MAX_SIZE] = "show-3-";
+            char file_9[MAX_SIZE] = "show-4-";
+            char file_10[MAX_SIZE] = "show-";
+            char file_11[MAX_SIZE] = "usr-games-";
+            strcat(file_1 , temp);
+            strcat(file_2 , temp);
+            strcat(file_3 , temp);
+            strcat(file_4 , temp);
+            strcat(file_5 , temp);
+            strcat(file_6 , temp);
+            strcat(file_7 , temp);
+            strcat(file_8 , temp);
+            strcat(file_9 , temp);
+            strcat(file_10 , temp);
+            strcat(file_11 , temp);
             if(game_highlight == 0)
-            {}
-            else
-            {}
+            {
+                noecho();
+                keypad(stdscr , TRUE);
+                clear();
+                bkgd(' ');
+                int out = 0;
+                int finish = 0;
+                while (1)
+                {
+                    if(out == 2)
+                    {
+                        clear();
+                        WINDOW * option_menu = newwin(row , col , 0 , 0);
+                        box(option_menu , 0 , 0);
+                        keypad(option_menu , TRUE);
+                        refresh();
+                        wrefresh(option_menu);
+                        wbkgd(option_menu , COLOR_PAIR(4));
+                        char options[2][MAX_SIZE] = { "<new game>" ,
+                                                        "<exit>"};
+                        int highlight_option = 0;
+                        int decision_option;
+                        wattron(option_menu , COLOR_PAIR(6));
+                        mvwprintw(option_menu , 0 , col/2 - 8/2 , "YOU LOST");
+                        wattroff(option_menu , COLOR_PAIR(6));
+                        while(1)
+                        {
+                            for(int i = 0 ; i < 2 ; i++)
+                            {
+                                int game_len = strlen(options[i]);
+                                if(i == highlight_option)
+                                {
+                                    wattron(option_menu , A_REVERSE);
+                                }
+                                mvwprintw(option_menu , i + row/2 - 4 , col/2 - game_len/2 , options[i]);
+                                wattroff(option_menu , A_REVERSE);
+                            }
+                            decision_option = wgetch(option_menu);
+                            switch (decision_option)
+                            {
+                            case KEY_UP:
+                                highlight_option--;
+                                if(highlight_option == -1)
+                                {
+                                    highlight_option = 1;
+                                }
+                                break;
+                            case KEY_DOWN:
+                                highlight_option++;
+                                if(highlight_option == 2)
+                                {
+                                    highlight_option = 0;
+                                }
+                            default:
+                                break;
+                            }
+                            if(decision_option == 10)
+                            {
+                                break;
+                            }
+                        }
+                        if(highlight_option == 1)
+                        {
+                            exit = 1;
+                            break;
+                        }
+                        else
+                        {
+                            out = 0;
+                        }
+                    }
+                    
+                    rooms Room[4][9];
+                    location pelle[6];
+                    int RoomNum[4];
+                    for(int i = 0 ; i < 4 ; i++)
+                    {
+                        dungeons[i].RoomNum = Random(3 , 9);
+                    }
+                    generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh , 1 , pelle);
+                    generate_corridor(dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh);
+                    generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh , 2 , pelle);
+                    generate_corridor(dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh);
+                    generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh , 3 , pelle);
+                    generate_corridor(dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh);
+                    generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh , 4 , pelle);
+                    generate_corridor(dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh);
+                    generate_treasure_room(row , col  , dungeons[4].naghseh );
+                    remove(file_1);
+                    remove(file_2);
+                    remove(file_3);
+                    remove(file_4);
+                    remove(file_5);
+                    remove(file_6);
+                    remove(file_7);
+                    remove(file_8);
+                    remove(file_9);
+                    remove(file_10);
+                    remove(file_11);
+                    profile guest;
+                    strcpy(guest.name , "guest-usr");
+                    
+                    guest.health = 100;
+                    guest.points = 0;
+                    guest.gold_reserve = 0;
+                    guest.weapon_num = 1;
+                    strcpy(guest.inventory[0] , "NO WEAPON");
+                    guest.experience = 1;
+                    int number = Random(0 , RoomNum[0] - 1);
+                    int y_loc;
+                    int x_loc;
+                    y_loc = spawn_py(dungeons[0].room[number]);
+                    x_loc = spawn_px(dungeons[0].room[number]);
+                    int floor = 0;
+                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                    attron(COLOR_PAIR(4));
+                    bkgd(COLOR_PAIR(4));
+                    init_show(dungeons[floor].show , row , col);
+                    showroom(dungeons[floor].room , dungeons[floor].naghseh , dungeons[floor].show , number);
+                    while(1)
+                    {
+                        
+                        clear();
+                        if(out == 1)
+                        {
+                            break;
+                        }
+                        if(out == 2)
+                        {
+                            break;
+                        }
+                        refresh();
+                        showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc , 5);
+                        print_map(row , col , dungeons[floor].naghseh , dungeons[floor].show);
+                        mvprintw(y_loc , x_loc , "@");
+                        mvprintw(0 , 0 , "your health is %d %d|" , guest.health , floor);
+                        mvprintw(0 , 20 , "your point is %d |" , guest.points);
+                        int kilid = getch();
+                        switch (kilid)
+                        {
+                        case KEY_UP:
+                            if(isfloor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc - 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc - 1][x_loc]))
+                            {
+                                if(iswall(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ispillar(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswindow(dungeons[floor].naghseh[y_loc - 1][x_loc]))
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                y_loc--;
+                            }
+                            break;
+                        case KEY_DOWN:
+                            if(isfloor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc + 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc + 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc + 1][x_loc]))
+                            {
+                                if(dungeons[floor].naghseh[y_loc + 1][x_loc] == '-'|| dungeons[floor].naghseh[y_loc + 1][x_loc] == '0' || dungeons[floor].naghseh[y_loc + 1][x_loc] == '=')
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                y_loc++;
+                            }
+                            break;
+                        case KEY_LEFT:
+                            if(isfloor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc - 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc - 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc - 1]))
+                            {
+                                if(dungeons[floor].naghseh[y_loc][x_loc - 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc - 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc - 1] == '=')
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                x_loc--;
+                            }
+                            break;
+                        case KEY_RIGHT:
+                            if(isfloor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc + 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc + 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc + 1]))
+                            {
+                                if(dungeons[floor].naghseh[y_loc][x_loc + 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc + 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc + 1] == '=')
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                x_loc++;
+                            }
+                            break;
+                        
+                        case '>':
+                            if(istair(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                switch (floor)
+                                {
+                                case 0:
+                                    if(pelle[0].x == x_loc && pelle[0].y == y_loc)
+                                    {
+                                        floor++;
+                                        y_loc = pelle[1].y;
+                                        x_loc = pelle[1].x;
+                                    }
+                                    break;
+                                case 1:
+                                    if(pelle[1].x == x_loc && pelle[1].y == y_loc)
+                                    {
+                                        floor--;
+                                        y_loc = pelle[0].y;
+                                        x_loc = pelle[0].x;
+                                    }
+                                    else if(pelle[2].x == x_loc && pelle[2].y == y_loc)
+                                    {
+                                        floor++;
+                                        y_loc = pelle[3].y;
+                                        x_loc = pelle[3].x;
+                                    }
+                                    break;
+                                case 2:
+                                    if(pelle[3].x == x_loc && pelle[3].y == y_loc)
+                                    {
+                                        floor--;
+                                        y_loc = pelle[2].y;
+                                        x_loc = pelle[2].x;
+                                    }
+                                    else if(pelle[4].x == x_loc && pelle[4].y == y_loc)
+                                    {
+                                        floor++;
+                                        y_loc = pelle[5].y;
+                                        x_loc = pelle[5].x;
+                                    }
+                                    break;
+                                case 3:
+                                    if(pelle[5].x == x_loc && pelle[5].y == y_loc)
+                                    {
+                                        floor--;
+                                        y_loc = pelle[4].y;
+                                        x_loc = pelle[4].x;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                            }
+                            else if(istreasure(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                x_loc = 10;
+                                y_loc = 10;
+                                floor++;
+                            }
+                            break;
+                        case 'i':
+                            WINDOW* inventory = newwin(row , col , 0 , 0);
+                            box(inventory , 0 , 0);
+                            refresh();
+                            keypad(inventory , TRUE);
+                            wrefresh(inventory);
+                            wbkgd(inventory , COLOR_PAIR(4));
+                            int inventory_highlight = 0;
+                            int inventory_decision;
+                            while(1)
+                            {
+                                for(int i = 0 ; i < guest.weapon_num ; i++)
+                                {
+                                    int item_len = strlen(guest.inventory[i]);
+                                    if(i == inventory_highlight)
+                                    {
+                                        wattron(inventory , A_REVERSE);
+                                    }
+                                    mvwprintw(inventory , i + 1 , col/2 - item_len/2 , guest.inventory[i]);
+                                    wattroff(inventory , A_REVERSE);
+                                }
+                                inventory_decision = wgetch(inventory);
+                                switch (inventory_decision)
+                                {
+                                case KEY_UP:
+                                    inventory_highlight--;
+                                    if(inventory_highlight == -1)
+                                    {
+                                        inventory_highlight = guest.weapon_num - 1;
+                                    }
+                                    break;
+                                case KEY_DOWN:
+                                    inventory_highlight++;
+                                    if(inventory_highlight == guest.weapon_num)
+                                    {
+                                        inventory_highlight = 0;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                                if(inventory_decision == 10)
+                                {
+                                    break;
+                                }
+                            }
+                            break;
+                        case 's':
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc + 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc - 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc - 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc + 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc + 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc - 1);
+                            break;
+                        case 'S':
+                            WINDOW* setting = newwin(row , col , 0 , 0);
+                            box(setting , 0 , 0);
+                            refresh();
+                            keypad(setting , TRUE);
+                            wrefresh(setting);
+                            wbkgd(setting , COLOR_PAIR(4));
+                            char setting_option[2][MAX_SIZE] = {"SAVE" , "EXIT"};
+                            int setting_highlight = 0;
+                            int setting_decision;
+                            while (1)
+                            {
+                                for(int i = 0 ; i < 2 ; i++)
+                                {
+                                    int setting_len = strlen(setting_option[i]);
+                                    if(i == setting_highlight)
+                                    {
+                                        wattron(setting , A_REVERSE);
+                                    }
+                                    mvwprintw(setting , i + row/2 - 4 , col/2 - setting_len/2 , setting_option[i]);
+                                    wattroff(setting , A_REVERSE);
+                                }
+                                setting_decision = wgetch(setting);
+                                switch (setting_decision)
+                                {
+                                case KEY_UP:
+                                    setting_highlight--;
+                                    if(setting_highlight == -1)
+                                    {
+                                        setting_highlight = 1;
+                                    }
+                                    break;
+                                case KEY_DOWN:
+                                    setting_highlight++;
+                                    if(setting_highlight == 2)
+                                    {
+                                        setting_highlight = 0;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                                if(setting_decision == 10)
+                                {
+                                    break;
+                                }
+                            }
+                            if(setting_highlight == 0)
+                                {
+                                    FILE * map_1 = fopen(file_1 , "w");
+                                    FILE * map_2 = fopen(file_2 , "w");
+                                    FILE * map_3 = fopen(file_3 , "w");
+                                    FILE * map_4 = fopen(file_4 , "w");
+                                    FILE * treasure_map = fopen(file_5 , "w");
+                                    FILE * show_1 = fopen(file_6 , "w");
+                                    FILE * show_2 = fopen(file_7 , "w");
+                                    FILE * show_3 = fopen(file_8 , "w");
+                                    FILE * show_4 = fopen(file_9 , "w");
+                                    FILE * show_treasure = fopen(file_10 , "w");
+                                    FILE * guestfile = fopen(file_11 , "w");
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_1 ,"%s\n"  , dungeons[0].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_2 ,"%s\n"  , dungeons[1].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_3 ,"%s\n"  , dungeons[2].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_4 ,"%s\n"  , dungeons[3].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(treasure_map ,"%s\n"  , dungeons[4].naghseh[i]);
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_1 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_1 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_2 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_2 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_3 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_3 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_4 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_4 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_treasure , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_treasure , "\n");
+                                    }
+                                    fprintf(guestfile , "%d\n" , guest.health);
+                                    fprintf(guestfile , "%d\n" , guest.points);
+                                    fprintf(guestfile , "%d\n" , guest.experience);
+                                    fprintf(guestfile , "%d\n" , y_loc);
+                                    fprintf(guestfile , "%d\n" , x_loc);
+                                    fprintf(guestfile , "%d\n" , floor);
+                                    fprintf(guestfile , "%d\n" , pelle[0].x);
+                                    fprintf(guestfile , "%d\n" , pelle[0].y);
+                                    fprintf(guestfile , "%d\n" , pelle[1].x);
+                                    fprintf(guestfile , "%d\n" , pelle[1].y);
+                                    fprintf(guestfile , "%d\n" , pelle[2].x);
+                                    fprintf(guestfile , "%d\n" , pelle[2].y);
+                                    fprintf(guestfile , "%d\n" , pelle[3].x);
+                                    fprintf(guestfile , "%d\n" , pelle[3].y);
+                                    fprintf(guestfile , "%d\n" , pelle[4].x);
+                                    fprintf(guestfile , "%d\n" , pelle[4].y);
+                                    fprintf(guestfile , "%d\n" , pelle[5].x);
+                                    fprintf(guestfile , "%d\n" , pelle[5].y);
+                                    for(int i = 0 ; i < 10 ; i++)
+                                    {
+                                        fprintf(guestfile , "%s\n" , guest.inventory[i]);
+                                    }
+                                    clear();
+                                    out = 2;
+                                }
+                            else
+                            {
+                                out = 2;
+                            }
+                            
+                            break;
+                        default:
+                            break;
+                        }
+                        
+                    }
+                }
+
+            }
+
+
         }
         else if(highlight == 1)
         {
@@ -1442,10 +2108,1580 @@ int main()
                     break;
                 }
             }
+            char file_1[MAX_SIZE] = "map-1-";
+            char file_2[MAX_SIZE] = "map-2-";
+            char file_3[MAX_SIZE] = "map-3-";
+            char file_4[MAX_SIZE] = "map-4-";
+            char file_5[MAX_SIZE] = "treasure-";
+            char file_6[MAX_SIZE] = "show-1-";
+            char file_7[MAX_SIZE] = "show-2-";
+            char file_8[MAX_SIZE] = "show-3-";
+            char file_9[MAX_SIZE] = "show-4-";
+            char file_10[MAX_SIZE] = "show-";
+            char file_11[MAX_SIZE] = "usr-games-";
+            char file_12[MAX_SIZE] = "usr-points-";
+            strcat(file_1 , File);
+            strcat(file_2 , File);
+            strcat(file_3 , File);
+            strcat(file_4 , File);
+            strcat(file_5 , File);
+            strcat(file_6 , File);
+            strcat(file_7 , File);
+            strcat(file_8 , File);
+            strcat(file_9 , File);
+            strcat(file_10 , File);
+            strcat(file_11 , File);
+            strcat(file_12 , File);
             if(game_highlight == 0)
-            {}
+            {
+                noecho();
+                keypad(stdscr , TRUE);
+                clear();
+                bkgd(' ');
+                int out = 0;
+                int finish = 0;
+                while (1)
+                {
+                    if(out == 2)
+                    {
+                        clear();
+                        WINDOW * option_menu = newwin(row , col , 0 , 0);
+                        box(option_menu , 0 , 0);
+                        keypad(option_menu , TRUE);
+                        refresh();
+                        wrefresh(option_menu);
+                        wbkgd(option_menu , COLOR_PAIR(4));
+                        char options[2][MAX_SIZE] = { "<new game>" ,
+                                                        "<exit>"};
+                        int highlight_option = 0;
+                        int decision_option;
+                        wattron(option_menu , COLOR_PAIR(6));
+                        mvwprintw(option_menu , 0 , col/2 - 8/2 , "YOU LOST");
+                        wattroff(option_menu , COLOR_PAIR(6));
+                        while(1)
+                        {
+                            for(int i = 0 ; i < 2 ; i++)
+                            {
+                                int game_len = strlen(options[i]);
+                                if(i == highlight_option)
+                                {
+                                    wattron(option_menu , A_REVERSE);
+                                }
+                                mvwprintw(option_menu , i + row/2 - 4 , col/2 - game_len/2 , options[i]);
+                                wattroff(option_menu , A_REVERSE);
+                            }
+                            decision_option = wgetch(option_menu);
+                            switch (decision_option)
+                            {
+                            case KEY_UP:
+                                highlight_option--;
+                                if(highlight_option == -1)
+                                {
+                                    highlight_option = 1;
+                                }
+                                break;
+                            case KEY_DOWN:
+                                highlight_option++;
+                                if(highlight_option == 2)
+                                {
+                                    highlight_option = 0;
+                                }
+                            default:
+                                break;
+                            }
+                            if(decision_option == 10)
+                            {
+                                break;
+                            }
+                        }
+                        if(highlight_option == 1)
+                        {
+                            exit = 1;
+                            break;
+                        }
+                        else
+                        {
+                            out = 0;
+                        }
+                    }
+                    
+                    rooms Room[4][9];
+                    location pelle[6];
+                    int RoomNum[4];
+                    for(int i = 0 ; i < 4 ; i++)
+                    {
+                        dungeons[i].RoomNum = Random(3 , 9);
+                    }
+                    generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh , 1 , pelle);
+                    generate_corridor(dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh);
+                    generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh , 2 , pelle);
+                    generate_corridor(dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh);
+                    generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh , 3 , pelle);
+                    generate_corridor(dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh);
+                    generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh , 4 , pelle);
+                    generate_corridor(dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh);
+                    generate_treasure_room(row , col  , dungeons[4].naghseh );
+                    remove(file_1);
+                    remove(file_2);
+                    remove(file_3);
+                    remove(file_4);
+                    remove(file_5);
+                    remove(file_6);
+                    remove(file_7);
+                    remove(file_8);
+                    remove(file_9);
+                    remove(file_10);
+                    remove(file_11);
+                    profile guest;
+                    strcpy(guest.name , "guest-usr");
+                    
+                    guest.health = 100;
+                    guest.points = 0;
+                    guest.gold_reserve = 0;
+                    guest.weapon_num = 1;
+                    strcpy(guest.inventory[0] , "NO WEAPON");
+                    guest.experience = 1;
+                    int number = Random(0 , RoomNum[0] - 1);
+                    int y_loc;
+                    int x_loc;
+                    y_loc = spawn_py(dungeons[0].room[number]);
+                    x_loc = spawn_px(dungeons[0].room[number]);
+                    int floor = 0;
+                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                    attron(COLOR_PAIR(4));
+                    bkgd(COLOR_PAIR(4));
+                    init_show(dungeons[floor].show , row , col);
+                    showroom(dungeons[floor].room , dungeons[floor].naghseh , dungeons[floor].show , number);
+                    while(1)
+                    {
+                        
+                        clear();
+                        if(out == 1)
+                        {
+                            break;
+                        }
+                        if(out == 2)
+                        {
+                            break;
+                        }
+                        refresh();
+                        showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc , 5);
+                        print_map(row , col , dungeons[floor].naghseh , dungeons[floor].show);
+                        mvprintw(y_loc , x_loc , "@");
+                        mvprintw(0 , 0 , "your health is %d %d|" , guest.health , floor);
+                        mvprintw(0 , 20 , "your point is %d |" , guest.points);
+                        int kilid = getch();
+                        switch (kilid)
+                        {
+                        case KEY_UP:
+                            if(isfloor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc - 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc - 1][x_loc]))
+                            {
+                                if(iswall(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ispillar(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswindow(dungeons[floor].naghseh[y_loc - 1][x_loc]))
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                y_loc--;
+                            }
+                            break;
+                        case KEY_DOWN:
+                            if(isfloor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc + 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc + 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc + 1][x_loc]))
+                            {
+                                if(dungeons[floor].naghseh[y_loc + 1][x_loc] == '-'|| dungeons[floor].naghseh[y_loc + 1][x_loc] == '0' || dungeons[floor].naghseh[y_loc + 1][x_loc] == '=')
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                y_loc++;
+                            }
+                            break;
+                        case KEY_LEFT:
+                            if(isfloor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc - 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc - 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc - 1]))
+                            {
+                                if(dungeons[floor].naghseh[y_loc][x_loc - 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc - 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc - 1] == '=')
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                x_loc--;
+                            }
+                            break;
+                        case KEY_RIGHT:
+                            if(isfloor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc + 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc + 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc + 1]))
+                            {
+                                if(dungeons[floor].naghseh[y_loc][x_loc + 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc + 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc + 1] == '=')
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                x_loc++;
+                            }
+                            break;
+                        
+                        case '>':
+                            if(istair(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                switch (floor)
+                                {
+                                case 0:
+                                    if(pelle[0].x == x_loc && pelle[0].y == y_loc)
+                                    {
+                                        floor++;
+                                        y_loc = pelle[1].y;
+                                        x_loc = pelle[1].x;
+                                    }
+                                    break;
+                                case 1:
+                                    if(pelle[1].x == x_loc && pelle[1].y == y_loc)
+                                    {
+                                        floor--;
+                                        y_loc = pelle[0].y;
+                                        x_loc = pelle[0].x;
+                                    }
+                                    else if(pelle[2].x == x_loc && pelle[2].y == y_loc)
+                                    {
+                                        floor++;
+                                        y_loc = pelle[3].y;
+                                        x_loc = pelle[3].x;
+                                    }
+                                    break;
+                                case 2:
+                                    if(pelle[3].x == x_loc && pelle[3].y == y_loc)
+                                    {
+                                        floor--;
+                                        y_loc = pelle[2].y;
+                                        x_loc = pelle[2].x;
+                                    }
+                                    else if(pelle[4].x == x_loc && pelle[4].y == y_loc)
+                                    {
+                                        floor++;
+                                        y_loc = pelle[5].y;
+                                        x_loc = pelle[5].x;
+                                    }
+                                    break;
+                                case 3:
+                                    if(pelle[5].x == x_loc && pelle[5].y == y_loc)
+                                    {
+                                        floor--;
+                                        y_loc = pelle[4].y;
+                                        x_loc = pelle[4].x;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                            }
+                            else if(istreasure(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                x_loc = 10;
+                                y_loc = 10;
+                                floor++;
+                            }
+                            break;
+                        case 'i':
+                            WINDOW* inventory = newwin(row , col , 0 , 0);
+                            box(inventory , 0 , 0);
+                            refresh();
+                            keypad(inventory , TRUE);
+                            wrefresh(inventory);
+                            wbkgd(inventory , COLOR_PAIR(4));
+                            int inventory_highlight = 0;
+                            int inventory_decision;
+                            while(1)
+                            {
+                                for(int i = 0 ; i < guest.weapon_num ; i++)
+                                {
+                                    int item_len = strlen(guest.inventory[i]);
+                                    if(i == inventory_highlight)
+                                    {
+                                        wattron(inventory , A_REVERSE);
+                                    }
+                                    mvwprintw(inventory , i + 1 , col/2 - item_len/2 , guest.inventory[i]);
+                                    wattroff(inventory , A_REVERSE);
+                                }
+                                inventory_decision = wgetch(inventory);
+                                switch (inventory_decision)
+                                {
+                                case KEY_UP:
+                                    inventory_highlight--;
+                                    if(inventory_highlight == -1)
+                                    {
+                                        inventory_highlight = guest.weapon_num - 1;
+                                    }
+                                    break;
+                                case KEY_DOWN:
+                                    inventory_highlight++;
+                                    if(inventory_highlight == guest.weapon_num)
+                                    {
+                                        inventory_highlight = 0;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                                if(inventory_decision == 10)
+                                {
+                                    break;
+                                }
+                            }
+                            break;
+                        case 's':
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc + 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc - 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc - 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc + 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc + 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc - 1);
+                            break;
+                        case 'S':
+                            WINDOW* setting = newwin(row , col , 0 , 0);
+                            box(setting , 0 , 0);
+                            refresh();
+                            keypad(setting , TRUE);
+                            wrefresh(setting);
+                            wbkgd(setting , COLOR_PAIR(4));
+                            char setting_option[2][MAX_SIZE] = {"SAVE" , "EXIT"};
+                            int setting_highlight = 0;
+                            int setting_decision;
+                            while (1)
+                            {
+                                for(int i = 0 ; i < 2 ; i++)
+                                {
+                                    int setting_len = strlen(setting_option[i]);
+                                    if(i == setting_highlight)
+                                    {
+                                        wattron(setting , A_REVERSE);
+                                    }
+                                    mvwprintw(setting , i + row/2 - 4 , col/2 - setting_len/2 , setting_option[i]);
+                                    wattroff(setting , A_REVERSE);
+                                }
+                                setting_decision = wgetch(setting);
+                                switch (setting_decision)
+                                {
+                                case KEY_UP:
+                                    setting_highlight--;
+                                    if(setting_highlight == -1)
+                                    {
+                                        setting_highlight = 1;
+                                    }
+                                    break;
+                                case KEY_DOWN:
+                                    setting_highlight++;
+                                    if(setting_highlight == 2)
+                                    {
+                                        setting_highlight = 0;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                                if(setting_decision == 10)
+                                {
+                                    break;
+                                }
+                            }
+                            if(setting_highlight == 0)
+                                {
+                                    FILE * map_1 = fopen(file_1 , "w");
+                                    FILE * map_2 = fopen(file_2 , "w");
+                                    FILE * map_3 = fopen(file_3 , "w");
+                                    FILE * map_4 = fopen(file_4 , "w");
+                                    FILE * treasure_map = fopen(file_5 , "w");
+                                    FILE * show_1 = fopen(file_6 , "w");
+                                    FILE * show_2 = fopen(file_7 , "w");
+                                    FILE * show_3 = fopen(file_8 , "w");
+                                    FILE * show_4 = fopen(file_9 , "w");
+                                    FILE * show_treasure = fopen(file_10 , "w");
+                                    FILE * guestfile = fopen(file_11 , "w");
+                                    FILE * points_read = fopen(file_12 , "r");
+                                    fscanf(points_read , "%d" , &user.gold_reserve);
+                                    fclose(points_read);
+                                    user.gold_reserve += guest.points;
+                                    FILE * points_write = fopen(file_12 , "w");
+                                    fprintf(points_write , "%d" , user.gold_reserve);
+                                    fclose(points_write);
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_1 ,"%s\n"  , dungeons[0].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_2 ,"%s\n"  , dungeons[1].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_3 ,"%s\n"  , dungeons[2].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_4 ,"%s\n"  , dungeons[3].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(treasure_map ,"%s\n"  , dungeons[4].naghseh[i]);
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_1 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_1 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_2 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_2 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_3 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_3 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_4 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_4 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_treasure , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_treasure , "\n");
+                                    }
+                                    fprintf(guestfile , "%d\n" , guest.health);
+                                    fprintf(guestfile , "%d\n" , guest.points);
+                                    fprintf(guestfile , "%d\n" , guest.experience);
+                                    fprintf(guestfile , "%d\n" , y_loc);
+                                    fprintf(guestfile , "%d\n" , x_loc);
+                                    fprintf(guestfile , "%d\n" , floor);
+                                    fprintf(guestfile , "%d\n" , pelle[0].x);
+                                    fprintf(guestfile , "%d\n" , pelle[0].y);
+                                    fprintf(guestfile , "%d\n" , pelle[1].x);
+                                    fprintf(guestfile , "%d\n" , pelle[1].y);
+                                    fprintf(guestfile , "%d\n" , pelle[2].x);
+                                    fprintf(guestfile , "%d\n" , pelle[2].y);
+                                    fprintf(guestfile , "%d\n" , pelle[3].x);
+                                    fprintf(guestfile , "%d\n" , pelle[3].y);
+                                    fprintf(guestfile , "%d\n" , pelle[4].x);
+                                    fprintf(guestfile , "%d\n" , pelle[4].y);
+                                    fprintf(guestfile , "%d\n" , pelle[5].x);
+                                    fprintf(guestfile , "%d\n" , pelle[5].y);
+                                    for(int i = 0 ; i < 10 ; i++)
+                                    {
+                                        fprintf(guestfile , "%s\n" , guest.inventory[i]);
+                                    }
+                                    clear();
+                                    out = 2;
+                                }
+                            else
+                            {
+                                out = 2;
+                            }
+                            
+                            break;
+                        default:
+                            break;
+                        }
+                        
+                    }
+                }
+
+            }
             else
-            {}
+            {
+                clear();
+                FILE * map_1 = fopen(file_1 , "r");
+                FILE * map_2 = fopen(file_2 , "r");
+                FILE * map_3 = fopen(file_3 , "r");
+                FILE * map_4 = fopen(file_4 , "r");
+                FILE * treasure_map = fopen(file_5 , "r");
+                FILE * show_1 = fopen(file_6 , "r");
+                FILE * show_2 = fopen(file_7 , "r");
+                FILE * show_3 = fopen(file_8 , "r");
+                FILE * show_4 = fopen(file_9 , "r");
+                FILE * show_treasure = fopen(file_10 , "r");
+                FILE * guestfile = fopen(file_11 , "r"); 
+                if(guestfile != NULL)
+                {
+                    int index_1 = 0;
+                    while (fgets(dungeons[0].naghseh[index_1] , MAX_SIZE, map_1) != NULL && index_1 < row)
+                    {
+                        dungeons[0].naghseh[index_1][strcspn(dungeons[0].naghseh[index_1] , "\n")] = '\0';
+                        index_1++;
+                    }
+                    int index_2 = 0;
+                    while (fgets(dungeons[1].naghseh[index_2] , MAX_SIZE , map_2) != NULL && index_2 < row)
+                    {
+                        dungeons[1].naghseh[index_2][strcspn(dungeons[1].naghseh[index_2] , "\n")] = '\0';
+                        index_2++;
+                    }
+                    int index_3 = 0;
+                    while (fgets(dungeons[2].naghseh[index_3] , MAX_SIZE , map_3) != NULL && index_3 < row)
+                    {
+                        dungeons[2].naghseh[index_3][strcspn(dungeons[0].naghseh[index_3] , "\n")] = '\0';
+                        index_3++;
+                    }
+                    int index_4 = 0;
+                    while (fgets(dungeons[3].naghseh[index_4] , MAX_SIZE , map_4) != NULL && index_4 < row)
+                    {
+                        dungeons[3].naghseh[index_4][strcspn(dungeons[3].naghseh[index_4] , "\n")] = '\0';
+                        index_4++;
+                    }
+
+                    int index_5 = 0;
+                    while (fgets(dungeons[4].naghseh[index_5] , MAX_SIZE , treasure_map) != NULL && index_5 < row)
+                    {
+                        dungeons[4].naghseh[index_5][strcspn(dungeons[4].naghseh[index_5] , "\n")] = '\0';
+                        index_5++;
+                    }
+
+                    for(int i = 0 ; i < row ; i++)
+                    {
+                        for(int j = 0 ; j < col ; j++)
+                        {
+                            fscanf(show_1 , "%d" , &dungeons[0].show[i][j]);
+                        }
+                    }
+                    for(int i = 0 ; i < row ; i++)
+                    {
+                        for(int j = 0 ; j < col ; j++)
+                        {
+                            fscanf(show_2 , "%d" , &dungeons[1].show[i][j]);
+                        }
+                    }
+                    for(int i = 0 ; i < row ; i++)
+                    {
+                        for(int j = 0 ; j < col ; j++)
+                        {
+                            fscanf(show_3 , "%d" , &dungeons[2].show[i][j]);
+                        }
+                    }
+                    for(int i = 0 ; i < row ; i++)
+                    {
+                        for(int j = 0 ; j < col ; j++)
+                        {
+                            fscanf(show_4 , "%d" , &dungeons[3].show[i][j]);
+                        }
+                    }
+                    for(int i = 0 ; i < row ; i++)
+                    {
+                        for(int j = 0 ; j < col ; j++)
+                        {
+                            fscanf(show_treasure , "%d" , &dungeons[4].show[i][j]);
+                        }
+                    }
+                    profile guest;
+                    location pelle[6];
+                    int x_loc , y_loc , floor;
+                    strcpy(guest.name , "guest-usr");
+                    fscanf(guestfile , "%d" ,&guest.health);
+                    fscanf(guestfile , "%d" , &guest.points);
+                    fscanf(guestfile , "%d" , &guest.experience);
+                    fscanf(guestfile , "%d" , &y_loc);
+                    fscanf(guestfile , "%d" , &x_loc);
+                    fscanf(guestfile , "%d" , &floor);
+                    fscanf(guestfile , "%d" , &pelle[0].x);
+                    fscanf(guestfile , "%d" , &pelle[0].y);
+                    fscanf(guestfile , "%d" , &pelle[1].x);
+                    fscanf(guestfile , "%d" , &pelle[1].y);
+                    fscanf(guestfile , "%d" , &pelle[2].x);
+                    fscanf(guestfile , "%d" , &pelle[2].y);
+                    fscanf(guestfile , "%d" , &pelle[3].x);
+                    fscanf(guestfile , "%d" , &pelle[3].y);
+                    fscanf(guestfile , "%d" , &pelle[4].x);
+                    fscanf(guestfile , "%d" , &pelle[4].y);
+                    fscanf(guestfile , "%d" , &pelle[5].x);
+                    fscanf(guestfile , "%d" , &pelle[5].y);
+                    int index = 0;
+                    while (index < 10)
+                    {
+                        int a = fscanf(guestfile , " %s" , guest.inventory[index]);
+                        if(a == -1)
+                        {
+                            break;
+                        }
+                        index++;
+                    }
+                    guest.weapon_num = index - 1;
+                    int out = 0;
+                    int finish = 0;
+                    keypad(stdscr , TRUE);
+                    while (1)
+                    {
+                        if(out == 2)
+                        {
+                            clear();
+                            WINDOW * option_menu = newwin(row , col , 0 , 0);
+                            box(option_menu , 0 , 0);
+                            keypad(option_menu , TRUE);
+                            refresh();
+                            wrefresh(option_menu);
+                            wbkgd(option_menu , COLOR_PAIR(4));
+                            char options[2][MAX_SIZE] = { "<new game>" ,
+                                                            "<exit>"};
+                            int highlight_option = 0;
+                            int decision_option;
+                            wattron(option_menu , COLOR_PAIR(6));
+                            mvwprintw(option_menu , 0 , col/2 - 8/2 , "YOU LOST");
+                            wattroff(option_menu , COLOR_PAIR(6));
+                            while(1)
+                            {
+                                for(int i = 0 ; i < 2 ; i++)
+                                {
+                                    int game_len = strlen(options[i]);
+                                    if(i == highlight_option)
+                                    {
+                                        wattron(option_menu , A_REVERSE);
+                                    }
+                                    mvwprintw(option_menu , i + row/2 - 4 , col/2 - game_len/2 , options[i]);
+                                    wattroff(option_menu , A_REVERSE);
+                                }
+                                decision_option = wgetch(option_menu);
+                                switch (decision_option)
+                                {
+                                case KEY_UP:
+                                    highlight_option--;
+                                    if(highlight_option == -1)
+                                    {
+                                        highlight_option = 1;
+                                    }
+                                    break;
+                                case KEY_DOWN:
+                                    highlight_option++;
+                                    if(highlight_option == 2)
+                                    {
+                                        highlight_option = 0;
+                                    }
+                                default:
+                                    break;
+                                }
+                                if(decision_option == 10)
+                                {
+                                    break;
+                                }
+                            }
+                            if(highlight_option == 1)
+                            {
+                                exit = 1;
+                                break;
+                            }
+                            else
+                            {
+                                out = 0;
+                            }
+                        }
+                        while(1)
+                        {
+                            
+                            clear();
+                            if(out == 1)
+                            {
+                                break;
+                            }
+                            if(out == 2)
+                            {
+                                break;
+                            }
+                            refresh();
+                            showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc , 5);
+                            move(0,0);
+                            attron(COLOR_PAIR(4));
+                            // mvprintw(10,0,dungeons[floor].naghseh[10]);
+                            // getch();
+                            print_map(row , col , dungeons[floor].naghseh , dungeons[floor].show);
+                            mvprintw(y_loc , x_loc , "@");
+                            mvprintw(0 , 0 , "your health is %d %d|" , y_loc , x_loc);
+                            mvprintw(0 , 20 , "your point is %d |" , guest.points);
+                            int kilid = getch();
+                            switch (kilid)
+                            {
+                            case KEY_UP:
+                                if(isfloor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc - 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc - 1][x_loc]))
+                                {
+                                    if(iswall(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ispillar(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswindow(dungeons[floor].naghseh[y_loc - 1][x_loc]))
+                                    {
+                                        break;
+                                    }
+                                    else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.health >= 10)
+                                        {
+                                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                            guest.health -= 10;
+                                        }
+                                        else
+                                            out = 2;
+                                    }
+                                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                    {
+                                        if(guest.health <= 90)
+                                        {
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                            guest.health+=10;
+                                        }
+                                    }
+                                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                    {
+                                        guest.points++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    y_loc--;
+                                }
+                                break;
+                            case KEY_DOWN:
+                                if(isfloor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc + 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc + 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc + 1][x_loc]))
+                                {
+                                    if(dungeons[floor].naghseh[y_loc + 1][x_loc] == '-'|| dungeons[floor].naghseh[y_loc + 1][x_loc] == '0' || dungeons[floor].naghseh[y_loc + 1][x_loc] == '=')
+                                    {
+                                        break;
+                                    }
+                                    else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.health >= 10)
+                                        {
+                                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                            guest.health -= 10;
+                                        }
+                                        else
+                                            out = 2;
+                                    }
+                                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                    {
+                                        if(guest.health <= 90)
+                                        {
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                            guest.health+=10;
+                                        }
+                                    }
+                                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                    {
+                                        guest.points++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    y_loc++;
+                                }
+                                break;
+                            case KEY_LEFT:
+                                if(isfloor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc - 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc - 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc - 1]))
+                                {
+                                    if(dungeons[floor].naghseh[y_loc][x_loc - 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc - 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc - 1] == '=')
+                                    {
+                                        break;
+                                    }
+                                    else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.health >= 10)
+                                        {
+                                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                            guest.health -= 10;
+                                        }
+                                        else
+                                            out = 2;
+                                    }
+                                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                    {
+                                        if(guest.health <= 90)
+                                        {
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                            guest.health+=10;
+                                        }
+                                    }
+                                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                    {
+                                        guest.points++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    x_loc--;
+                                }
+                                break;
+                            case KEY_RIGHT:
+                                if(isfloor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc + 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc + 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc + 1]))
+                                {
+                                    if(dungeons[floor].naghseh[y_loc][x_loc + 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc + 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc + 1] == '=')
+                                    {
+                                        break;
+                                    }
+                                    else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.health >= 10)
+                                        {
+                                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                            guest.health -= 10;
+                                        }
+                                        else
+                                            out = 2;
+                                    }
+                                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                    {
+                                        if(guest.health <= 90)
+                                        {
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                            guest.health+=10;
+                                        }
+                                    }
+                                    else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                    {
+                                        guest.points++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                    {
+                                        if(guest.weapon_num < 5)
+                                        {
+                                            strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                            guest.weapon_num++;
+                                            dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        }
+                                    }
+                                    x_loc++;
+                                }
+                                break;
+                            
+                            case '>':
+                                if(istair(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    switch (floor)
+                                    {
+                                    case 0:
+                                        if(pelle[0].x == x_loc && pelle[0].y == y_loc)
+                                        {
+                                            floor++;
+                                            y_loc = pelle[1].y;
+                                            x_loc = pelle[1].x;
+                                        }
+                                        break;
+                                    case 1:
+                                        if(pelle[1].x == x_loc && pelle[1].y == y_loc)
+                                        {
+                                            floor--;
+                                            y_loc = pelle[0].y;
+                                            x_loc = pelle[0].x;
+                                        }
+                                        else if(pelle[2].x == x_loc && pelle[2].y == y_loc)
+                                        {
+                                            floor++;
+                                            y_loc = pelle[3].y;
+                                            x_loc = pelle[3].x;
+                                        }
+                                        break;
+                                    case 2:
+                                        if(pelle[3].x == x_loc && pelle[3].y == y_loc)
+                                        {
+                                            floor--;
+                                            y_loc = pelle[2].y;
+                                            x_loc = pelle[2].x;
+                                        }
+                                        else if(pelle[4].x == x_loc && pelle[4].y == y_loc)
+                                        {
+                                            floor++;
+                                            y_loc = pelle[5].y;
+                                            x_loc = pelle[5].x;
+                                        }
+                                        break;
+                                    case 3:
+                                        if(pelle[5].x == x_loc && pelle[5].y == y_loc)
+                                        {
+                                            floor--;
+                                            y_loc = pelle[4].y;
+                                            x_loc = pelle[4].x;
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                    }
+                                }
+                                else if(istreasure(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    x_loc = 10;
+                                    y_loc = 10;
+                                    floor++;
+                                }
+                                break;
+                            case 'i':
+                                WINDOW* inventory = newwin(row , col , 0 , 0);
+                                box(inventory , 0 , 0);
+                                refresh();
+                                keypad(inventory , TRUE);
+                                wrefresh(inventory);
+                                wbkgd(inventory , COLOR_PAIR(4));
+                                int inventory_highlight = 0;
+                                int inventory_decision;
+                                while(1)
+                                {
+                                    for(int i = 0 ; i < guest.weapon_num ; i++)
+                                    {
+                                        int item_len = strlen(guest.inventory[i]);
+                                        if(i == inventory_highlight)
+                                        {
+                                            wattron(inventory , A_REVERSE);
+                                        }
+                                        mvwprintw(inventory , i + 1 , col/2 - item_len/2 , guest.inventory[i]);
+                                        wattroff(inventory , A_REVERSE);
+                                    }
+                                    inventory_decision = wgetch(inventory);
+                                    switch (inventory_decision)
+                                    {
+                                    case KEY_UP:
+                                        inventory_highlight--;
+                                        if(inventory_highlight == -1)
+                                        {
+                                            inventory_highlight = guest.weapon_num - 1;
+                                        }
+                                        break;
+                                    case KEY_DOWN:
+                                        inventory_highlight++;
+                                        if(inventory_highlight == guest.weapon_num)
+                                        {
+                                            inventory_highlight = 0;
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                    }
+                                    if(inventory_decision == 10)
+                                    {
+                                        break;
+                                    }
+                                }
+                                break;
+                            case 's':
+                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc + 1);
+                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc - 1);
+                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc);
+                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc);
+                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc - 1);
+                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc + 1);
+                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc + 1);
+                                showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc - 1);
+                                break;
+                            case 'S':
+                                WINDOW* setting = newwin(row , col , 0 , 0);
+                                box(setting , 0 , 0);
+                                refresh();
+                                keypad(setting , TRUE);
+                                wrefresh(setting);
+                                wbkgd(setting , COLOR_PAIR(4));
+                                char setting_option[2][MAX_SIZE] = {"SAVE" , "EXIT"};
+                                int setting_highlight = 0;
+                                int setting_decision;
+                                while (1)
+                                {
+                                    for(int i = 0 ; i < 2 ; i++)
+                                    {
+                                        int setting_len = strlen(setting_option[i]);
+                                        if(i == setting_highlight)
+                                        {
+                                            wattron(setting , A_REVERSE);
+                                        }
+                                        mvwprintw(setting , i + row/2 - 4 , col/2 - setting_len/2 , setting_option[i]);
+                                        wattroff(setting , A_REVERSE);
+                                    }
+                                    setting_decision = wgetch(setting);
+                                    switch (setting_decision)
+                                    {
+                                    case KEY_UP:
+                                        setting_highlight--;
+                                        if(setting_highlight == -1)
+                                        {
+                                            setting_highlight = 1;
+                                        }
+                                        break;
+                                    case KEY_DOWN:
+                                        setting_highlight++;
+                                        if(setting_highlight == 2)
+                                        {
+                                            setting_highlight = 0;
+                                        }
+                                        break;
+                                    default:
+                                        break;
+                                    }
+                                    if(setting_decision == 10)
+                                    {
+                                        break;
+                                    }
+                                }
+                                if(setting_highlight == 0)
+                                {
+                                    FILE * map_1 = fopen(file_1 , "w");
+                                    FILE * map_2 = fopen(file_2 , "w");
+                                    FILE * map_3 = fopen(file_3 , "w");
+                                    FILE * map_4 = fopen(file_4 , "w");
+                                    FILE * treasure_map = fopen(file_5 , "w");
+                                    FILE * show_1 = fopen(file_6 , "w");
+                                    FILE * show_2 = fopen(file_7 , "w");
+                                    FILE * show_3 = fopen(file_8 , "w");
+                                    FILE * show_4 = fopen(file_9 , "w");
+                                    FILE * show_treasure = fopen(file_10 , "w");
+                                    FILE * guestfile = fopen(file_11 , "w");
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_1 ,"%s\n"  , dungeons[0].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_2 ,"%s\n"  , dungeons[1].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_3 ,"%s\n"  , dungeons[2].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(map_4 ,"%s\n"  , dungeons[3].naghseh[i]);
+                                    }
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        fprintf(treasure_map ,"%s\n"  , dungeons[4].naghseh[i]);
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_1 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_1 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_2 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_2 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_3 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_3 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_4 , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_4 , "\n");
+                                    }
+
+                                    for(int i = 0 ; i < row ; i++)
+                                    {
+                                        for(int j = 0 ; j < col ; j++)
+                                        {
+                                            fprintf(show_treasure , "%d " , dungeons[0].show[i][j]);
+                                        }
+                                        fprintf(show_treasure , "\n");
+                                    }
+                                    fprintf(guestfile , "%d\n" , guest.health);
+                                    fprintf(guestfile , "%d\n" , guest.points);
+                                    fprintf(guestfile , "%d\n" , guest.experience);
+                                    fprintf(guestfile , "%d\n" , y_loc);
+                                    fprintf(guestfile , "%d\n" , x_loc);
+                                    fprintf(guestfile , "%d\n" , floor);
+                                    fprintf(guestfile , "%d\n" , pelle[0].x);
+                                    fprintf(guestfile , "%d\n" , pelle[0].y);
+                                    fprintf(guestfile , "%d\n" , pelle[1].x);
+                                    fprintf(guestfile , "%d\n" , pelle[1].y);
+                                    fprintf(guestfile , "%d\n" , pelle[2].x);
+                                    fprintf(guestfile , "%d\n" , pelle[2].y);
+                                    fprintf(guestfile , "%d\n" , pelle[3].x);
+                                    fprintf(guestfile , "%d\n" , pelle[3].y);
+                                    fprintf(guestfile , "%d\n" , pelle[4].x);
+                                    fprintf(guestfile , "%d\n" , pelle[4].y);
+                                    fprintf(guestfile , "%d\n" , pelle[5].x);
+                                    fprintf(guestfile , "%d\n" , pelle[5].y);
+                                    for(int i = 0 ; i < 10 ; i++)
+                                    {
+                                        fprintf(guestfile , "%s\n" , guest.inventory[i]);
+                                    }
+                                    clear();
+                                    out = 2;
+                                }
+                                else
+                                {
+                                    out = 2;
+                                }
+                                
+                                break;
+                            default:
+                                break;
+                            }
+                            
+                        }
+                    }
+
+                    
+
+                    
+                }
+            }
+
+
 
         }
         else if(highlight == 2)
@@ -1550,20 +3786,13 @@ int main()
                 remove("defualt.txt");
                 profile guest;
                 strcpy(guest.name , "guest-usr");
-                copy_map(row , col , guest.map[0] , dungeons[0].naghseh);
-                copy_map(row , col , guest.map[1] , dungeons[1].naghseh);
-                copy_map(row , col , guest.map[2] , dungeons[2].naghseh);
-                copy_map(row , col , guest.map[3] , dungeons[3].naghseh);
+                
                 guest.health = 100;
                 guest.points = 0;
                 guest.gold_reserve = 0;
                 guest.weapon_num = 1;
                 strcpy(guest.inventory[0] , "NO WEAPON");
                 guest.experience = 1;
-
-                char naghsheh[MAX_SIZE][MAX_SIZE];
-
-                copy_map(row , col , naghsheh , dungeons[0].naghseh);
                 int number = Random(0 , RoomNum[0] - 1);
                 int y_loc;
                 int x_loc;
@@ -2075,16 +4304,16 @@ int main()
                         }
                         if(setting_highlight == 0)
                         {
-                            FILE * map_1 = fopen("map-1-defualt.txt" , "a");
-                            FILE * map_2 = fopen("map-2-defualt.txt" , "a");
-                            FILE * map_3 = fopen("map-3-defualt.txt" , "a");
-                            FILE * map_4 = fopen("map-4-defualt.txt" , "a");
-                            FILE * treasure_map = fopen("treasure-defualt.txt" , "a");
-                            FILE * show_1 = fopen("show-1-defualt.txt" , "a");
-                            FILE * show_2 = fopen("show-2-defualt.txt" , "a");
-                            FILE * show_3 = fopen("show-3-defualt.txt" , "a");
-                            FILE * show_4 = fopen("show-4-defualt.txt" , "a");
-                            FILE * show_treasure = fopen("show-defualt.txt" , "a");
+                            FILE * map_1 = fopen("map-1-defualt.txt" , "w");
+                            FILE * map_2 = fopen("map-2-defualt.txt" , "w");
+                            FILE * map_3 = fopen("map-3-defualt.txt" , "w");
+                            FILE * map_4 = fopen("map-4-defualt.txt" , "w");
+                            FILE * treasure_map = fopen("treasure-defualt.txt" , "w");
+                            FILE * show_1 = fopen("show-1-defualt.txt" , "w");
+                            FILE * show_2 = fopen("show-2-defualt.txt" , "w");
+                            FILE * show_3 = fopen("show-3-defualt.txt" , "w");
+                            FILE * show_4 = fopen("show-4-defualt.txt" , "w");
+                            FILE * show_treasure = fopen("show-defualt.txt" , "w");
                             FILE * guestfile = fopen("defualt.txt" , "a");
                             for(int i = 0 ; i < row ; i++)
                             {
@@ -2154,6 +4383,21 @@ int main()
                             fprintf(guestfile , "%d\n" , guest.health);
                             fprintf(guestfile , "%d\n" , guest.points);
                             fprintf(guestfile , "%d\n" , guest.experience);
+                            fprintf(guestfile , "%d\n" , y_loc);
+                            fprintf(guestfile , "%d\n" , x_loc);
+                            fprintf(guestfile , "%d\n" , floor);
+                            fprintf(guestfile , "%d\n" , pelle[0].x);
+                            fprintf(guestfile , "%d\n" , pelle[0].y);
+                            fprintf(guestfile , "%d\n" , pelle[1].x);
+                            fprintf(guestfile , "%d\n" , pelle[1].y);
+                            fprintf(guestfile , "%d\n" , pelle[2].x);
+                            fprintf(guestfile , "%d\n" , pelle[2].y);
+                            fprintf(guestfile , "%d\n" , pelle[3].x);
+                            fprintf(guestfile , "%d\n" , pelle[3].y);
+                            fprintf(guestfile , "%d\n" , pelle[4].x);
+                            fprintf(guestfile , "%d\n" , pelle[4].y);
+                            fprintf(guestfile , "%d\n" , pelle[5].x);
+                            fprintf(guestfile , "%d\n" , pelle[5].y);
                             for(int i = 0 ; i < 10 ; i++)
                             {
                                 fprintf(guestfile , "%s\n" , guest.inventory[i]);
@@ -2219,67 +4463,27 @@ int main()
                     break;
                 }
             }
-            
             // if(highlight_s == 0)
             // {
-            //     if(music_1 == NULL)
-            //     {
-            //         music_1 = Mix_LoadMUS(track_1);
-            //         Mix_PlayMusic(music_1 , -1);
-            //     }
-            //     else
-            //     {
-            //         Mix_HaltMusic();
-            //         Mix_FreeMusic(music_1);
-            //         music_1 = NULL;
-            //         Mix_CloseAudio();
-            //         music_1 = Mix_LoadMUS(track_1);
-            //         Mix_PlayMusic(music_1 , -1);
-            //     }
+            //     stop();
+            //     Seda_1();
+            //     play_track("1.mp3");
             // }
             // if(highlight_s == 1)
             // {
-            //     if(music_1 == NULL)
-            //     {
-            //         music_1 = Mix_LoadMUS(track_2);
-            //         Mix_PlayMusic(music_1 , -1);
-            //     }
-            //     else
-            //     {
-            //         Mix_HaltMusic();
-            //         Mix_FreeMusic(music_1);
-            //         music_1 = NULL;
-            //         Mix_CloseAudio();
-            //         music_1 = Mix_LoadMUS(track_2);
-            //         Mix_PlayMusic(music_1 , -1);
-            //     }
+            //     stop();
+            //     Seda_1();
+            //     play_track("2.mp3");
             // }
             // if(highlight_s == 2)
             // {
-            //     if(music_1 == NULL)
-            //     {
-            //         music_1 = Mix_LoadMUS(track_3);
-            //         Mix_PlayMusic(music_1 , -1);
-            //     }
-            //     else
-            //     {
-            //         Mix_HaltMusic();
-            //         Mix_FreeMusic(music_1);
-            //         music_1 = NULL;
-            //         Mix_CloseAudio();
-            //         music_1 = Mix_LoadMUS(track_3);
-            //         Mix_PlayMusic(music_1 , -1);
-            //     }
+            //     stop();
+            //     Seda_1();
+            //     play_track("3.mp3");
             // }
             // if(highlight_s == 3)
             // {
-            //     if(music_1 != NULL)
-            //     {
-            //         Mix_HaltMusic();
-            //         Mix_FreeMusic(music_1);
-            //         music_1 = NULL;
-            //         Mix_CloseAudio();
-            //     }
+            //     stop();
             // }
         }
         else if(highlight == 4)
@@ -2287,19 +4491,808 @@ int main()
         else if(highlight == 5)
         {
             clear();
-            FILE * map_1 = fopen("map-1-defualt.txt" , "a");
-            FILE * map_2 = fopen("map-2-defualt.txt" , "a");
-            FILE * map_3 = fopen("map-3-defualt.txt" , "a");
-            FILE * map_4 = fopen("map-4-defualt.txt" , "a");
-            FILE * treasure_map = fopen("treasure-defualt.txt" , "a");
-            FILE * show_1 = fopen("show-1-defualt.txt" , "a");
-            FILE * show_2 = fopen("show-2-defualt.txt" , "a");
-            FILE * show_3 = fopen("show-3-defualt.txt" , "a");
-            FILE * show_4 = fopen("show-4-defualt.txt" , "a");
-            FILE * show_treasure = fopen("show-defualt.txt" , "a");
-            FILE * guestfile = fopen("defualt.txt" , "a");
-            if(guestfile == NULL)
-            {}
+            FILE * map_1 = fopen("map-1-defualt.txt" , "r");
+            FILE * map_2 = fopen("map-2-defualt.txt" , "r");
+            FILE * map_3 = fopen("map-3-defualt.txt" , "r");
+            FILE * map_4 = fopen("map-4-defualt.txt" , "r");
+            FILE * treasure_map = fopen("treasure-defualt.txt" , "r");
+            FILE * show_1 = fopen("show-1-defualt.txt" , "r");
+            FILE * show_2 = fopen("show-2-defualt.txt" , "r");
+            FILE * show_3 = fopen("show-3-defualt.txt" , "r");
+            FILE * show_4 = fopen("show-4-defualt.txt" , "r");
+            FILE * show_treasure = fopen("show-defualt.txt" , "r");
+            FILE * guestfile = fopen("defualt.txt" , "r");
+            if(guestfile != NULL)
+            {
+                int index_1 = 0;
+                while (fgets(dungeons[0].naghseh[index_1] , MAX_SIZE, map_1) != NULL && index_1 < row)
+                {
+                    dungeons[0].naghseh[index_1][strcspn(dungeons[0].naghseh[index_1] , "\n")] = '\0';
+                    index_1++;
+                }
+                int index_2 = 0;
+                while (fgets(dungeons[1].naghseh[index_2] , MAX_SIZE , map_2) != NULL && index_2 < row)
+                {
+                    dungeons[1].naghseh[index_2][strcspn(dungeons[1].naghseh[index_2] , "\n")] = '\0';
+                    index_2++;
+                }
+                int index_3 = 0;
+                while (fgets(dungeons[2].naghseh[index_3] , MAX_SIZE , map_3) != NULL && index_3 < row)
+                {
+                    dungeons[2].naghseh[index_3][strcspn(dungeons[0].naghseh[index_3] , "\n")] = '\0';
+                    index_3++;
+                }
+                int index_4 = 0;
+                while (fgets(dungeons[3].naghseh[index_4] , MAX_SIZE , map_4) != NULL && index_4 < row)
+                {
+                    dungeons[3].naghseh[index_4][strcspn(dungeons[3].naghseh[index_4] , "\n")] = '\0';
+                    index_4++;
+                }
+
+                int index_5 = 0;
+                while (fgets(dungeons[4].naghseh[index_5] , MAX_SIZE , treasure_map) != NULL && index_5 < row)
+                {
+                    dungeons[4].naghseh[index_5][strcspn(dungeons[4].naghseh[index_5] , "\n")] = '\0';
+                    index_5++;
+                }
+
+                for(int i = 0 ; i < row ; i++)
+                {
+                    for(int j = 0 ; j < col ; j++)
+                    {
+                        fscanf(show_1 , "%d" , &dungeons[0].show[i][j]);
+                    }
+                }
+                for(int i = 0 ; i < row ; i++)
+                {
+                    for(int j = 0 ; j < col ; j++)
+                    {
+                        fscanf(show_2 , "%d" , &dungeons[1].show[i][j]);
+                    }
+                }
+                for(int i = 0 ; i < row ; i++)
+                {
+                    for(int j = 0 ; j < col ; j++)
+                    {
+                        fscanf(show_3 , "%d" , &dungeons[2].show[i][j]);
+                    }
+                }
+                for(int i = 0 ; i < row ; i++)
+                {
+                    for(int j = 0 ; j < col ; j++)
+                    {
+                        fscanf(show_4 , "%d" , &dungeons[3].show[i][j]);
+                    }
+                }
+                for(int i = 0 ; i < row ; i++)
+                {
+                    for(int j = 0 ; j < col ; j++)
+                    {
+                        fscanf(show_treasure , "%d" , &dungeons[4].show[i][j]);
+                    }
+                }
+                profile guest;
+                location pelle[6];
+                int x_loc , y_loc , floor;
+                strcpy(guest.name , "guest-usr");
+                fscanf(guestfile , "%d" ,&guest.health);
+                fscanf(guestfile , "%d" , &guest.points);
+                fscanf(guestfile , "%d" , &guest.experience);
+                fscanf(guestfile , "%d" , &y_loc);
+                fscanf(guestfile , "%d" , &x_loc);
+                fscanf(guestfile , "%d" , &floor);
+                fscanf(guestfile , "%d" , &pelle[0].x);
+                fscanf(guestfile , "%d" , &pelle[0].y);
+                fscanf(guestfile , "%d" , &pelle[1].x);
+                fscanf(guestfile , "%d" , &pelle[1].y);
+                fscanf(guestfile , "%d" , &pelle[2].x);
+                fscanf(guestfile , "%d" , &pelle[2].y);
+                fscanf(guestfile , "%d" , &pelle[3].x);
+                fscanf(guestfile , "%d" , &pelle[3].y);
+                fscanf(guestfile , "%d" , &pelle[4].x);
+                fscanf(guestfile , "%d" , &pelle[4].y);
+                fscanf(guestfile , "%d" , &pelle[5].x);
+                fscanf(guestfile , "%d" , &pelle[5].y);
+                int index = 0;
+                while (index < 10)
+                {
+                    int a = fscanf(guestfile , " %s" , guest.inventory[index]);
+                    if(a == -1)
+                    {
+                        break;
+                    }
+                    index++;
+                }
+                guest.weapon_num = index - 1;
+                int out = 0;
+                int finish = 0;
+                keypad(stdscr , TRUE);
+                while (1)
+                {
+                    if(out == 2)
+                    {
+                        clear();
+                        WINDOW * option_menu = newwin(row , col , 0 , 0);
+                        box(option_menu , 0 , 0);
+                        keypad(option_menu , TRUE);
+                        refresh();
+                        wrefresh(option_menu);
+                        wbkgd(option_menu , COLOR_PAIR(4));
+                        char options[2][MAX_SIZE] = { "<new game>" ,
+                                                        "<exit>"};
+                        int highlight_option = 0;
+                        int decision_option;
+                        wattron(option_menu , COLOR_PAIR(6));
+                        mvwprintw(option_menu , 0 , col/2 - 8/2 , "YOU LOST");
+                        wattroff(option_menu , COLOR_PAIR(6));
+                        while(1)
+                        {
+                            for(int i = 0 ; i < 2 ; i++)
+                            {
+                                int game_len = strlen(options[i]);
+                                if(i == highlight_option)
+                                {
+                                    wattron(option_menu , A_REVERSE);
+                                }
+                                mvwprintw(option_menu , i + row/2 - 4 , col/2 - game_len/2 , options[i]);
+                                wattroff(option_menu , A_REVERSE);
+                            }
+                            decision_option = wgetch(option_menu);
+                            switch (decision_option)
+                            {
+                            case KEY_UP:
+                                highlight_option--;
+                                if(highlight_option == -1)
+                                {
+                                    highlight_option = 1;
+                                }
+                                break;
+                            case KEY_DOWN:
+                                highlight_option++;
+                                if(highlight_option == 2)
+                                {
+                                    highlight_option = 0;
+                                }
+                            default:
+                                break;
+                            }
+                            if(decision_option == 10)
+                            {
+                                break;
+                            }
+                        }
+                        if(highlight_option == 1)
+                        {
+                            exit = 1;
+                            break;
+                        }
+                        else
+                        {
+                            out = 0;
+                        }
+                    }
+                    while(1)
+                    {
+                        
+                        clear();
+                        if(out == 1)
+                        {
+                            break;
+                        }
+                        if(out == 2)
+                        {
+                            break;
+                        }
+                        refresh();
+                        showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc , 5);
+                        move(0,0);
+                        attron(COLOR_PAIR(4));
+                        // mvprintw(10,0,dungeons[floor].naghseh[10]);
+                        // getch();
+                        print_map(row , col , dungeons[floor].naghseh , dungeons[floor].show);
+                        mvprintw(y_loc , x_loc , "@");
+                        mvprintw(0 , 0 , "your health is %d %d|" , y_loc , x_loc);
+                        mvprintw(0 , 20 , "your point is %d |" , guest.points);
+                        int kilid = getch();
+                        switch (kilid)
+                        {
+                        case KEY_UP:
+                            if(isfloor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc - 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc - 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc - 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc - 1][x_loc]))
+                            {
+                                if(iswall(dungeons[floor].naghseh[y_loc - 1][x_loc]) || ispillar(dungeons[floor].naghseh[y_loc - 1][x_loc]) || iswindow(dungeons[floor].naghseh[y_loc - 1][x_loc]))
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                y_loc--;
+                            }
+                            break;
+                        case KEY_DOWN:
+                            if(isfloor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iscorridor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdoor(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istrap(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isfood(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istair(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isgold(dungeons[floor].naghseh[y_loc + 1][x_loc]) || ismace(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isdagger(dungeons[floor].naghseh[y_loc + 1][x_loc]) || iswand(dungeons[floor].naghseh[y_loc + 1][x_loc]) || isarrow(dungeons[floor].naghseh[y_loc + 1][x_loc]) || issword(dungeons[floor].naghseh[y_loc + 1][x_loc]) || istreasure(dungeons[floor].naghseh[y_loc + 1][x_loc]))
+                            {
+                                if(dungeons[floor].naghseh[y_loc + 1][x_loc] == '-'|| dungeons[floor].naghseh[y_loc + 1][x_loc] == '0' || dungeons[floor].naghseh[y_loc + 1][x_loc] == '=')
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                y_loc++;
+                            }
+                            break;
+                        case KEY_LEFT:
+                            if(isfloor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc - 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc - 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc - 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc - 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc - 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc - 1]))
+                            {
+                                if(dungeons[floor].naghseh[y_loc][x_loc - 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc - 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc - 1] == '=')
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                x_loc--;
+                            }
+                            break;
+                        case KEY_RIGHT:
+                            if(isfloor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iscorridor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdoor(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istrap(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isfood(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istair(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isgold(dungeons[floor].naghseh[y_loc][x_loc + 1]) || ismace(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isdagger(dungeons[floor].naghseh[y_loc][x_loc + 1]) || iswand(dungeons[floor].naghseh[y_loc][x_loc + 1]) || isarrow(dungeons[floor].naghseh[y_loc][x_loc + 1]) || issword(dungeons[floor].naghseh[y_loc][x_loc + 1]) || istreasure(dungeons[floor].naghseh[y_loc][x_loc + 1]))
+                            {
+                                if(dungeons[floor].naghseh[y_loc][x_loc + 1] == '|'|| dungeons[floor].naghseh[y_loc][x_loc + 1] == '0' || dungeons[floor].naghseh[y_loc][x_loc + 1] == '=')
+                                {
+                                    break;
+                                }
+                                else if(istrap(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.health >= 10)
+                                    {
+                                        showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc);
+                                        guest.health -= 10;
+                                    }
+                                    else
+                                        out = 2;
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'f')
+                                {
+                                    if(guest.health <= 90)
+                                    {
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                        guest.health+=10;
+                                    }
+                                }
+                                else if(dungeons[floor].naghseh[y_loc][x_loc] == 'G')
+                                {
+                                    guest.points++;
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Mace (M)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Magic Wand (I)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Dagger (p)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Arrow (Y)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(guest.weapon_num < 5)
+                                    {
+                                        strcpy(guest.inventory[guest.weapon_num] , "Sword (P)");
+                                        guest.weapon_num++;
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                }
+                                x_loc++;
+                            }
+                            break;
+                        
+                        case '>':
+                            if(istair(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                switch (floor)
+                                {
+                                case 0:
+                                    if(pelle[0].x == x_loc && pelle[0].y == y_loc)
+                                    {
+                                        floor++;
+                                        y_loc = pelle[1].y;
+                                        x_loc = pelle[1].x;
+                                    }
+                                    break;
+                                case 1:
+                                    if(pelle[1].x == x_loc && pelle[1].y == y_loc)
+                                    {
+                                        floor--;
+                                        y_loc = pelle[0].y;
+                                        x_loc = pelle[0].x;
+                                    }
+                                    else if(pelle[2].x == x_loc && pelle[2].y == y_loc)
+                                    {
+                                        floor++;
+                                        y_loc = pelle[3].y;
+                                        x_loc = pelle[3].x;
+                                    }
+                                    break;
+                                case 2:
+                                    if(pelle[3].x == x_loc && pelle[3].y == y_loc)
+                                    {
+                                        floor--;
+                                        y_loc = pelle[2].y;
+                                        x_loc = pelle[2].x;
+                                    }
+                                    else if(pelle[4].x == x_loc && pelle[4].y == y_loc)
+                                    {
+                                        floor++;
+                                        y_loc = pelle[5].y;
+                                        x_loc = pelle[5].x;
+                                    }
+                                    break;
+                                case 3:
+                                    if(pelle[5].x == x_loc && pelle[5].y == y_loc)
+                                    {
+                                        floor--;
+                                        y_loc = pelle[4].y;
+                                        x_loc = pelle[4].x;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                            }
+                            else if(istreasure(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                x_loc = 10;
+                                y_loc = 10;
+                                floor++;
+                            }
+                            break;
+                        case 'i':
+                            WINDOW* inventory = newwin(row , col , 0 , 0);
+                            box(inventory , 0 , 0);
+                            refresh();
+                            keypad(inventory , TRUE);
+                            wrefresh(inventory);
+                            wbkgd(inventory , COLOR_PAIR(4));
+                            int inventory_highlight = 0;
+                            int inventory_decision;
+                            while(1)
+                            {
+                                for(int i = 0 ; i < guest.weapon_num ; i++)
+                                {
+                                    int item_len = strlen(guest.inventory[i]);
+                                    if(i == inventory_highlight)
+                                    {
+                                        wattron(inventory , A_REVERSE);
+                                    }
+                                    mvwprintw(inventory , i + 1 , col/2 - item_len/2 , guest.inventory[i]);
+                                    wattroff(inventory , A_REVERSE);
+                                }
+                                inventory_decision = wgetch(inventory);
+                                switch (inventory_decision)
+                                {
+                                case KEY_UP:
+                                    inventory_highlight--;
+                                    if(inventory_highlight == -1)
+                                    {
+                                        inventory_highlight = guest.weapon_num - 1;
+                                    }
+                                    break;
+                                case KEY_DOWN:
+                                    inventory_highlight++;
+                                    if(inventory_highlight == guest.weapon_num)
+                                    {
+                                        inventory_highlight = 0;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                                if(inventory_decision == 10)
+                                {
+                                    break;
+                                }
+                            }
+                            break;
+                        case 's':
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc + 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc - 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc - 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc + 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc + 1);
+                            showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc - 1);
+                            break;
+                        case 'S':
+                            WINDOW* setting = newwin(row , col , 0 , 0);
+                            box(setting , 0 , 0);
+                            refresh();
+                            keypad(setting , TRUE);
+                            wrefresh(setting);
+                            wbkgd(setting , COLOR_PAIR(4));
+                            char setting_option[2][MAX_SIZE] = {"SAVE" , "EXIT"};
+                            int setting_highlight = 0;
+                            int setting_decision;
+                            while (1)
+                            {
+                                for(int i = 0 ; i < 2 ; i++)
+                                {
+                                    int setting_len = strlen(setting_option[i]);
+                                    if(i == setting_highlight)
+                                    {
+                                        wattron(setting , A_REVERSE);
+                                    }
+                                    mvwprintw(setting , i + row/2 - 4 , col/2 - setting_len/2 , setting_option[i]);
+                                    wattroff(setting , A_REVERSE);
+                                }
+                                setting_decision = wgetch(setting);
+                                switch (setting_decision)
+                                {
+                                case KEY_UP:
+                                    setting_highlight--;
+                                    if(setting_highlight == -1)
+                                    {
+                                        setting_highlight = 1;
+                                    }
+                                    break;
+                                case KEY_DOWN:
+                                    setting_highlight++;
+                                    if(setting_highlight == 2)
+                                    {
+                                        setting_highlight = 0;
+                                    }
+                                    break;
+                                default:
+                                    break;
+                                }
+                                if(setting_decision == 10)
+                                {
+                                    break;
+                                }
+                            }
+                            if(setting_highlight == 0)
+                            {
+                                FILE * map_1 = fopen("map-1-defualt.txt" , "w");
+                                FILE * map_2 = fopen("map-2-defualt.txt" , "w");
+                                FILE * map_3 = fopen("map-3-defualt.txt" , "w");
+                                FILE * map_4 = fopen("map-4-defualt.txt" , "w");
+                                FILE * treasure_map = fopen("treasure-defualt.txt" , "w");
+                                FILE * show_1 = fopen("show-1-defualt.txt" , "w");
+                                FILE * show_2 = fopen("show-2-defualt.txt" , "w");
+                                FILE * show_3 = fopen("show-3-defualt.txt" , "w");
+                                FILE * show_4 = fopen("show-4-defualt.txt" , "w");
+                                FILE * show_treasure = fopen("show-defualt.txt" , "w");
+                                FILE * guestfile = fopen("defualt.txt" , "w");
+                                for(int i = 0 ; i < row ; i++)
+                                {
+                                    fprintf(map_1 ,"%s\n"  , dungeons[0].naghseh[i]);
+                                }
+                                for(int i = 0 ; i < row ; i++)
+                                {
+                                    fprintf(map_2 ,"%s\n"  , dungeons[1].naghseh[i]);
+                                }
+                                for(int i = 0 ; i < row ; i++)
+                                {
+                                    fprintf(map_3 ,"%s\n"  , dungeons[2].naghseh[i]);
+                                }
+                                for(int i = 0 ; i < row ; i++)
+                                {
+                                    fprintf(map_4 ,"%s\n"  , dungeons[3].naghseh[i]);
+                                }
+                                for(int i = 0 ; i < row ; i++)
+                                {
+                                    fprintf(treasure_map ,"%s\n"  , dungeons[4].naghseh[i]);
+                                }
+
+                                for(int i = 0 ; i < row ; i++)
+                                {
+                                    for(int j = 0 ; j < col ; j++)
+                                    {
+                                        fprintf(show_1 , "%d " , dungeons[0].show[i][j]);
+                                    }
+                                    fprintf(show_1 , "\n");
+                                }
+
+                                for(int i = 0 ; i < row ; i++)
+                                {
+                                    for(int j = 0 ; j < col ; j++)
+                                    {
+                                        fprintf(show_2 , "%d " , dungeons[0].show[i][j]);
+                                    }
+                                    fprintf(show_2 , "\n");
+                                }
+
+                                for(int i = 0 ; i < row ; i++)
+                                {
+                                    for(int j = 0 ; j < col ; j++)
+                                    {
+                                        fprintf(show_3 , "%d " , dungeons[0].show[i][j]);
+                                    }
+                                    fprintf(show_3 , "\n");
+                                }
+
+                                for(int i = 0 ; i < row ; i++)
+                                {
+                                    for(int j = 0 ; j < col ; j++)
+                                    {
+                                        fprintf(show_4 , "%d " , dungeons[0].show[i][j]);
+                                    }
+                                    fprintf(show_4 , "\n");
+                                }
+
+                                for(int i = 0 ; i < row ; i++)
+                                {
+                                    for(int j = 0 ; j < col ; j++)
+                                    {
+                                        fprintf(show_treasure , "%d " , dungeons[0].show[i][j]);
+                                    }
+                                    fprintf(show_treasure , "\n");
+                                }
+                                fprintf(guestfile , "%d\n" , guest.health);
+                                fprintf(guestfile , "%d\n" , guest.points);
+                                fprintf(guestfile , "%d\n" , guest.experience);
+                                fprintf(guestfile , "%d\n" , y_loc);
+                                fprintf(guestfile , "%d\n" , x_loc);
+                                fprintf(guestfile , "%d\n" , floor);
+                                fprintf(guestfile , "%d\n" , pelle[0].x);
+                                fprintf(guestfile , "%d\n" , pelle[0].y);
+                                fprintf(guestfile , "%d\n" , pelle[1].x);
+                                fprintf(guestfile , "%d\n" , pelle[1].y);
+                                fprintf(guestfile , "%d\n" , pelle[2].x);
+                                fprintf(guestfile , "%d\n" , pelle[2].y);
+                                fprintf(guestfile , "%d\n" , pelle[3].x);
+                                fprintf(guestfile , "%d\n" , pelle[3].y);
+                                fprintf(guestfile , "%d\n" , pelle[4].x);
+                                fprintf(guestfile , "%d\n" , pelle[4].y);
+                                fprintf(guestfile , "%d\n" , pelle[5].x);
+                                fprintf(guestfile , "%d\n" , pelle[5].y);
+                                for(int i = 0 ; i < 10 ; i++)
+                                {
+                                    fprintf(guestfile , "%s\n" , guest.inventory[i]);
+                                }
+                                clear();
+                                out = 2;
+                            }
+                            else
+                            {
+                                out = 2;
+                            }
+                            
+                            break;
+                        default:
+                            break;
+                        }
+                        
+                    }
+                }
+
+                
+
+                
+            }
         }
     } 
     // getchar();
