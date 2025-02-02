@@ -1210,17 +1210,31 @@ int main()
             char file_9[MAX_SIZE] = "show-4-";
             char file_10[MAX_SIZE] = "show-";
             char file_11[MAX_SIZE] = "usr-games-";
-            strcat(file_1 , temp);
-            strcat(file_2 , temp);
-            strcat(file_3 , temp);
-            strcat(file_4 , temp);
-            strcat(file_5 , temp);
-            strcat(file_6 , temp);
-            strcat(file_7 , temp);
-            strcat(file_8 , temp);
-            strcat(file_9 , temp);
-            strcat(file_10 , temp);
-            strcat(file_11 , temp);
+            char file_12[MAX_SIZE] = "usr-points-";
+            strcat(file_1 , user.name);
+            strcat(file_1 , ".txt");
+            strcat(file_2 , user.name);
+            strcat(file_2 , ".txt");
+            strcat(file_3 , user.name);
+            strcat(file_3 , ".txt");
+            strcat(file_4 , user.name);
+            strcat(file_4 , ".txt");
+            strcat(file_5 , user.name);
+            strcat(file_5 , ".txt");
+            strcat(file_6 , user.name);
+            strcat(file_6 , ".txt");
+            strcat(file_7 , user.name);
+            strcat(file_7 , ".txt");
+            strcat(file_8 , user.name);
+            strcat(file_8 , ".txt");
+            strcat(file_9 , user.name);
+            strcat(file_9 , ".txt");
+            strcat(file_10 , user.name);
+            strcat(file_10 , ".txt");
+            strcat(file_11 , user.name);
+            strcat(file_11 , ".txt");
+            strcat(file_12 , user.name);
+            strcat(file_12 , ".txt");
             if(game_highlight == 0)
             {
                 noecho();
@@ -1323,6 +1337,7 @@ int main()
                     remove(file_11);
                     profile guest;
                     strcpy(guest.name , "guest-usr");
+                    user.gold_reserve = 0;
                     
                     guest.health = 100;
                     guest.points = 0;
@@ -1852,6 +1867,8 @@ int main()
                                     FILE * show_4 = fopen(file_9 , "w");
                                     FILE * show_treasure = fopen(file_10 , "w");
                                     FILE * guestfile = fopen(file_11 , "w");
+                                    FILE * points = fopen(file_12 , "w");
+                                    fprintf(file_12 , "%d" , user.gold_reserve + guest.points);
                                     for(int i = 0 ; i < row ; i++)
                                     {
                                         fprintf(map_1 ,"%s\n"  , dungeons[0].naghseh[i]);
@@ -2120,18 +2137,30 @@ int main()
             char file_10[MAX_SIZE] = "show-";
             char file_11[MAX_SIZE] = "usr-games-";
             char file_12[MAX_SIZE] = "usr-points-";
-            strcat(file_1 , File);
-            strcat(file_2 , File);
-            strcat(file_3 , File);
-            strcat(file_4 , File);
-            strcat(file_5 , File);
-            strcat(file_6 , File);
-            strcat(file_7 , File);
-            strcat(file_8 , File);
-            strcat(file_9 , File);
-            strcat(file_10 , File);
-            strcat(file_11 , File);
-            strcat(file_12 , File);
+            strcat(file_1 , user.name);
+            strcat(file_1 , ".txt");
+            strcat(file_2 , user.name);
+            strcat(file_2 , ".txt");
+            strcat(file_3 , user.name);
+            strcat(file_3 , ".txt");
+            strcat(file_4 , user.name);
+            strcat(file_4 , ".txt");
+            strcat(file_5 , user.name);
+            strcat(file_5 , ".txt");
+            strcat(file_6 , user.name);
+            strcat(file_6 , ".txt");
+            strcat(file_7 , user.name);
+            strcat(file_7 , ".txt");
+            strcat(file_8 , user.name);
+            strcat(file_8 , ".txt");
+            strcat(file_9 , user.name);
+            strcat(file_9 , ".txt");
+            strcat(file_10 , user.name);
+            strcat(file_10 , ".txt");
+            strcat(file_11 , user.name);
+            strcat(file_11 , ".txt");
+            strcat(file_12 , user.name);
+            strcat(file_12 , ".txt");
             if(game_highlight == 0)
             {
                 noecho();
@@ -2234,6 +2263,12 @@ int main()
                     remove(file_11);
                     profile guest;
                     strcpy(guest.name , "guest-usr");
+                    FILE * temp = fopen(file_12 , "r");
+                    if(temp != NULL)
+                        fscanf(temp , "%d" , &user.gold_reserve);
+                    else
+                        user.gold_reserve = 0;
+                    remove(file_12);
                     
                     guest.health = 100;
                     guest.points = 0;
@@ -2763,9 +2798,6 @@ int main()
                                     FILE * show_4 = fopen(file_9 , "w");
                                     FILE * show_treasure = fopen(file_10 , "w");
                                     FILE * guestfile = fopen(file_11 , "w");
-                                    FILE * points_read = fopen(file_12 , "r");
-                                    fscanf(points_read , "%d" , &user.gold_reserve);
-                                    fclose(points_read);
                                     user.gold_reserve += guest.points;
                                     FILE * points_write = fopen(file_12 , "w");
                                     fprintf(points_write , "%d" , user.gold_reserve);
@@ -2888,6 +2920,15 @@ int main()
                 FILE * show_4 = fopen(file_9 , "r");
                 FILE * show_treasure = fopen(file_10 , "r");
                 FILE * guestfile = fopen(file_11 , "r"); 
+                FILE * usr_point = fopen(file_12 , "r");
+                if(usr_point != NULL)
+                {
+                    fscanf(usr_point , "%d" , &user.gold_reserve);
+                }
+                else
+                {
+                    user.gold_reserve = 0;
+                }
                 if(guestfile != NULL)
                 {
                     int index_1 = 0;
@@ -3572,6 +3613,8 @@ int main()
                                     FILE * show_4 = fopen(file_9 , "w");
                                     FILE * show_treasure = fopen(file_10 , "w");
                                     FILE * guestfile = fopen(file_11 , "w");
+                                    FILE * points = fopen(file_12 , "w");
+                                    fprintf(points , "%d" , user.gold_reserve + guest.points);
                                     for(int i = 0 ; i < row ; i++)
                                     {
                                         fprintf(map_1 ,"%s\n"  , dungeons[0].naghseh[i]);
