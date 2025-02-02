@@ -14,7 +14,7 @@
 int all_treasures = 0;
 int dificulty = 0;
 int health_num = 100;
-
+//version 1
 
 typedef struct prof
 {
