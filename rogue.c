@@ -23,6 +23,7 @@ typedef struct prof
     char e_mail[MAX_SIZE];
     char map[4][MAX_SIZE][MAX_SIZE];
     char inventory[10][MAX_SIZE];
+    int weapon;
     int weapon_num;
     int points;
     int gold_reserve;
@@ -68,7 +69,6 @@ typedef struct naghseh
     int RoomNum;
     int MonsNum;
     rooms room[9];
-    monsters monster[4];
 }naghseh;
 naghseh dungeons[5];
 int stairs = 0;
@@ -119,58 +119,123 @@ void follow(int range , int x_p , int y_p , int* x_mp , int* y_mp , int* hurt)
         {
             y_m--;
         }
-        ishurt = 0;
         ishurt = 1;
     }
 }
 
 
 
-int isdeamon(char a)
+int type_monster(char a)
 {
     if(a == 'd')
     {
-        return 1;
+        return 1; // deamon
     }
-    return 0;
+    else if(a == 'b')
+    {
+        return 2; // fbm
+    }
+    else if(a == 'V')
+    {
+        return 3; //Giant
+    }
+    else if(a == 'S')
+    {
+        return 4; // snake
+    }
+    else if(a == 'U')
+    {
+        return 5; // undeed
+    }
+    return 0; // non.
 }
 
 
-int isfbm(char a)
+int isfollower(char a)
 {
-    if( a == 'b' )
+    if(a == 'V')
     {
-        return 1;
+        return 1; //Giant
     }
-    return 0;
-}
-
-int isgiant(char a)
-{
-    if( a == 'V' )
+    else if(a == 'S')
     {
-        return 1;
+        return 1; // snake
     }
-    return 0;
-}
-
-int issnake(char a)
-{
-    if(a == 'S')
+    else if(a == 'U')
     {
-        return 1;
+        return 1; // undeed
     }
-    return 0;
+    return 0; // non.
 }
 
 
-int isundeed(char a)
+int range_monster(char a)
 {
-    if(a=='U')
+    if(a == 'V')
     {
-        return 1;
+        return 5; //Giant
     }
-    return 0;
+    else if(a == 'S')
+    {
+        return MAX_SIZE; // snake
+    }
+    else if(a == 'U')
+    {
+        return 5; // undeed
+    }
+    return 0; // non.
+}
+
+
+int damage(char a)
+{
+    if(a == 'd')
+    {
+        return 5; // deamon
+    }
+    else if(a == 'b')
+    {
+        return 10; // fbm
+    }
+    else if(a == 'V')
+    {
+        return 15; //Giant
+    }
+    else if(a == 'S')
+    {
+        return 20; // snake
+    }
+    else if(a == 'U')
+    {
+        return 30; // undeed
+    }
+    return 0; // non.
+}
+
+
+
+char type(int a)
+{
+    if( a == 0 )
+    {
+        return 'd';
+    }
+    else if( a == 1 )
+    {
+        return 'b';
+    }
+    else if(a == 2)
+    {
+        return 'V';
+    }
+    else if(a==3)
+    {
+        return 'S';
+    }
+    else if(a==4)
+    {
+        return 'U';
+    }
 }
 
 
@@ -647,7 +712,7 @@ void welcome_to_the_rouge()
 
 
 
-void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh[][MAX_SIZE] , int floor , location pelle[] , monsters beast[])
+void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh[][MAX_SIZE] , int floor , location pelle[] , location beast[])
 {
     for (int i = 0; i < row; i++)
     {
@@ -668,7 +733,7 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh
     int stairs_cnt = 0;
 
     int beast_num = 4;
-
+    int beast_cnt = 0;
 
 
 
@@ -814,8 +879,21 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh
                         }
                         else if(pilar == 1)
                         {
-                            naghsheh[j][i_1] = '^';
-                            Room[i].map[j][i_1] = '^';
+                            int randomize = Random(0,10);
+                            if (randomize > 7 && beast_cnt < beast_num)
+                            {
+                                int tip = Random(0,5);
+                                naghsheh[j][i_1] = type(tip);
+                                Room[i].map[j][i_1] = type(tip);
+                                beast[beast_cnt].x = i_1;
+                                beast[beast_cnt].y = j;
+                                beast_cnt++;
+                            }
+                            else
+                            {                            
+                                naghsheh[j][i_1] = '^';
+                                Room[i].map[j][i_1] = '^';
+                            }
                         }
                         else if(pilar == 2)
                         {
@@ -1442,18 +1520,19 @@ int main()
                     
                     rooms Room[4][9];
                     location pelle[6];
+                    location beasts[5][4];
                     int RoomNum[4];
                     for(int i = 0 ; i < 4 ; i++)
                     {
                         dungeons[i].RoomNum = Random(3 , 9);
                     }
-                    generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh , 1 , pelle , dungeons[0].monster);
+                    generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh , 1 , pelle , beasts[1]);
                     generate_corridor(dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh);
-                    generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh , 2 , pelle , dungeons[1].monster);
+                    generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh , 2 , pelle , beasts[2]);
                     generate_corridor(dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh);
-                    generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh , 3 , pelle , dungeons[3].monster);
+                    generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh , 3 , pelle , beasts[3]);
                     generate_corridor(dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh);
-                    generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh , 4 , pelle , dungeons[4].monster);
+                    generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh , 4 , pelle , beasts[4]);
                     generate_corridor(dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh);
                     generate_treasure_room(row , col  , dungeons[4].naghseh );
                     remove(file_1);
@@ -1486,6 +1565,7 @@ int main()
                     dungeons[floor].naghseh[y_loc][x_loc] = '.';
                     attron(COLOR_PAIR(4));
                     bkgd(COLOR_PAIR(4));
+                    int move = 0;
                     init_show(dungeons[floor].show , row , col);
                     showroom(dungeons[floor].room , dungeons[floor].naghseh , dungeons[floor].show , number);
                     while(1)
@@ -1501,8 +1581,65 @@ int main()
                             break;
                         }
                         refresh();
-                        guest.health--;
+                        move++;
+                        if(move%4 == 0)
+                            guest.health--;
                         showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc , 5);
+                        for(int k = 0 ; k < 4 ; k++)
+                        {
+                            if (isfollower(dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x]))
+                            {
+                                int range = range_monster(dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x]);
+                                int hurt = 0;
+                                int x_m = beasts[floor][k].x;
+                                int y_m = beasts[floor][k].y;
+                                char temp = dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x];
+                                dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x] = '.';
+                                int distance_x = abs(x_loc - x_m);
+                                int distance_y = abs(y_loc - y_m);
+                                if((distance_x != 1 || distance_y != 1) && (distance_x < range && distance_y < range))
+                                {
+                                    if(abs(x_loc - (x_m - 1)) <= distance_x &&
+                                    (!iswall(dungeons[floor].naghseh[y_m][x_m - 1]) && !iswindow(dungeons[floor].naghseh[y_m][x_m - 1]) && !isdoor(dungeons[floor].naghseh[y_m][x_m - 1]) && !ispillar(dungeons[floor].naghseh[y_m][x_m - 1])) && 
+                                    abs(x_loc - (x_m - 1)) > 0)
+                                    {
+                                        x_m--;
+                                        beasts[floor][k].x = x_m;
+                                    }
+                                    else if(abs(x_loc - (x_m + 1)) <= distance_x && 
+                                    (!iswall(dungeons[floor].naghseh[y_m][x_m + 1]) && !iswindow(dungeons[floor].naghseh[y_m][x_m + 1]) && !isdoor(dungeons[floor].naghseh[y_m][x_m + 1]) && !ispillar(dungeons[floor].naghseh[y_m][x_m + 1])) && 
+                                    abs(x_loc - (x_m + 1)) > 0)
+                                    {
+                                        x_m++;
+                                        beasts[floor][k].x = x_m;
+                                    }
+                                    else if(abs(y_loc - (y_m - 1)) <= distance_y && 
+                                    (!iswall(dungeons[floor].naghseh[y_m - 1][x_m]) && !iswindow(dungeons[floor].naghseh[y_m - 1][x_m]) && !isdoor(dungeons[floor].naghseh[y_m - 1][x_m]) && !ispillar(dungeons[floor].naghseh[y_m - 1][x_m])) && 
+                                    abs(y_loc - (y_m - 1)) > 0)
+                                    {
+                                        y_m--;
+                                        beasts[floor][k].y = y_m;
+                                    }
+                                    else if(abs(y_loc - (y_m + 1)) > 0 && 
+                                    (!iswall(dungeons[floor].naghseh[y_m + 1][x_m]) && !iswindow(dungeons[floor].naghseh[y_m + 1][x_m]) && !isdoor(dungeons[floor].naghseh[y_m + 1][x_m]) && !ispillar(dungeons[floor].naghseh[y_m + 1][x_m])))
+                                    {
+                                        y_m++;
+                                        beasts[floor][k].y = y_m;
+                                    }
+                                    hurt = 0;
+                                }
+                                else if(distance_x == 1 && distance_y == 1)
+                                {
+                                    hurt = 1;
+                                }
+                                dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x] = temp;
+                                if(hurt)
+                                {
+                                    int asib = damage(temp);
+                                    guest.health-=asib;
+                                }
+                            }
+                        }
                         print_map(row , col , dungeons[floor].naghseh , dungeons[floor].show);
                         mvprintw(y_loc , x_loc , "@");
                         mvprintw(0 , 0 , "your health is %d |" , guest.health , floor);
@@ -1976,6 +2113,123 @@ int main()
                                 {
                                     break;
                                 }
+                                
+                            
+                                if(inventory_highlight == 0)
+                                {
+                                    if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                    {
+                                        guest.weapon = 12;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                    {
+                                        guest.weapon = 15;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                    {
+                                        guest.weapon = 10;
+                                    }
+                                }
+                                else if(inventory_highlight == 1)
+                                {
+                                    if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                    {
+                                        guest.weapon = 12;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                    {
+                                        guest.weapon = 15;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                    {
+                                        guest.weapon = 10;
+                                    }
+                                }
+                                else if(inventory_highlight == 2)
+                                {
+                                    if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                    {
+                                        guest.weapon = 12;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                    {
+                                        guest.weapon = 15;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                    {
+                                        guest.weapon = 10;
+                                    }
+                                }
+                                else if(inventory_highlight == 3)
+                                {
+                                    if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                    {
+                                        guest.weapon = 12;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                    {
+                                        guest.weapon = 15;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                    {
+                                        guest.weapon = 10;
+                                    }
+                                }
+                                else if(inventory_highlight == 4)
+                                {
+                                    if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                    {
+                                        guest.weapon = 12;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                    {
+                                        guest.weapon = 15;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                    {
+                                        guest.weapon = 10;
+                                    }
+                                }
                             }
                             break;
                         case 's':
@@ -1987,6 +2241,278 @@ int main()
                             showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc + 1);
                             showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc + 1);
                             showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc - 1);
+                            break;
+                        case 'w':
+                            if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[1] , "Mace (M)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[2] , "Mace (M)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[3] , "Mace (M)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[4] , "Mace (M)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[5] , "Mace (M)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else
+                                {
+                                    char weap;
+                                    if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                    {
+                                        weap = 'M';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                    {
+                                        weap = 'p';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                    {
+                                        weap = 'I';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                    {
+                                        weap = 'Y';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                    {
+                                        weap = 'P';
+                                    }
+                                    dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                    strcpy(guest.inventory[5] , "Mace (M)");
+                                }
+                            }
+                            else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[1] , "Magic Wand (I)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[2] , "Magic Wand (I)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[3] , "Magic Wand (I)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[4] , "Magic Wand (I)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[5] , "Magic Wand (I)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else
+                                {
+                                    char weap;
+                                    if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                    {
+                                        weap = 'M';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                    {
+                                        weap = 'p';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                    {
+                                        weap = 'I';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                    {
+                                        weap = 'Y';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                    {
+                                        weap = 'P';
+                                    }
+                                    dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                    strcpy(guest.inventory[5] , "Magic Wand (I)");
+                                }
+                            }
+                            else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[1] , "Dagger (p)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[2] , "Dagger (p)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[3] , "Dagger (p)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[4] , "Dagger (p)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[5] , "Dagger (p)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else
+                                {
+                                    char weap;
+                                    if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                    {
+                                        weap = 'M';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                    {
+                                        weap = 'p';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                    {
+                                        weap = 'I';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                    {
+                                        weap = 'Y';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                    {
+                                        weap = 'P';
+                                    }
+                                    dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                    strcpy(guest.inventory[5] , "Dagger (p)");
+                                }
+                            }
+                            else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[1] , "Arrow (Y)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[2] , "Arrow (Y)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[3] , "Arrow (Y)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[4] , "Arrow (Y)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[5] , "Arrow (Y)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else
+                                {
+                                    char weap;
+                                    if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                    {
+                                        weap = 'M';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                    {
+                                        weap = 'p';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                    {
+                                        weap = 'I';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                    {
+                                        weap = 'Y';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                    {
+                                        weap = 'P';
+                                    }
+                                    dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                    strcpy(guest.inventory[5] , "Arrow (Y)");
+                                }
+                            }
+                            else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[1] , "Sword (P)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[2] , "Sword (P)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[3] , "Sword (P)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[4] , "Sword (P)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[5] , "Sword (P)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else
+                                {
+                                    char weap;
+                                    if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                    {
+                                        weap = 'M';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                    {
+                                        weap = 'p';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                    {
+                                        weap = 'I';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                    {
+                                        weap = 'Y';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                    {
+                                        weap = 'P';
+                                    }
+                                    dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                    strcpy(guest.inventory[5] , "Sword (P)");
+                                }
+                            }
                             break;
                         case 'S':
                             WINDOW* setting = newwin(row , col , 0 , 0);
@@ -2133,6 +2659,13 @@ int main()
                                     fprintf(guestfile , "%d\n" , pelle[4].y);
                                     fprintf(guestfile , "%d\n" , pelle[5].x);
                                     fprintf(guestfile , "%d\n" , pelle[5].y);
+                                    fprintf(guestfile , "%d\n" , guest.weapon);
+                                    for(int i = 0 ; i < 5 ; i++)
+                                    {
+                                        for(int j = 0 ; j < 4 ; j++)
+                                            fprintf(guestfile , "%d %d" , beasts[i][j].x , beasts[i][j].y);
+                                        fprintf(guestfile , "\n");
+                                    }
                                     for(int i = 0 ; i < 10 ; i++)
                                     {
                                         fprintf(guestfile , "%s\n" , guest.inventory[i]);
@@ -2418,18 +2951,19 @@ int main()
                     
                     rooms Room[4][9];
                     location pelle[6];
+                    location beasts[5][4];
                     int RoomNum[4];
                     for(int i = 0 ; i < 4 ; i++)
                     {
                         dungeons[i].RoomNum = Random(3 , 9);
                     }
-                    generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh , 1 , pelle , dungeons[0].monster);
+                    generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh , 1 , pelle , beasts[0]);
                     generate_corridor(dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh);
-                    generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh , 2 , pelle , dungeons[1].monster);
+                    generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh , 2 , pelle , beasts[1]);
                     generate_corridor(dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh);
-                    generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh , 3 , pelle , dungeons[2].monster);
+                    generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh , 3 , pelle , beasts[2]);
                     generate_corridor(dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh);
-                    generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh , 4 , pelle , dungeons[3].monster);
+                    generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh , 4 , pelle , beasts[3]);
                     generate_corridor(dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh);
                     generate_treasure_room(row , col  , dungeons[4].naghseh );
                     remove(file_1);
@@ -2468,6 +3002,7 @@ int main()
                     attron(COLOR_PAIR(4));
                     bkgd(COLOR_PAIR(4));
                     init_show(dungeons[floor].show , row , col);
+                    int move = 0;
                     showroom(dungeons[floor].room , dungeons[floor].naghseh , dungeons[floor].show , number);
                     while(1)
                     {
@@ -2482,8 +3017,65 @@ int main()
                             break;
                         }
                         refresh();
-                        guest.health--;
+                        move++;
+                        if(move%4 == 0)
+                            guest.health--;
                         showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc , 5);
+                        for(int k = 0 ; k < 4 ; k++)
+                        {
+                            if (isfollower(dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x]))
+                            {
+                                int range = range_monster(dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x]);
+                                int hurt = 0;
+                                int x_m = beasts[floor][k].x;
+                                int y_m = beasts[floor][k].y;
+                                char temp = dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x];
+                                dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x] = '.';
+                                int distance_x = abs(x_loc - x_m);
+                                int distance_y = abs(y_loc - y_m);
+                                if((distance_x != 1 || distance_y != 1) && (distance_x < range && distance_y < range))
+                                {
+                                    if(abs(x_loc - (x_m - 1)) <= distance_x &&
+                                    (!iswall(dungeons[floor].naghseh[y_m][x_m - 1]) && !iswindow(dungeons[floor].naghseh[y_m][x_m - 1]) && !isdoor(dungeons[floor].naghseh[y_m][x_m - 1]) && !ispillar(dungeons[floor].naghseh[y_m][x_m - 1])) && 
+                                    abs(x_loc - (x_m - 1)) > 0)
+                                    {
+                                        x_m--;
+                                        beasts[floor][k].x = x_m;
+                                    }
+                                    else if(abs(x_loc - (x_m + 1)) <= distance_x && 
+                                    (!iswall(dungeons[floor].naghseh[y_m][x_m + 1]) && !iswindow(dungeons[floor].naghseh[y_m][x_m + 1]) && !isdoor(dungeons[floor].naghseh[y_m][x_m + 1]) && !ispillar(dungeons[floor].naghseh[y_m][x_m + 1])) && 
+                                    abs(x_loc - (x_m + 1)) > 0)
+                                    {
+                                        x_m++;
+                                        beasts[floor][k].x = x_m;
+                                    }
+                                    else if(abs(y_loc - (y_m - 1)) <= distance_y && 
+                                    (!iswall(dungeons[floor].naghseh[y_m - 1][x_m]) && !iswindow(dungeons[floor].naghseh[y_m - 1][x_m]) && !isdoor(dungeons[floor].naghseh[y_m - 1][x_m]) && !ispillar(dungeons[floor].naghseh[y_m - 1][x_m])) && 
+                                    abs(y_loc - (y_m - 1)) > 0)
+                                    {
+                                        y_m--;
+                                        beasts[floor][k].y = y_m;
+                                    }
+                                    else if(abs(y_loc - (y_m + 1)) > 0 && 
+                                    (!iswall(dungeons[floor].naghseh[y_m + 1][x_m]) && !iswindow(dungeons[floor].naghseh[y_m + 1][x_m]) && !isdoor(dungeons[floor].naghseh[y_m + 1][x_m]) && !ispillar(dungeons[floor].naghseh[y_m + 1][x_m])))
+                                    {
+                                        y_m++;
+                                        beasts[floor][k].y = y_m;
+                                    }
+                                    hurt = 0;
+                                }
+                                else if(distance_x == 1 && distance_y == 1)
+                                {
+                                    hurt = 1;
+                                }
+                                dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x] = temp;
+                                if(hurt)
+                                {
+                                    int asib = damage(temp);
+                                    guest.health-=asib;
+                                }
+                            }
+                        }
                         print_map(row , col , dungeons[floor].naghseh , dungeons[floor].show);
                         mvprintw(y_loc , x_loc , "@");
                         mvprintw(0 , 0 , "your health is %d %d|" , guest.health , floor);
@@ -2957,6 +3549,121 @@ int main()
                                 {
                                     break;
                                 }
+                                if(inventory_highlight == 0)
+                                {
+                                    if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                    {
+                                        guest.weapon = 12;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                    {
+                                        guest.weapon = 15;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                    {
+                                        guest.weapon = 10;
+                                    }
+                                }
+                                else if(inventory_highlight == 1)
+                                {
+                                    if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                    {
+                                        guest.weapon = 12;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                    {
+                                        guest.weapon = 15;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                    {
+                                        guest.weapon = 10;
+                                    }
+                                }
+                                else if(inventory_highlight == 2)
+                                {
+                                    if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                    {
+                                        guest.weapon = 12;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                    {
+                                        guest.weapon = 15;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                    {
+                                        guest.weapon = 10;
+                                    }
+                                }
+                                else if(inventory_highlight == 3)
+                                {
+                                    if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                    {
+                                        guest.weapon = 12;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                    {
+                                        guest.weapon = 15;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                    {
+                                        guest.weapon = 10;
+                                    }
+                                }
+                                else if(inventory_highlight == 4)
+                                {
+                                    if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                    {
+                                        guest.weapon = 12;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                    {
+                                        guest.weapon = 15;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                    {
+                                        guest.weapon = 5;
+                                    }
+                                    else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                    {
+                                        guest.weapon = 10;
+                                    }
+                                }
                             }
                             break;
                         case 's':
@@ -2968,6 +3675,278 @@ int main()
                             showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc + 1);
                             showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc + 1);
                             showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc - 1);
+                            break;
+                        case 'w':
+                            if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[1] , "Mace (M)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[2] , "Mace (M)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[3] , "Mace (M)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[4] , "Mace (M)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[5] , "Mace (M)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else
+                                {
+                                    char weap;
+                                    if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                    {
+                                        weap = 'M';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                    {
+                                        weap = 'p';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                    {
+                                        weap = 'I';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                    {
+                                        weap = 'Y';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                    {
+                                        weap = 'P';
+                                    }
+                                    dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                    strcpy(guest.inventory[5] , "Mace (M)");
+                                }
+                            }
+                            else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[1] , "Magic Wand (I)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[2] , "Magic Wand (I)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[3] , "Magic Wand (I)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[4] , "Magic Wand (I)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[5] , "Magic Wand (I)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else
+                                {
+                                    char weap;
+                                    if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                    {
+                                        weap = 'M';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                    {
+                                        weap = 'p';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                    {
+                                        weap = 'I';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                    {
+                                        weap = 'Y';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                    {
+                                        weap = 'P';
+                                    }
+                                    dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                    strcpy(guest.inventory[5] , "Magic Wand (I)");
+                                }
+                            }
+                            else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[1] , "Dagger (p)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[2] , "Dagger (p)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[3] , "Dagger (p)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[4] , "Dagger (p)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[5] , "Dagger (p)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else
+                                {
+                                    char weap;
+                                    if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                    {
+                                        weap = 'M';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                    {
+                                        weap = 'p';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                    {
+                                        weap = 'I';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                    {
+                                        weap = 'Y';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                    {
+                                        weap = 'P';
+                                    }
+                                    dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                    strcpy(guest.inventory[5] , "Dagger (p)");
+                                }
+                            }
+                            else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[1] , "Arrow (Y)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[2] , "Arrow (Y)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[3] , "Arrow (Y)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[4] , "Arrow (Y)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[5] , "Arrow (Y)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else
+                                {
+                                    char weap;
+                                    if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                    {
+                                        weap = 'M';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                    {
+                                        weap = 'p';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                    {
+                                        weap = 'I';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                    {
+                                        weap = 'Y';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                    {
+                                        weap = 'P';
+                                    }
+                                    dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                    strcpy(guest.inventory[5] , "Arrow (Y)");
+                                }
+                            }
+                            else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                            {
+                                if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[1] , "Sword (P)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[2] , "Sword (P)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[3] , "Sword (P)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[4] , "Sword (P)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                {
+                                    strcpy(guest.inventory[5] , "Sword (P)");
+                                    dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                }
+                                else
+                                {
+                                    char weap;
+                                    if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                    {
+                                        weap = 'M';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                    {
+                                        weap = 'p';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                    {
+                                        weap = 'I';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                    {
+                                        weap = 'Y';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                    {
+                                        weap = 'P';
+                                    }
+                                    dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                    strcpy(guest.inventory[5] , "Sword (P)");
+                                }
+                            }
                             break;
                         case 'S':
                             WINDOW* setting = newwin(row , col , 0 , 0);
@@ -3116,6 +4095,13 @@ int main()
                                     fprintf(guestfile , "%d\n" , pelle[4].y);
                                     fprintf(guestfile , "%d\n" , pelle[5].x);
                                     fprintf(guestfile , "%d\n" , pelle[5].y);
+                                    fprintf(guestfile , "%d\n" , guest.weapon);
+                                    for(int i = 0 ; i < 5 ; i++)
+                                    {
+                                        for(int j = 0 ; j < 4 ; j++)
+                                            fprintf(guestfile , "%d %d" , beasts[i][j].x , beasts[i][j].y);
+                                        fprintf(guestfile , "\n");
+                                    }
                                     for(int i = 0 ; i < 10 ; i++)
                                     {
                                         fprintf(guestfile , "%s\n" , guest.inventory[i]);
@@ -3231,6 +4217,7 @@ int main()
                     }
                     profile guest;
                     location pelle[6];
+                    location beasts[5][4];
                     int x_loc , y_loc , floor;
                     strcpy(guest.name , "guest-usr");
                     fscanf(guestfile , "%d" ,&guest.health);
@@ -3251,6 +4238,15 @@ int main()
                     fscanf(guestfile , "%d" , &pelle[4].y);
                     fscanf(guestfile , "%d" , &pelle[5].x);
                     fscanf(guestfile , "%d" , &pelle[5].y);
+                    fscanf(guestfile , "%d" , &guest.weapon);
+                    for(int i = 0 ; i < 5 ; i++)
+                    {
+                        for(int j = 0 ; j < 4 ; j++)
+                        {
+                            fscanf(guestfile , "%d" , &beasts[i][j].x);
+                            fscanf(guestfile , "%d" , &beasts[i][j].x);
+                        }
+                    }
                     int index = 0;
                     while (index < 10)
                     {
@@ -3330,6 +4326,7 @@ int main()
                                 out = 0;
                             }
                         }
+                        int move = 0;
                         while(1)
                         {
                             
@@ -3343,8 +4340,65 @@ int main()
                                 break;
                             }
                             refresh();
-                            guest.health--;
+                            move++;
+                            if(move%4==0)
+                                guest.health--;
                             showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc , 5);
+                            for(int k = 0 ; k < 4 ; k++)
+                            {
+                                if (isfollower(dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x]))
+                                {
+                                    int range = range_monster(dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x]);
+                                    int hurt = 0;
+                                    int x_m = beasts[floor][k].x;
+                                    int y_m = beasts[floor][k].y;
+                                    char temp = dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x];
+                                    dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x] = '.';
+                                    int distance_x = abs(x_loc - x_m);
+                                    int distance_y = abs(y_loc - y_m);
+                                    if((distance_x != 1 || distance_y != 1) && (distance_x < range && distance_y < range))
+                                    {
+                                        if(abs(x_loc - (x_m - 1)) <= distance_x &&
+                                        (!iswall(dungeons[floor].naghseh[y_m][x_m - 1]) && !iswindow(dungeons[floor].naghseh[y_m][x_m - 1]) && !isdoor(dungeons[floor].naghseh[y_m][x_m - 1]) && !ispillar(dungeons[floor].naghseh[y_m][x_m - 1])) && 
+                                        abs(x_loc - (x_m - 1)) > 0)
+                                        {
+                                            x_m--;
+                                            beasts[floor][k].x = x_m;
+                                        }
+                                        else if(abs(x_loc - (x_m + 1)) <= distance_x && 
+                                        (!iswall(dungeons[floor].naghseh[y_m][x_m + 1]) && !iswindow(dungeons[floor].naghseh[y_m][x_m + 1]) && !isdoor(dungeons[floor].naghseh[y_m][x_m + 1]) && !ispillar(dungeons[floor].naghseh[y_m][x_m + 1])) && 
+                                        abs(x_loc - (x_m + 1)) > 0)
+                                        {
+                                            x_m++;
+                                            beasts[floor][k].x = x_m;
+                                        }
+                                        else if(abs(y_loc - (y_m - 1)) <= distance_y && 
+                                        (!iswall(dungeons[floor].naghseh[y_m - 1][x_m]) && !iswindow(dungeons[floor].naghseh[y_m - 1][x_m]) && !isdoor(dungeons[floor].naghseh[y_m - 1][x_m]) && !ispillar(dungeons[floor].naghseh[y_m - 1][x_m])) && 
+                                        abs(y_loc - (y_m - 1)) > 0)
+                                        {
+                                            y_m--;
+                                            beasts[floor][k].y = y_m;
+                                        }
+                                        else if(abs(y_loc - (y_m + 1)) > 0 && 
+                                        (!iswall(dungeons[floor].naghseh[y_m + 1][x_m]) && !iswindow(dungeons[floor].naghseh[y_m + 1][x_m]) && !isdoor(dungeons[floor].naghseh[y_m + 1][x_m]) && !ispillar(dungeons[floor].naghseh[y_m + 1][x_m])))
+                                        {
+                                            y_m++;
+                                            beasts[floor][k].y = y_m;
+                                        }
+                                        hurt = 0;
+                                    }
+                                    else if(distance_x == 1 && distance_y == 1)
+                                    {
+                                        hurt = 1;
+                                    }
+                                    dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x] = temp;
+                                    if(hurt)
+                                    {
+                                        int asib = damage(temp);
+                                        guest.health-=asib;
+                                    }
+                                }
+                            }
                             move(0,0);
                             attron(COLOR_PAIR(4));
                             // mvprintw(10,0,dungeons[floor].naghseh[10]);
@@ -3822,6 +4876,121 @@ int main()
                                     {
                                         break;
                                     }
+                                    if(inventory_highlight == 0)
+                                    {
+                                        if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                        {
+                                            guest.weapon = 5;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                        {
+                                            guest.weapon = 12;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                        {
+                                            guest.weapon = 15;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                        {
+                                            guest.weapon = 5;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                        {
+                                            guest.weapon = 10;
+                                        }
+                                    }
+                                    else if(inventory_highlight == 1)
+                                    {
+                                        if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                        {
+                                            guest.weapon = 5;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                        {
+                                            guest.weapon = 12;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                        {
+                                            guest.weapon = 15;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                        {
+                                            guest.weapon = 5;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                        {
+                                            guest.weapon = 10;
+                                        }
+                                    }
+                                    else if(inventory_highlight == 2)
+                                    {
+                                        if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                        {
+                                            guest.weapon = 5;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                        {
+                                            guest.weapon = 12;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                        {
+                                            guest.weapon = 15;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                        {
+                                            guest.weapon = 5;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                        {
+                                            guest.weapon = 10;
+                                        }
+                                    }
+                                    else if(inventory_highlight == 3)
+                                    {
+                                        if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                        {
+                                            guest.weapon = 5;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                        {
+                                            guest.weapon = 12;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                        {
+                                            guest.weapon = 15;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                        {
+                                            guest.weapon = 5;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                        {
+                                            guest.weapon = 10;
+                                        }
+                                    }
+                                    else if(inventory_highlight == 4)
+                                    {
+                                        if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                        {
+                                            guest.weapon = 5;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                        {
+                                            guest.weapon = 12;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                        {
+                                            guest.weapon = 15;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                        {
+                                            guest.weapon = 5;
+                                        }
+                                        else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                        {
+                                            guest.weapon = 10;
+                                        }
+                                    }
                                 }
                                 break;
                             case 's':
@@ -3833,6 +5002,278 @@ int main()
                                 showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc + 1);
                                 showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc + 1);
                                 showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc - 1);
+                                break;
+                            case 'w':
+                                if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[1] , "Mace (M)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[2] , "Mace (M)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[3] , "Mace (M)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[4] , "Mace (M)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[5] , "Mace (M)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else
+                                    {
+                                        char weap;
+                                        if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                        {
+                                            weap = 'M';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                        {
+                                            weap = 'p';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                        {
+                                            weap = 'I';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                        {
+                                            weap = 'Y';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                        {
+                                            weap = 'P';
+                                        }
+                                        dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                        strcpy(guest.inventory[5] , "Mace (M)");
+                                    }
+                                }
+                                else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[1] , "Magic Wand (I)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[2] , "Magic Wand (I)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[3] , "Magic Wand (I)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[4] , "Magic Wand (I)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[5] , "Magic Wand (I)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else
+                                    {
+                                        char weap;
+                                        if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                        {
+                                            weap = 'M';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                        {
+                                            weap = 'p';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                        {
+                                            weap = 'I';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                        {
+                                            weap = 'Y';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                        {
+                                            weap = 'P';
+                                        }
+                                        dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                        strcpy(guest.inventory[5] , "Magic Wand (I)");
+                                    }
+                                }
+                                else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[1] , "Dagger (p)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[2] , "Dagger (p)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[3] , "Dagger (p)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[4] , "Dagger (p)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[5] , "Dagger (p)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else
+                                    {
+                                        char weap;
+                                        if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                        {
+                                            weap = 'M';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                        {
+                                            weap = 'p';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                        {
+                                            weap = 'I';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                        {
+                                            weap = 'Y';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                        {
+                                            weap = 'P';
+                                        }
+                                        dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                        strcpy(guest.inventory[5] , "Dagger (p)");
+                                    }
+                                }
+                                else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[1] , "Arrow (Y)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[2] , "Arrow (Y)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[3] , "Arrow (Y)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[4] , "Arrow (Y)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[5] , "Arrow (Y)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else
+                                    {
+                                        char weap;
+                                        if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                        {
+                                            weap = 'M';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                        {
+                                            weap = 'p';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                        {
+                                            weap = 'I';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                        {
+                                            weap = 'Y';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                        {
+                                            weap = 'P';
+                                        }
+                                        dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                        strcpy(guest.inventory[5] , "Arrow (Y)");
+                                    }
+                                }
+                                else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                                {
+                                    if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[1] , "Sword (P)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[2] , "Sword (P)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[3] , "Sword (P)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[4] , "Sword (P)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                                    {
+                                        strcpy(guest.inventory[5] , "Sword (P)");
+                                        dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                                    }
+                                    else
+                                    {
+                                        char weap;
+                                        if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                        {
+                                            weap = 'M';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                        {
+                                            weap = 'p';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                        {
+                                            weap = 'I';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                        {
+                                            weap = 'Y';
+                                        }
+                                        else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                        {
+                                            weap = 'P';
+                                        }
+                                        dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                        strcpy(guest.inventory[5] , "Sword (P)");
+                                    }
+                                }
                                 break;
                             case 'S':
                                 WINDOW* setting = newwin(row , col , 0 , 0);
@@ -3979,6 +5420,13 @@ int main()
                                     fprintf(guestfile , "%d\n" , pelle[4].y);
                                     fprintf(guestfile , "%d\n" , pelle[5].x);
                                     fprintf(guestfile , "%d\n" , pelle[5].y);
+                                    fprintf(guestfile , "%d\n" , guest.weapon);
+                                    for(int i = 0 ; i < 5 ; i++)
+                                    {
+                                        for(int j = 0 ; j < 4 ; j++)
+                                            fprintf(guestfile , "%d %d" , beasts[i][j].x , beasts[i][j].y);
+                                        fprintf(guestfile , "\n");
+                                    }
                                     for(int i = 0 ; i < 10 ; i++)
                                     {
                                         fprintf(guestfile , "%s\n" , guest.inventory[i]);
@@ -4084,18 +5532,19 @@ int main()
                 
                 rooms Room[4][9];
                 location pelle[6];
+                location beasts[5][4];
                 int RoomNum[4];
                 for(int i = 0 ; i < 4 ; i++)
                 {
                     dungeons[i].RoomNum = Random(3 , 9);
                 }
-                generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh , 1 , pelle , dungeons[0].monster);
+                generate_map(row , col , dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh , 1 , pelle , beasts[0]);
                 generate_corridor(dungeons[0].room , dungeons[0].RoomNum , dungeons[0].naghseh);
-                generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh , 2 , pelle , dungeons[1].monster);
+                generate_map(row , col , dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh , 2 , pelle , beasts[1]);
                 generate_corridor(dungeons[1].room , dungeons[1].RoomNum , dungeons[1].naghseh);
-                generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh , 3 , pelle , dungeons[2].monster);
+                generate_map(row , col , dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh , 3 , pelle , beasts[2]);
                 generate_corridor(dungeons[2].room , dungeons[2].RoomNum , dungeons[2].naghseh);
-                generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh , 4 , pelle , dungeons[3].monster);
+                generate_map(row , col , dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh , 4 , pelle , beasts[3]);
                 generate_corridor(dungeons[3].room , dungeons[3].RoomNum , dungeons[3].naghseh);
                 generate_treasure_room(row , col  , dungeons[4].naghseh );
                 remove("map-1-defualt.txt");
@@ -4115,6 +5564,7 @@ int main()
                 guest.health = health_num;
                 guest.points = 0;
                 guest.gold_reserve = 0;
+                guest.weapon = 5;
                 guest.weapon_num = 1;
                 strcpy(guest.inventory[0] , "NO WEAPON");
                 guest.experience = 1;
@@ -4127,6 +5577,7 @@ int main()
                 dungeons[floor].naghseh[y_loc][x_loc] = '.';
                 attron(COLOR_PAIR(4));
                 bkgd(COLOR_PAIR(4));
+                int move = 0;
                 init_show(dungeons[floor].show , row , col);
                 showroom(dungeons[floor].room , dungeons[floor].naghseh , dungeons[floor].show , number);
                 while(1)
@@ -4142,8 +5593,65 @@ int main()
                         break;
                     }
                     refresh();
-                    guest.health--;
+                    move++;
+                    if(move%4 == 0)
+                        guest.health--;
                     showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc , 5);
+                    for(int k = 0 ; k < 4 ; k++)
+                    {
+                        if (isfollower(dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x]))
+                        {
+                            int range = range_monster(dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x]);
+                            int hurt = 0;
+                            int x_m = beasts[floor][k].x;
+                            int y_m = beasts[floor][k].y;
+                            char temp = dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x];
+                            dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x] = '.';
+                            int distance_x = abs(x_loc - x_m);
+                            int distance_y = abs(y_loc - y_m);
+                            if((distance_x != 1 || distance_y != 1) && (distance_x < range && distance_y < range))
+                            {
+                                if(abs(x_loc - (x_m - 1)) <= distance_x &&
+                                (!iswall(dungeons[floor].naghseh[y_m][x_m - 1]) && !iswindow(dungeons[floor].naghseh[y_m][x_m - 1]) && !isdoor(dungeons[floor].naghseh[y_m][x_m - 1]) && !ispillar(dungeons[floor].naghseh[y_m][x_m - 1])) && 
+                                abs(x_loc - (x_m - 1)) > 0)
+                                {
+                                    x_m--;
+                                    beasts[floor][k].x = x_m;
+                                }
+                                else if(abs(x_loc - (x_m + 1)) <= distance_x && 
+                                (!iswall(dungeons[floor].naghseh[y_m][x_m + 1]) && !iswindow(dungeons[floor].naghseh[y_m][x_m + 1]) && !isdoor(dungeons[floor].naghseh[y_m][x_m + 1]) && !ispillar(dungeons[floor].naghseh[y_m][x_m + 1])) && 
+                                abs(x_loc - (x_m + 1)) > 0)
+                                {
+                                    x_m++;
+                                    beasts[floor][k].x = x_m;
+                                }
+                                else if(abs(y_loc - (y_m - 1)) <= distance_y && 
+                                (!iswall(dungeons[floor].naghseh[y_m - 1][x_m]) && !iswindow(dungeons[floor].naghseh[y_m - 1][x_m]) && !isdoor(dungeons[floor].naghseh[y_m - 1][x_m]) && !ispillar(dungeons[floor].naghseh[y_m - 1][x_m])) && 
+                                abs(y_loc - (y_m - 1)) > 0)
+                                {
+                                    y_m--;
+                                    beasts[floor][k].y = y_m;
+                                }
+                                else if(abs(y_loc - (y_m + 1)) > 0 && 
+                                (!iswall(dungeons[floor].naghseh[y_m + 1][x_m]) && !iswindow(dungeons[floor].naghseh[y_m + 1][x_m]) && !isdoor(dungeons[floor].naghseh[y_m + 1][x_m]) && !ispillar(dungeons[floor].naghseh[y_m + 1][x_m])))
+                                {
+                                    y_m++;
+                                    beasts[floor][k].y = y_m;
+                                }
+                                hurt = 0;
+                            }
+                            else if(distance_x == 1 && distance_y == 1)
+                            {
+                                hurt = 1;
+                            }
+                            dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x] = temp;
+                            if(hurt)
+                            {
+                                int asib = damage(temp);
+                                guest.health-=asib;
+                            }
+                        }
+                    }
                     print_map(row , col , dungeons[floor].naghseh , dungeons[floor].show);
                     mvprintw(y_loc , x_loc , "@");
                     mvprintw(0 , 0 , "your health is %d %d|" , guest.health , floor);
@@ -4617,6 +6125,121 @@ int main()
                             {
                                 break;
                             }
+                            if(inventory_highlight == 0)
+                            {
+                                if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                {
+                                    guest.weapon = 5;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                {
+                                    guest.weapon = 12;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                {
+                                    guest.weapon = 15;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                {
+                                    guest.weapon = 5;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                {
+                                    guest.weapon = 10;
+                                }
+                            }
+                            else if(inventory_highlight == 1)
+                            {
+                                if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                {
+                                    guest.weapon = 5;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                {
+                                    guest.weapon = 12;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                {
+                                    guest.weapon = 15;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                {
+                                    guest.weapon = 5;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                {
+                                    guest.weapon = 10;
+                                }
+                            }
+                            else if(inventory_highlight == 2)
+                            {
+                                if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                {
+                                    guest.weapon = 5;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                {
+                                    guest.weapon = 12;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                {
+                                    guest.weapon = 15;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                {
+                                    guest.weapon = 5;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                {
+                                    guest.weapon = 10;
+                                }
+                            }
+                            else if(inventory_highlight == 3)
+                            {
+                                if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                {
+                                    guest.weapon = 5;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                {
+                                    guest.weapon = 12;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                {
+                                    guest.weapon = 15;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                {
+                                    guest.weapon = 5;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                {
+                                    guest.weapon = 10;
+                                }
+                            }
+                            else if(inventory_highlight == 4)
+                            {
+                                if(strcmp(guest.inventory[inventory_highlight] , "Mace (M)") == 0)
+                                {
+                                    guest.weapon = 5;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Dagger (p)") == 0)
+                                {
+                                    guest.weapon = 12;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Magic Wand (I)") == 0)
+                                {
+                                    guest.weapon = 15;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Arrow (Y)") == 0)
+                                {
+                                    guest.weapon = 5;
+                                }
+                                else if(strcmp(guest.inventory[inventory_highlight] , "Sword (P)") == 0)
+                                {
+                                    guest.weapon = 10;
+                                }
+                            }
                         }
                         break;
                     case 's':
@@ -4628,6 +6251,278 @@ int main()
                         showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc + 1);
                         showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc - 1 , y_loc + 1);
                         showtraps(dungeons[floor].naghseh , dungeons[floor].show , x_loc + 1 , y_loc - 1);
+                        break;
+                    case 'w':
+                        if(ismace(dungeons[floor].naghseh[y_loc][x_loc]))
+                        {
+                            if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[1] , "Mace (M)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[2] , "Mace (M)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[3] , "Mace (M)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[4] , "Mace (M)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[5] , "Mace (M)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else
+                            {
+                                char weap;
+                                if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                {
+                                    weap = 'M';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                {
+                                    weap = 'p';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                {
+                                    weap = 'I';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                {
+                                    weap = 'Y';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                {
+                                    weap = 'P';
+                                }
+                                dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                strcpy(guest.inventory[5] , "Mace (M)");
+                            }
+                        }
+                        else if(iswand(dungeons[floor].naghseh[y_loc][x_loc]))
+                        {
+                            if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[1] , "Magic Wand (I)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[2] , "Magic Wand (I)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[3] , "Magic Wand (I)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[4] , "Magic Wand (I)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[5] , "Magic Wand (I)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else
+                            {
+                                char weap;
+                                if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                {
+                                    weap = 'M';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                {
+                                    weap = 'p';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                {
+                                    weap = 'I';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                {
+                                    weap = 'Y';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                {
+                                    weap = 'P';
+                                }
+                                dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                strcpy(guest.inventory[5] , "Magic Wand (I)");
+                            }
+                        }
+                        else if(isdagger(dungeons[floor].naghseh[y_loc][x_loc]))
+                        {
+                            if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[1] , "Dagger (p)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[2] , "Dagger (p)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[3] , "Dagger (p)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[4] , "Dagger (p)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[5] , "Dagger (p)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else
+                            {
+                                char weap;
+                                if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                {
+                                    weap = 'M';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                {
+                                    weap = 'p';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                {
+                                    weap = 'I';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                {
+                                    weap = 'Y';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                {
+                                    weap = 'P';
+                                }
+                                dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                strcpy(guest.inventory[5] , "Dagger (p)");
+                            }
+                        }
+                        else if(isarrow(dungeons[floor].naghseh[y_loc][x_loc]))
+                        {
+                            if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[1] , "Arrow (Y)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[2] , "Arrow (Y)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[3] , "Arrow (Y)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[4] , "Arrow (Y)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[5] , "Arrow (Y)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else
+                            {
+                                char weap;
+                                if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                {
+                                    weap = 'M';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                {
+                                    weap = 'p';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                {
+                                    weap = 'I';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                {
+                                    weap = 'Y';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                {
+                                    weap = 'P';
+                                }
+                                dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                strcpy(guest.inventory[5] , "Arrow (Y)");
+                            }
+                        }
+                        else if(issword(dungeons[floor].naghseh[y_loc][x_loc]))
+                        {
+                            if(strcmp(guest.inventory[1] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[1] , "Sword (P)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[2] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[2] , "Sword (P)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[3] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[3] , "Sword (P)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[4] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[4] , "Sword (P)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else if(strcmp(guest.inventory[5] , "NO WEAPON"))
+                            {
+                                strcpy(guest.inventory[5] , "Sword (P)");
+                                dungeons[floor].naghseh[y_loc][x_loc] = '.';
+                            }
+                            else
+                            {
+                                char weap;
+                                if(strcmp(guest.inventory[5] , "Mace (M)") == 0)
+                                {
+                                    weap = 'M';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Dagger (p)") == 0)
+                                {
+                                    weap = 'p';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Magic Wand (I)") == 0)
+                                {
+                                    weap = 'I';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Arrow (Y)") == 0)
+                                {
+                                    weap = 'Y';
+                                }
+                                else if(strcmp(guest.inventory[5] , "Sword (P)") == 0)
+                                {
+                                    weap = 'P';
+                                }
+                                dungeons[floor].naghseh[y_loc][x_loc] = weap;
+                                strcpy(guest.inventory[5] , "Sword (P)");
+                            }
+                        }
                         break;
                     case 'S':
                         WINDOW* setting = newwin(row , col , 0 , 0);
@@ -4772,6 +6667,13 @@ int main()
                             fprintf(guestfile , "%d\n" , pelle[4].y);
                             fprintf(guestfile , "%d\n" , pelle[5].x);
                             fprintf(guestfile , "%d\n" , pelle[5].y);
+                            fprintf(guestfile , "%d\n" , guest.weapon);
+                            for(int i = 0 ; i < 5 ; i++)
+                            {
+                                for(int j = 0 ; j < 4 ; j++)
+                                    fprintf(guestfile , "%d %d" , beasts[i][j].x , beasts[i][j].y);
+                                fprintf(guestfile , "\n");
+                            }
                             for(int i = 0 ; i < 10 ; i++)
                             {
                                 fprintf(guestfile , "%s\n" , guest.inventory[i]);
@@ -4945,6 +6847,7 @@ int main()
                 }
                 profile guest;
                 location pelle[6];
+                location beasts[5][4];
                 int x_loc , y_loc , floor;
                 strcpy(guest.name , "guest-usr");
                 fscanf(guestfile , "%d" ,&guest.health);
@@ -4965,6 +6868,15 @@ int main()
                 fscanf(guestfile , "%d" , &pelle[4].y);
                 fscanf(guestfile , "%d" , &pelle[5].x);
                 fscanf(guestfile , "%d" , &pelle[5].y);
+                fscanf(guestfile , "%d" , &guest.weapon);
+                for(int i = 0 ; i < 5 ; i++)
+                {
+                    for(int j = 0 ; j < 4 ; j++)
+                    {
+                        fscanf(guestfile , "%d" , &beasts[i][j].x);
+                        fscanf(guestfile , "%d" , &beasts[i][j].x);
+                    }
+                }
                 int index = 0;
                 while (index < 10)
                 {
