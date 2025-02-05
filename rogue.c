@@ -14,7 +14,7 @@
 int all_treasures = 0;
 int dificulty = 0;
 int health_num = 100;
-//version 1
+
 
 typedef struct prof
 {
@@ -1127,6 +1127,53 @@ void print(int row , int col , char map[MAX_SIZE][MAX_SIZE] , int show[MAX_SIZE]
     }
 }
 
+void draw_scoreboard(WINDOW *win, char name[MAX_SIZE][MAX_SIZE] , int score[MAX_SIZE], int num_players) {
+    // Clear the window
+    werase(win);
+    wrefresh(win);
+
+    // Print the title
+    mvwprintw(win, 1, 10, "SCOREBOARD");
+
+    // Print the column headers
+    mvwprintw(win, 3, 2, "Rank");
+    mvwprintw(win, 3, 10, "Player Name");
+    mvwprintw(win, 3, 30, "Score");
+
+    // Print the players' information
+    for (int i = 0; i < num_players; i++) {
+        if( i == 0 )
+        {
+            mvwprintw(win, 5 + i, 2, "%d", i + 1);
+            mvwprintw(win, 5 + i, 10, "%s", name[i]);
+            mvwprintw(win, 5 + i, 30, "%d       he is the goat!!!", score[i]);
+        }
+        else if( i == 1 )
+        {
+            mvwprintw(win, 5 + i, 2, "%d", i + 1);
+            mvwprintw(win, 5 + i, 10, "%s", name[i]);
+            mvwprintw(win, 5 + i, 30, "%d       My Man :)", score[i]);
+        }
+        else if( i == 3 )
+        {
+            mvwprintw(win, 5 + i, 2, "%d", i + 1);
+            mvwprintw(win, 5 + i, 10, "%s", name[i]);
+            mvwprintw(win, 5 + i, 30, "%d       My Man :)", score[i]);
+        }
+        else
+        {
+            mvwprintw(win, 5 + i, 2, "%d", i + 1);
+            mvwprintw(win, 5 + i, 10, "%s", name[i]);
+            mvwprintw(win, 5 + i, 30, "%d", score[i]);
+        }
+    }
+    wprintw(win , "\n\n\n");
+    wprintw(win , "type anything to exit!");
+
+    // Refresh the window to show the updates
+    wrefresh(win);
+}
+
 
 void game(){}
 
@@ -1197,6 +1244,7 @@ int main()
             break;
         }
         clear();
+        box(menu_win , 0 , 0);
         wbkgd(menu_win , COLOR_PAIR(4));
         refresh();
         wrefresh(menu_win);
@@ -6761,7 +6809,69 @@ int main()
             // }
         }
         else if(highlight == 4)
-        {}
+        {
+            // clear();
+            FILE * file = fopen("all-names.txt" , "r");
+            char name[MAX_SIZE][MAX_SIZE];
+            char final_names[MAX_SIZE][MAX_SIZE];
+            char names[MAX_SIZE][MAX_SIZE];
+            char file_names[MAX_SIZE][MAX_SIZE];
+            int score_arr[MAX_SIZE];
+            int i = 0;
+            if(file == NULL)
+            {
+                endwin();
+                printf("No player exists\n");
+                return 1;
+            }
+            int l = 0;
+            while (fscanf(file , "%s" , names[i]) == 1 && i < MAX_SIZE)
+            {
+                strcpy(file_names[i] , "usr-points-");
+                strcpy(name[i] , names[i]);
+                strcat(names[i] , ".txt");
+                strcat(file_names[i] , names[i]);
+                FILE * points = fopen(file_names[i] , "r");
+                if(points != NULL)
+                {
+                    fscanf(points , "%d" , &score_arr[l]);
+                    strcpy(final_names[l] , name[i]);
+                    fclose(points);
+                    l++;
+                }
+                i++;
+            }
+
+            // // sorting.
+            for(int j = 0 ; j < l ; j++)
+            {
+                for(int k = j + 1 ; k < l ; k++)
+                {
+                    if(score_arr[j] < score_arr[k])
+                    {
+                        int temp = score_arr[k];
+                        char temp_1[MAX_SIZE];
+                        strcpy(temp_1 , final_names[k]);
+                        score_arr[k] = score_arr[j];
+                        score_arr[j] = temp;
+                        strcpy(final_names[k] , final_names[j]);
+                        strcpy(final_names[j] , temp_1);
+                    }
+                }
+            }
+            int height = row, width = col;
+            WINDOW *scoreboard_win = newwin(height, width, 0, 0);
+            int num = 10;
+            if(l < 10)
+            {
+                num = l;
+            }
+            draw_scoreboard(scoreboard_win , final_names , score_arr , num);
+            getch();
+
+
+            
+        }
         else if(highlight == 5)
         {
             clear();
