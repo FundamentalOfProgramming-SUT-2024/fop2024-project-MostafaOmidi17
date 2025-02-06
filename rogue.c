@@ -1518,6 +1518,10 @@ int main()
                         wattron(option_menu , COLOR_PAIR(6));
                         if(out == 2)
                             mvwprintw(option_menu , 0 , col/2 - 8/2 , "YOU LOST");
+                        else if(out == 1)
+                        {
+                            mvwprintw(option_menu , 0 , col/2 - 7/2 , "YOU WON");
+                        }
                         wattroff(option_menu , COLOR_PAIR(6));
                         while(1)
                         {
@@ -1684,7 +1688,16 @@ int main()
                                 if(hurt)
                                 {
                                     int asib = damage(temp);
-                                    guest.health-=asib;
+                                    if(guest.health - asib >= 0)
+                                    {
+                                        guest.health-=asib;
+                                        mvprintw(0,40 , "You got hit by a monster!");
+                                    }
+                                    else
+                                    {
+                                        out = 2;
+                                        continue;
+                                    }
                                 }
                             }
                         }
@@ -2114,6 +2127,8 @@ int main()
                                 x_loc = 10;
                                 y_loc = 10;
                                 floor++;
+                                out = 1;
+                                guest.points+=100;
                             }
                             break;
                         case 'i':
@@ -2949,6 +2964,10 @@ int main()
                         wattron(option_menu , COLOR_PAIR(6));
                         if(out == 2)
                             mvwprintw(option_menu , 0 , col/2 - 8/2 , "YOU LOST");
+                        else if(out == 1)
+                        {
+                            mvwprintw(option_menu , 0 , col/2 - 7/2 , "YOU WON");
+                        }
                         wattroff(option_menu , COLOR_PAIR(6));
                         while(1)
                         {
@@ -3120,13 +3139,22 @@ int main()
                                 if(hurt)
                                 {
                                     int asib = damage(temp);
-                                    guest.health-=asib;
+                                    if(guest.health - asib >= 0)
+                                    {
+                                        guest.health-=asib;
+                                        mvprintw(0,40 , "You got hit by a monster!");
+                                    }
+                                    else
+                                    {
+                                        out = 2;
+                                        continue;
+                                    }
                                 }
                             }
                         }
                         print_map(row , col , dungeons[floor].naghseh , dungeons[floor].show);
                         mvprintw(y_loc , x_loc , "@");
-                        mvprintw(0 , 0 , "your health is %d %d|" , guest.health , floor);
+                        mvprintw(0 , 0 , "your health is %d |" , guest.health , floor);
                         mvprintw(0 , 20 , "your point is %d |" , guest.points);
                         int kilid = getch();
                         switch (kilid)
@@ -3550,6 +3578,8 @@ int main()
                                 x_loc = 10;
                                 y_loc = 10;
                                 floor++;
+                                out = 1;
+                                guest.points += 100;
                             }
                             break;
                         case 'i':
@@ -4327,6 +4357,10 @@ int main()
                             wattron(option_menu , COLOR_PAIR(6));
                             if(out == 2)
                                 mvwprintw(option_menu , 0 , col/2 - 8/2 , "YOU LOST");
+                            else if(out == 1)
+                            {
+                                mvwprintw(option_menu , 0 , col/2 - 7/2 , "YOU WON");
+                            }
                             wattroff(option_menu , COLOR_PAIR(6));
                             while(1)
                             {
@@ -4443,7 +4477,16 @@ int main()
                                     if(hurt)
                                     {
                                         int asib = damage(temp);
-                                        guest.health-=asib;
+                                        if(guest.health - asib >= 0)
+                                        {
+                                            guest.health-=asib;
+                                            mvprintw(0,40 , "You got hit by a monster!");
+                                        }
+                                        else
+                                        {
+                                            out = 2;
+                                            continue;
+                                        }
                                     }
                                 }
                             }
@@ -4877,6 +4920,8 @@ int main()
                                     x_loc = 10;
                                     y_loc = 10;
                                     floor++;
+                                    out = 1;
+                                    guest.points += 100;
                                 }
                                 break;
                             case 'i':
@@ -5530,6 +5575,10 @@ int main()
                     wattron(option_menu , COLOR_PAIR(6));
                     if(out == 2)
                         mvwprintw(option_menu , 0 , col/2 - 8/2 , "YOU LOST");
+                    else if(out == 1)
+                    {
+                        mvwprintw(option_menu , 0 , col/2 - 7/2 , "YOU WON");
+                    }
                     wattroff(option_menu , COLOR_PAIR(6));
                     while(1)
                     {
@@ -5696,7 +5745,16 @@ int main()
                             if(hurt)
                             {
                                 int asib = damage(temp);
-                                guest.health-=asib;
+                                if(guest.health - asib >= 0)
+                                {
+                                    guest.health-=asib;
+                                    mvprintw(0,40 , "You got hit by a monster!");
+                                }
+                                else
+                                {
+                                    out = 2;
+                                    continue;
+                                }
                             }
                         }
                     }
@@ -6126,6 +6184,8 @@ int main()
                             x_loc = 10;
                             y_loc = 10;
                             floor++;
+                            out = 1;
+                            guest.points+=100;
                         }
                         break;
                     case 'i':
@@ -7019,6 +7079,10 @@ int main()
                         wattron(option_menu , COLOR_PAIR(6));
                         if(out == 2)
                             mvwprintw(option_menu , 0 , col/2 - 8/2 , "YOU LOST");
+                        else if(out == 1)
+                        {
+                            mvwprintw(option_menu , 0 , col/2 - 7/2 , "YOU WON");
+                        }
                         wattroff(option_menu , COLOR_PAIR(6));
                         while(1)
                         {
@@ -7066,6 +7130,7 @@ int main()
                             out = 0;
                         }
                     }
+                    int move = 0;
                     while(1)
                     {
                         
@@ -7079,9 +7144,74 @@ int main()
                             break;
                         }
                         refresh();
-                        guest.health--;
+                        move++;
+                        if(move%4 == 0)
+                            guest.health--;
                         showcorridor(dungeons[floor].naghseh , dungeons[floor].show , x_loc , y_loc , 5);
-                        move(0,0);
+                        for(int k = 0 ; k < 4 ; k++)
+                        {
+                            if (isfollower(dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x]))
+                            {
+                                int range = range_monster(dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x]);
+                                int hurt = 0;
+                                int x_m = beasts[floor][k].x;
+                                int y_m = beasts[floor][k].y;
+                                char temp = dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x];
+                                dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x] = '.';
+                                int distance_x = abs(x_loc - x_m);
+                                int distance_y = abs(y_loc - y_m);
+                                if((distance_x != 1 || distance_y != 1) && (distance_x < range && distance_y < range))
+                                {
+                                    if(abs(x_loc - (x_m - 1)) <= distance_x &&
+                                    (!iswall(dungeons[floor].naghseh[y_m][x_m - 1]) && !iswindow(dungeons[floor].naghseh[y_m][x_m - 1]) && !isdoor(dungeons[floor].naghseh[y_m][x_m - 1]) && !ispillar(dungeons[floor].naghseh[y_m][x_m - 1])) && 
+                                    abs(x_loc - (x_m - 1)) > 0)
+                                    {
+                                        x_m--;
+                                        beasts[floor][k].x = x_m;
+                                    }
+                                    else if(abs(x_loc - (x_m + 1)) <= distance_x && 
+                                    (!iswall(dungeons[floor].naghseh[y_m][x_m + 1]) && !iswindow(dungeons[floor].naghseh[y_m][x_m + 1]) && !isdoor(dungeons[floor].naghseh[y_m][x_m + 1]) && !ispillar(dungeons[floor].naghseh[y_m][x_m + 1])) && 
+                                    abs(x_loc - (x_m + 1)) > 0)
+                                    {
+                                        x_m++;
+                                        beasts[floor][k].x = x_m;
+                                    }
+                                    else if(abs(y_loc - (y_m - 1)) <= distance_y && 
+                                    (!iswall(dungeons[floor].naghseh[y_m - 1][x_m]) && !iswindow(dungeons[floor].naghseh[y_m - 1][x_m]) && !isdoor(dungeons[floor].naghseh[y_m - 1][x_m]) && !ispillar(dungeons[floor].naghseh[y_m - 1][x_m])) && 
+                                    abs(y_loc - (y_m - 1)) > 0)
+                                    {
+                                        y_m--;
+                                        beasts[floor][k].y = y_m;
+                                    }
+                                    else if(abs(y_loc - (y_m + 1)) > 0 && 
+                                    (!iswall(dungeons[floor].naghseh[y_m + 1][x_m]) && !iswindow(dungeons[floor].naghseh[y_m + 1][x_m]) && !isdoor(dungeons[floor].naghseh[y_m + 1][x_m]) && !ispillar(dungeons[floor].naghseh[y_m + 1][x_m])))
+                                    {
+                                        y_m++;
+                                        beasts[floor][k].y = y_m;
+                                    }
+                                    hurt = 0;
+                                }
+                                else if(distance_x == 1 && distance_y == 1)
+                                {
+                                    hurt = 1;
+                                }
+                                dungeons[floor].naghseh[beasts[floor][k].y][beasts[floor][k].x] = temp;
+                                if(hurt)
+                                {
+                                    int asib = damage(temp);
+                                    if(guest.health - asib >= 0)
+                                    {
+                                        guest.health-=asib;
+                                        mvprintw(0,40 , "You got hit by a monster!");
+                                    }
+                                    else
+                                    {
+                                        out = 2;
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
                         attron(COLOR_PAIR(4));
                         // mvprintw(10,0,dungeons[floor].naghseh[10]);
                         // getch();
@@ -7511,6 +7641,8 @@ int main()
                                 x_loc = 10;
                                 y_loc = 10;
                                 floor++;
+                                out = 1;
+                                guest.points+=100;
                             }
                             break;
                         case 'i':
