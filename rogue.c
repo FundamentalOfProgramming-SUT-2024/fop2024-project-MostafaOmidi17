@@ -938,6 +938,41 @@ void generate_map(int row , int col , rooms Room[] , int RoomNum , char naghsheh
             }
         }
     }
+    for(int i = 0 ; i < RoomNum ; i++)
+    {
+        int x = Room[i].x_c;
+        int y = Room[i].y_c;
+        int sx = Room[i].size_x;
+        int sy = Room[i].size_y;
+        for(int j = x - 1 ; j < x + sx ; j++)
+        {
+            for(int k = y - 1 ; k < y + sy ; k++)
+            {
+                if(j == x - 1 || j == x + sx - 1)
+                {
+                    if(naghsheh[k][j] == '+')
+                    {
+                        if(naghsheh[k+1][j]!='#' && naghsheh[k-1][j] != '#' && naghsheh[k][j+1]!='#' && naghsheh[k][j-1]!='#')
+                        {
+                            naghsheh[k][j] = '|';
+                            Room[i].map[k][j] = '|';
+                        }
+                    }
+                }
+                else if(k == y  - 1 || k == y + sy - 1 )
+                {
+                    if(naghsheh[k][j] == '+')
+                    {
+                        if(naghsheh[k+1][j] != '#' && naghsheh[k-1][j] != '#' && naghsheh[k][j+1] != '#' && naghsheh[k][j-1] != '#')
+                        {
+                            naghsheh[k][j] = '-';
+                            Room[i].map[k][j] = '-';
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 }
 
